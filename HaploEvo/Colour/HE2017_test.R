@@ -520,7 +520,7 @@ abline(v = dom_gen, lty = 2, lwd = 1.5, col = 'blue')
 ################################################################################
 
 #' Generate a simulated dataset without uncertain genotypes under the Wright-Fisher model
-test_seed <- 21
+test_seed <- 16
 set.seed(test_seed)
 
 model <- "WFM"
@@ -609,7 +609,7 @@ dev.off()
 ####################
 
 #' Generate a simulated dataset with uncertain genotypes under the Wright-Fisher model
-test_seed <- 21
+test_seed <- 16
 set.seed(test_seed)
 
 model <- "WFM"

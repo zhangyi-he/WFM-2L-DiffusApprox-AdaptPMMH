@@ -56,7 +56,7 @@ pcl_num <- 2e+03
 # 
 # 
 # pcl_num <- head(opt_pcl_num[which(log_lik_sdv > 1.0 & log_lik_sdv < 1.7)], n = 1)
-itn_num <- 1e+04
+itn_num <- 5e+04
 ER <- TRUE
 PA <- TRUE
 nap_num <- itn_num * 0.1
