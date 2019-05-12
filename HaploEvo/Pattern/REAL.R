@@ -55,9 +55,9 @@ pcl_num <- 2e+03
 # 
 # 
 # pcl_num <- head(opt_pcl_num[which(log_lik_sdv > 1.0 & log_lik_sdv < 1.7)], n = 1)
-itn_num <- 2e+04
-ER <- FALSE
-PA <- FALSE
+itn_num <- 5e+04
+ER <- TRUE
+PA <- TRUE
 nap_num <- itn_num * 0.1
 
 system.time(PMMH <- cmprunPMMH(int_sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num, ER, PA, nap_num))
