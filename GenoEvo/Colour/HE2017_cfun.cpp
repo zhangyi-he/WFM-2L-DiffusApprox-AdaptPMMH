@@ -1524,7 +1524,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
   
   calculateLogLikelihood_arma(log_lik_chn(0), sel_cof_chn.col(0), scl_rec_rat, smp_gen, smp_siz, ptl_smp_cnt, dt, ptn_num, pcl_num);
   
-  double sel_cof_sd = 3e-03;
+  double sel_cof_sd = 2e-03;
   arma::dmat sel_cof_cov = arma::eye<arma::dmat>(4, 4) * pow(sel_cof_sd, 2);
   
   bool apt = true;
@@ -1584,7 +1584,7 @@ arma::dmat runPAPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, c
   
   calculateLogLikelihood_arma(log_lik_chn(0), sel_cof_chn.col(0), scl_rec_rat, smp_gen, smp_siz, ptl_smp_cnt, dt, ptn_num, pcl_num);
   
-  double sel_cof_sd = 3e-03;
+  double sel_cof_sd = 2e-03;
   arma::dmat sel_cof_cov = arma::eye<arma::dmat>(4, 4) * pow(sel_cof_sd, 2);
   
   bool apt = true;
@@ -1813,7 +1813,7 @@ arma::dmat runERPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, c
   
   calculateLogLikelihood_arma(log_lik_chn(0), sel_cof_chn.col(0), scl_rec_rat, smp_gen, smp_siz, ptl_smp_cnt, dt, ptn_num, pcl_num);
   
-  double sel_cof_sd = 3e-03;
+  double sel_cof_sd = 2e-03;
   arma::dmat sel_cof_cov = arma::eye<arma::dmat>(4, 4) * pow(sel_cof_sd, 2);
   
   bool apt = true;
@@ -1873,7 +1873,7 @@ arma::dmat runERPAPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat,
   
   calculateLogLikelihood_arma(log_lik_chn(0), sel_cof_chn.col(0), scl_rec_rat, smp_gen, smp_siz, ptl_smp_cnt, dt, ptn_num, pcl_num);
   
-  double sel_cof_sd = 3e-03;
+  double sel_cof_sd = 2e-03;
   arma::dmat sel_cof_cov = arma::eye<arma::dmat>(4, 4) * pow(sel_cof_sd, 2);
   
   bool apt = true;
