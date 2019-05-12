@@ -589,7 +589,7 @@ points(smp_gen, smp_frq[9, ], col = 'red', pch = 17, cex = 1)
 ################################################################################
 
 #' Generate a simulated dataset without uncertain phenotypes under the Wright-Fisher model 
-test_seed <- 48
+test_seed <- 13
 set.seed(test_seed)
 
 model <- "WFM"
@@ -668,7 +668,7 @@ dev.off()
 ####################
 
 #' Generate a simulated dataset with uncertain phenotypes under the Wright-Fisher model 
-test_seed <- 48
+test_seed <- 13
 set.seed(test_seed)
 
 model <- "WFM"

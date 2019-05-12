@@ -21,7 +21,7 @@ library("plot3D")
 
 ################################################################################
 
-test_seed <- 3
+test_seed <- 13
 set.seed(test_seed)
 
 model <- "WFM"
@@ -143,9 +143,9 @@ smp_cnt
 mis_cnt
 ptn_num <- 5e+00
 pcl_num <- ifelse(tail(opt_pcl_num[which(log_lik_sdv > 1.0 & log_lik_sdv < 1.7)], n = 1) > 1000, tail(opt_pcl_num[which(log_lik_sdv > 1.0 & log_lik_sdv < 1.7)], n = 1), 1000)
-itn_num <- 1e+04
+itn_num <- 2e+04
 ER <- TRUE
-PA <- TRUE
+PA <- FALSE
 nap_num <- itn_num * 0.1
 
 system.time(PMMH <- cmprunPMMH(int_sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num, ER, PA, nap_num))
