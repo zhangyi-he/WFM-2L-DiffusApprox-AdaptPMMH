@@ -1,1 +1,1 @@
-# 2L-WFD-AdaptPMMH-Horse
+# WFM-2L-DiffusApprox-PMMH-Horse
