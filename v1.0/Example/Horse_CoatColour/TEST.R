@@ -25,89 +25,89 @@ setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2020-WFM-2L-DiffusAppr
 
 ################################################################################
 
-#' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher model with selection
-#' Parameter setting
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' Simulate the haplotype frequency trajectories according to the Wright-Fisher model
+#' parameter settings
+#' @param s_b the selection coefficient of the black phenotype
+#' @param s_c the selection coefficient of the chestnut phenotype
+#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param N the number of individuals in the population
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
 #' @param lst_gen the last generation of the simulated haplotype frequency trajectories
 
-sel_cof <- c(1e-02, 5e-03)
-dom_par <- c(5e-01, 5e-01)
-rec_rat <- 1e-03
-pop_siz <- 5e+03
-int_frq <- c(1e-01, 2e-01, 3e-01, 4e-01)
+s_b <- 5e-03
+s_c <- 1e-03
+r <- 5e-01
+N <- 1e+04
+int_frq <- rep(1, length.out = 4) / 4
 int_gen <- 0
 lst_gen <- 500
 
-frq_pth <- cmpsimulateTLWFMS(sel_cof, dom_par, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+frq_pth <- cmpsimulateTLWFMS(s_b, s_c, r, N, int_frq, int_gen, lst_gen)
 
 k <- int_gen:lst_gen
 plot(k, frq_pth[1, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A1B1 haplotype generated with the Wright-Fisher model")
+     main = "A frequency trajectory of the AE haplotype")
 plot(k, frq_pth[2, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A1B2 haplotype generated with the Wright-Fisher model")
+     main = "A frequency trajectory of the Ae haplotype")
 plot(k, frq_pth[3, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A2B1 haplotype generated with the Wright-Fisher model")
+     main = "A frequency trajectory of the aE haplotype")
 plot(k, frq_pth[4, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A2B2 haplotype generated with the Wright-Fisher model")
+     main = "A frequency trajectory of the ae haplotype")
 
 ########################################
 
-#' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
+#' Simulate the haplotype frequency trajectories according to the Wright-Fisher diffusion using the Euler-Maruyama method
 #' Parameter setting
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' @param s_b the selection coefficient of the black phenotype
+#' @param s_c the selection coefficient of the chestnut phenotype
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param N the number of individuals in the population
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
 #' @param lst_gen the last generation of the simulated haplotype frequency trajectories
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param data_augmentation = TRUE/FALSE (return the simulated sample trajectory with data augmentation or not)
 
-sel_cof <- c(1e-02, 5e-03)
-dom_par <- c(5e-01, 5e-01)
-rec_rat <- 1e-03
-pop_siz <- 5e+03
-int_frq <- c(1e-01, 2e-01, 3e-01, 4e-01)
+s_b <- 5e-03
+s_c <- 1e-03
+r <- 5e-01
+N <- 1e+04
+int_frq <- rep(1, length.out = 4) / 4
 int_gen <- 0
 lst_gen <- 500
 ptn_num <- 5e+00
 
-frq_pth <- cmpsimulateTLWFDS(sel_cof, dom_par, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, data_augmentation = TRUE)
+frq_pth <- cmpsimulateTLWFDS(s_b, s_c, r, N, int_frq, int_gen, lst_gen, ptn_num, data_augmentation = TRUE)
 
-t <- (int_gen:(int_gen + (lst_gen - int_gen) * ptn_num)) / 2 / pop_siz
+t <- (int_gen:(int_gen + (lst_gen - int_gen) * ptn_num)) / 2 / N
 plot(t, frq_pth[1, ], type = "l", lwd = 1.5,
-     xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A1B1 haplotype generated with the Wright-Fisher diffusion")
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "A frequency trajectory of the AE haplotype")
 plot(t, frq_pth[2, ], type = "l", lwd = 1.5,
-     xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A1B2 haplotype generated with the Wright-Fisher diffusion")
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "A frequency trajectory of the Ae haplotype")
 plot(t, frq_pth[3, ], type = "l", lwd = 1.5,
-     xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A2B1 haplotype generated with the Wright-Fisher diffusion")
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "A frequency trajectory of the aE haplotype")
 plot(t, frq_pth[4, ], type = "l", lwd = 1.5,
-     xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the A2B2 haplotype generated with the Wright-Fisher diffusion")
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "A frequency trajectory of the ae haplotype")
 
 ########################################
 
 #' Compare the simulation generated with the Wright-Fisher model and the Wright-Fisher diffusion
-sel_cof <- c(1e-02, 5e-03)
-dom_par <- c(5e-01, 5e-01)
-rec_rat <- 1e-03
-pop_siz <- 5e+03
-int_frq <- c(1e-01, 2e-01, 3e-01, 4e-01)
+s_b <- 5e-03
+s_c <- 1e-03
+r <- 5e-01
+N <- 1e+04
+int_frq <- rep(1, length.out = 4) / 4
 int_gen <- 0
-lst_gen <- 500
+lst_gen <- 100
 ptn_num <- 5e+00
 sim_num <- 1e+06
 
@@ -115,35 +115,35 @@ sim_frq_WFM <- matrix(NA, nrow = 4, ncol = sim_num)
 sim_frq_WFD <- matrix(NA, nrow = 4, ncol = sim_num)
 for (i in 1:sim_num) {
   print(i)
-  sim_frq_WFM[, i] <- cmpsimulateTLWFMS(sel_cof, dom_par, rec_rat, pop_siz, int_frq, int_gen, lst_gen)[, (lst_gen - int_gen) + 1]
-  sim_frq_WFD[, i] <- cmpsimulateTLWFDS(sel_cof, dom_par, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, data_augmentation = FALSE)[, (lst_gen - int_gen) + 1]
+  sim_frq_WFM[, i] <- cmpsimulateTLWFMS(s_b, s_c, r, N, int_frq, int_gen, lst_gen)[, (lst_gen - int_gen) + 1]
+  sim_frq_WFD[, i] <- cmpsimulateTLWFDS(s_b, s_c, r, N, int_frq, int_gen, lst_gen, ptn_num, data_augmentation = FALSE)[, (lst_gen - int_gen) + 1]
 }
 
-save(sel_cof, dom_par, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, sim_num, sim_frq_WFM, sim_frq_WFD,
-     file = "./Output/Output v2.1/Test v2.1/TEST_2L_WFM_vs_WFD.rda")
+save(s_b, s_c, r, N, int_frq, int_gen, lst_gen, ptn_num, sim_num, sim_frq_WFM, sim_frq_WFD,
+     file = "./Output/Output v1.0/Test/WFM_vs_WFD.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_WFM_vs_WFD.rda")
+load("./Output/Output v1.0/Test/WFM_vs_WFD.rda")
 
-pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_WFM_vs_WFD.pdf", width = 20, height = 10)
+pdf(file = "./Output/Output v1.0/Test/WFM_vs_WFD.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), oma = c(0, 0, 3, 0), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sim_frq_WFM[1, ], breaks = seq(min(sim_frq_WFM[1, ], sim_frq_WFD[1, ]), max(sim_frq_WFM[1, ], sim_frq_WFD[1, ]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
      xlim = c(min(sim_frq_WFM[1, ], sim_frq_WFD[1, ]), max(sim_frq_WFM[1, ], sim_frq_WFD[1, ])),
-     xlab = "Haplotype frequency", main = "Haplotype A1B1")
+     xlab = "Haplotype frequency", main = "Haplotype AE")
 hist(sim_frq_WFD[1, ], breaks = seq(min(sim_frq_WFM[1, ], sim_frq_WFD[1, ]), max(sim_frq_WFM[1, ], sim_frq_WFD[1, ]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
 
 hist(sim_frq_WFM[2, ], breaks = seq(min(sim_frq_WFM[2, ], sim_frq_WFD[2, ]), max(sim_frq_WFM[2, ], sim_frq_WFD[2, ]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
      xlim = c(min(sim_frq_WFM[2, ], sim_frq_WFD[2, ]), max(sim_frq_WFM[2, ], sim_frq_WFD[2, ])),
-     xlab = "Haplotype frequency", main = "Haplotype A1B2")
+     xlab = "Haplotype frequency", main = "Haplotype Ae")
 hist(sim_frq_WFD[2, ], breaks = seq(min(sim_frq_WFM[2, ], sim_frq_WFD[2, ]), max(sim_frq_WFM[2, ], sim_frq_WFD[2, ]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
 
 hist(sim_frq_WFM[3, ], breaks = seq(min(sim_frq_WFM[3, ], sim_frq_WFD[3, ]), max(sim_frq_WFM[3, ], sim_frq_WFD[3, ]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
      xlim = c(min(sim_frq_WFM[3, ], sim_frq_WFD[3, ]), max(sim_frq_WFM[3, ], sim_frq_WFD[3, ])),
-     xlab = "Haplotype frequency", main = "Haplotype A2B1")
+     xlab = "Haplotype frequency", main = "Haplotype aE")
 hist(sim_frq_WFD[3, ], breaks = seq(min(sim_frq_WFM[3, ], sim_frq_WFD[3, ]), max(sim_frq_WFM[3, ], sim_frq_WFD[3, ]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
 
 hist(sim_frq_WFM[4, ], breaks = seq(min(sim_frq_WFM[4, ], sim_frq_WFD[4, ]), max(sim_frq_WFM[4, ], sim_frq_WFD[4, ]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
      xlim = c(min(sim_frq_WFM[4, ], sim_frq_WFD[4, ]), max(sim_frq_WFM[4, ], sim_frq_WFD[4, ])),
-     xlab = "Haplotype frequency", main = "Haplotype A2B2")
+     xlab = "Haplotype frequency", main = "Haplotype ae")
 hist(sim_frq_WFD[4, ], breaks = seq(min(sim_frq_WFM[4, ], sim_frq_WFD[4, ]), max(sim_frq_WFM[4, ], sim_frq_WFD[4, ]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
 title(paste("Histograms of the haplotype frequencies in generation", lst_gen, "under the Wright-Fisher model and the Wright-Fisher diffusion"), outer = TRUE)
 dev.off()
@@ -151,12 +151,12 @@ dev.off()
 ################################################################################
 
 #' Simulate the hidden Markov model
-#' Parameter setting
-#' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' parameter settings
+#' @param model = "WFM"/"WFD" (return the observations from the underlying population under the WFM or WFD)
+#' @param s_b the selection coefficient of the black phenotype
+#' @param s_c the selection coefficient of the chestnut phenotype
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param N the number of individuals in the population
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
@@ -168,17 +168,16 @@ sel_cof <- c(1e-02, 5e-03)
 dom_par <- c(5e-01, 5e-01)
 rec_rat <- 1e-03
 pop_siz <- 5e+03
-int_frq <- c(1e-01, 2e-01, 3e-01, 4e-01)
+int_frq <- rep(1, length.out = 4) / 4
 smp_gen <- (0:10) * 50
 smp_siz <- rep(50, 11)
 
 sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, dom_par, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 smp_gen <- sim_HMM_WFM$smp_gen
 smp_siz <- sim_HMM_WFM$smp_siz
-smp_hap_cnt <- sim_HMM_WFM$smp_hap_cnt
-pop_hap_frq <- sim_HMM_WFM$pop_hap_frq
-smp_ale_cnt <- sim_HMM_WFM$smp_ale_cnt
-pop_ale_frq <- sim_HMM_WFM$pop_ale_frq
+smp_cnt <- sim_HMM_WFM$smp_cnt
+smp_frq <- sim_HMM_WFM$smp_frq
+pop_frq <- sim_HMM_WFM$pop_frq
 
 k <- min(smp_gen):max(smp_gen)
 smp_ale_frq <- smp_ale_cnt %*% diag(1 / smp_siz)
@@ -207,12 +206,11 @@ smp_siz <- rep(50, 11)
 ptn_num <- 5e+00
 
 sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, dom_par, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, ptn_num)
-smp_gen <- sim_HMM_WFD$smp_gen
-smp_siz <- sim_HMM_WFD$smp_siz
-smp_hap_cnt <- sim_HMM_WFD$smp_hap_cnt
-pop_hap_frq <- sim_HMM_WFD$pop_hap_frq
-smp_ale_cnt <- sim_HMM_WFD$smp_ale_cnt
-pop_ale_frq <- sim_HMM_WFD$pop_ale_frq
+smp_gen <- sim_HMM_WFM$smp_gen
+smp_siz <- sim_HMM_WFM$smp_siz
+smp_cnt <- sim_HMM_WFM$smp_cnt
+smp_frq <- sim_HMM_WFM$smp_frq
+pop_frq <- sim_HMM_WFM$pop_frq
 
 k <- min(smp_gen):max(smp_gen)
 smp_ale_frq <- smp_ale_cnt %*% diag(1 / smp_siz)
@@ -276,15 +274,15 @@ dev.off()
 
 ########################################
 
-#' Run the bootstrap particle filter (BPF) with the two-locus Wright-Fisher diffusion with selection
+#' Run the bootstrap particle filter (BPF) with the Wright-Fisher diffusion
 #' Parameter setting
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' @param s_b the selection coefficient of the black phenotype
+#' @param s_c the selection coefficient of the chestnut phenotype
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles and ancestral alleles observed in the sample at all sampling time points
+#' @param smp_cnt 
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
@@ -292,22 +290,22 @@ load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
 
 set.seed(test_seed)
 
-sel_cof
-dom_par
-rec_rat
-pop_siz
+s_b
+s_c
+r
+N
 smp_gen
 smp_siz
-smp_ale_cnt
+smp_cnt
 ptn_num <- 5e+00
-pcl_num <- 5e+04
+pcl_num <- 1e+05
 
-system.time(BPF <- cmprunBPF(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num))
+system.time(BPF <- cmprunBPF(s_b, s_c, r, N, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num))
 
-save(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, BPF,
-     file = "./Output/Output v2.1/Test v2.1/TEST_2L_BPF.rda")
+save(s_b, s_c, r, N, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, BPF,
+     file = "./Output/Output v1.0/Test/BPF.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_BPF.rda")
+load("./Output/Output v1.0/Test/BPF.rda")
 
 lik <- rep(1, pcl_num)
 wght <- BPF$wght
@@ -315,16 +313,15 @@ for (k in 1:length(smp_gen)) {
   lik <- lik * (cumsum(wght[, k]) / (1:pcl_num))
 }
 
-pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_BPF_Likelihood.pdf", width = 10, height = 10)
+pdf(file = "./Output/Output v1.0/Test/BPF_Likelihood.pdf", width = 12, height = 9)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:pcl_num, log(lik), type = 'l',
      xlab = "Number of particles", ylab = "Log likelihood",
      main = "Log likelihood estimated with the bootstrap particle filter")
 dev.off()
 
-smp_hap_frq <- smp_hap_cnt %*% diag(1 / smp_siz)
-pop_hap_frq_pre_resmp <- BPF$pop_frq_pre_resmp
-pop_hap_frq_pst_resmp <- BPF$pop_frq_pst_resmp
+pop_frq_pre_resmp <- BPF$pop_frq_pre_resmp
+pop_frq_pst_resmp <- BPF$pop_frq_pst_resmp
 
 pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_BPF_Particle.pdf", width = 20, height = 55)
 par(mfrow = c(11, 4), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -372,43 +369,43 @@ dev.off()
 
 #' Calculate the optimal particle number in the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' @param s_b the selection coefficient of the black phenotype
+#' @param s_c the selection coefficient of the chestnut phenotype
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt 
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+load("./Output/Output v1.0/Test/SimData.rda")
 
 set.seed(test_seed)
 
-sel_cof
-dom_par
-rec_rat
-pop_siz
+s_b
+s_c
+r
+N
 smp_gen
 smp_siz
-smp_ale_cnt
+smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
 gap_num <- 1e+02
 
-system.time(OptNum <- calculateOptimalParticleNum(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, gap_num))
+system.time(OptNum <- calculateOptimalParticleNum(s_b, s_c, r, N, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, gap_num))
 
-save(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, gap_num, OptNum,
-     file = "./Output/Output v2.1/Test v2.1/TEST_2L_OptNum.rda")
+save(s_b, s_c, r, N, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, gap_num, OptNum,
+     file = "./Output/Output v1.0/Test/OptNum.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_OptNum.rda")
+load("./Output/Output v1.0/Test/OptNum.rda")
 
 opt_pcl_num <- OptNum$opt_pcl_num
 log_lik_sdv <- OptNum$log_lik_sdv
 
-pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_OptNum.pdf", width = 12, height = 9)
+pdf(file = "./Output/Output v1.0/Test/OptNum.pdf", width = 12, height = 9)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(opt_pcl_num, log_lik_sdv, type = 'b', lwd = 2,
      xlab = "Particle number", ylab = "Log-likelihood standard deviation",
@@ -421,85 +418,106 @@ dev.off()
 
 #' Run the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' @param s_b the selection coefficient of the black phenotype
+#' @param s_c the selection coefficient of the chestnut phenotype
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt 
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+load("./Output/Output v1.0/Test/SimData.rda")
 
 set.seed(test_seed)
 
-sel_cof <- c(0e+00, 0e+00)
-dom_par <- c(5e-01, 5e-01)
-rec_rat <- 1e-03
-pop_siz <- 5e+03
+s_b <- 0e+00
+s_c <- 0e+00
+r <- 5e-01
+N <- 1e+04
 smp_gen
 smp_siz
-smp_ale_cnt
+smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
-itn_num <- 5e+04
+itn_num <- 2e+04
 
-system.time(PMMH <- cmprunPMMH(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, itn_num))
+system.time(PMMH <- cmprunPMMH(s_b, s_c, r, N, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num))
 
-save(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, itn_num, PMMH,
-     file = "./Output/Output v2.1/Test v2.1/TEST_2L_PMMH.rda")
+save(s_b, s_c, r, N, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, PMMH,
+     file = "./Output/Output v1.0/Test/PMMH.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_PMMH.rda")
+load("./Output/Output v1.0/Test/PMMH.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+load("./Output/Output v1.0/Test/SimData.rda")
 
-sel_cof_A_chn <- PMMH$sel_cof_A_chn
-sel_cof_B_chn <- PMMH$sel_cof_B_chn
-pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_PMMH_Traceplot.pdf", width = 20, height = 10)
+s_b_chn <- PMMH$s_b_chn
+s_c_chn <- PMMH$s_c_chn
+
+pdf(file = "./Output/Output v1.0/Test/PMMH_Traceplot.pdf", width = 12, height = 9)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
-plot(1:itn_num, sel_cof_A_chn[1:itn_num], type = 'l',
+plot(1:itn_num, s_b_chn[1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient at locus A")
-abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-plot(1:itn_num, sel_cof_B_chn[1:itn_num], type = 'l',
+     main = "Trace plot of the selection coefficient of the black phenotype")
+abline(h = s_b, col = 'red', lty = 2, lwd = 2)
+plot(1:itn_num, s_c_chn[1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient at locus B")
-abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+     main = "Trace plot of the selection coefficient of the chestnut phenotype")
+abline(h = s_c, col = 'red', lty = 2, lwd = 2)
 dev.off()
 
-brn_num <- 1e+04
-sel_cof_A_chn <- sel_cof_A_chn[brn_num:length(sel_cof_A_chn)]
-sel_cof_B_chn <- sel_cof_B_chn[brn_num:length(sel_cof_B_chn)]
+brn_num <- 4e+03
+s_b_chn <- s_b_chn[brn_num:length(s_b_chn)]
+s_c_chn <- s_c_chn[brn_num:length(s_c_chn)]
 
 thn_num <- 8e+00
-sel_cof_A_chn <- sel_cof_A_chn[(1:round(length(sel_cof_A_chn) / thn_num)) * thn_num]
-sel_cof_B_chn <- sel_cof_B_chn[(1:round(length(sel_cof_B_chn) / thn_num)) * thn_num]
+s_b_chn <- s_b_chn[(1:round(length(s_b_chn) / thn_num)) * thn_num]
+s_c_chn <- s_c_chn[(1:round(length(s_c_chn) / thn_num)) * thn_num]
+
+s_b_mmse <- mean(s_b_chn)
+s_c_mmse <- mean(s_c_chn)
+
+pdf(file = "./Output/Output v1.0/Test/PMMH_MarginalPosterior.pdf", width = 16, height = 6)
+par(mfrow = c(3, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
+hist(s_b_chn, breaks = seq(min(s_b_chn), max(s_b_chn), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Posterior for the selection coefficient of the black phenotype")
+lines(density(s_b_chn), lwd = 2, col = 'black')
+abline(v = s_b, col = 'red', lty = 2, lwd = 2)
+abline(v = s_b_mmse, col = 'black', lty = 2, lwd = 2)
+
+hist(s_c_chn, breaks = seq(min(s_c_chn), max(s_c_chn), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Posterior for the selection coefficient of the chestnut phenotype")
+lines(density(s_c_chn), lwd = 2, col = 'black')
+abline(v = s_c, col = 'red', lty = 2, lwd = 2)
+abline(v = s_c_mmse, col = 'black', lty = 2, lwd = 2)
+dev.off()
 
 grd_num <- 1e+03
-sel_cof_pdf <- kde2d(sel_cof_A_chn, sel_cof_B_chn, n = grd_num)
-pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_PMMH_Posterior.pdf", width = 10, height = 10)
+sel_cof_pdf <- kde2d(s_b_chn, s_c_chn, n = grd_num)
+pdf(file = "./Output/Output v1.0/Test/PMMH_JointPosterior.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient at locus A", ylab = "Selection coefficient at locus B",
-      main = "Posterior for the selection coefficients at loci A and B")
-abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+      xlab = "Selection coefficient of the black phenotype", ylab = "Selection coefficient of the chestnut phenotype",
+      main = "Posterior for the selection coefficients of the black and chestnut phenotypes")
+abline(v = s_b, col = 'red', lty = 2, lwd = 2)
+abline(h = s_c, col = 'red', lty = 2, lwd = 2)
 dev.off()
 
 ########################################
 
 #' Run the Bayesian procedure for the inference of natural selection
 #' Parameter settings
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' @param s_b the selection coefficient of the black phenotype
+#' @param s_c the selection coefficient of the chestnut phenotype
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt 
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
@@ -507,79 +525,58 @@ dev.off()
 #' @param thn_num the number of the iterations for thinning
 #' @param grd_num the number of the grids in the kernel density estimation
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+load("./Output/Output v1.0/Test/SimData.rda")
 
 set.seed(test_seed)
 
-sel_cof <- c(0e+00, 0e+00)
-dom_par <- c(5e-01, 5e-01)
-rec_rat <- 1e-03
-pop_siz <- 5e+03
+s_b <- 0e+00
+s_c <- 0e+00
+r <- 5e-01
+N <- 1e+04
 smp_gen
 smp_siz
-smp_ale_cnt
+smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
-itn_num <- 5e+04
-brn_num <- 1e+04
+itn_num <- 2e+04
+brn_num <- 4e+03
 thn_num <- 8e+00
-grd_num <- 1e+03
 
-system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, grd_num))
+system.time(BayesianProcedure <- cmprunBayesianProcedure(ss_b, s_c, r, N, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
 
-save(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_ale_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, grd_num, BayesianProcedure,
-     file = "./Output/Output v2.1/Test v2.1/TEST_2L_BayesianProcedure.rda")
+save(s_b, s_c, r, N, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
+     file = "./Output/Output v1.0/Test/BayesianProcedure.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_BayesianProcedure.rda")
+load("./Output/Output v1.0/Test/BayesianProcedure.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+load("./Output/Output v1.0/Test/SimData.rda")
 
-sel_cof_A_chn <- BayesianProcedure$sel_cof_A_chn
-sel_cof_B_chn <- BayesianProcedure$sel_cof_B_chn
+s_b_chn <- BayesianProcedure$s_b_chn
+s_c_chn <- BayesianProcedure$s_c_chn
 
-sel_cof_pdf <- BayesianProcedure$sel_cof_pdf
+s_b_mmse <- BayesianProcedure$s_b_mmse
+s_c_mmse <- BayesianProcedure$s_c_mmse
 
-sel_cof_A_map <- BayesianProcedure$sel_cof_A_map
-sel_cof_B_map <- BayesianProcedure$sel_cof_B_map
+s_c_hpd <- BayesianProcedure$s_c_hpd
+s_b_hpd <- BayesianProcedure$s_b_hpd
 
-sel_cof_A_mmse <- BayesianProcedure$sel_cof_A_mmse
-sel_cof_B_mmse <- BayesianProcedure$sel_cof_B_mmse
-
-sel_cof_B_hpd <- BayesianProcedure$sel_cof_B_hpd
-sel_cof_A_hpd <- BayesianProcedure$sel_cof_A_hpd
-
-pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_BayesianProcedure_Posterior.pdf", width = 20, height = 10)
-par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
-layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
-image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient at locus A", ylab = "Selection coefficient at locus B",
-      main = "Joint posterior for the selection coefficients at loci A and B")
-abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_A_map, col = 'black', lty = 4, lwd = 2)
-abline(h = sel_cof_B_map, col = 'black', lty = 4, lwd = 2)
-abline(v = sel_cof_A_mmse, col = 'black', lty = 2, lwd = 2)
-abline(h = sel_cof_B_mmse, col = 'black', lty = 2, lwd = 2)
-
-hist(sel_cof_A_chn, breaks = seq(min(sel_cof_A_chn), max(sel_cof_A_chn), length.out = 50), freq = FALSE,
+pdf(file = "./Output/Output v1.0/Test/BayesianProcedure_Posterior.pdf", width = 16, height = 6)
+par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
+hist(s_b_chn, breaks = seq(min(s_b_chn), max(s_b_chn), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients at locus A")
-lines(density(sel_cof_A_chn), lwd = 2, col = 'black')
-abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_A_map, col = 'black', lty = 4, lwd = 2)
-abline(v = sel_cof_A_mmse, col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_A_hpd[1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_A_hpd[2], col = 'blue', lty = 2, lwd = 2)
+     main = "Posterior for the selection coefficients of the black phenotype")
+lines(density(s_b_chn), lwd = 2, col = 'black')
+abline(v = s_b, col = 'red', lty = 2, lwd = 2)
+abline(v = s_b_hpd[1], col = 'blue', lty = 2, lwd = 2)
+abline(v = s_b_hpd[2], col = 'blue', lty = 2, lwd = 2)
 
-hist(sel_cof_B_chn, breaks = seq(min(sel_cof_B_chn), max(sel_cof_B_chn), length.out = 50), freq = FALSE,
+hist(s_c_chn, breaks = seq(min(s_c_chn), max(s_c_chn), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients at locus B")
-lines(density(sel_cof_B_chn), lwd = 2, col = 'black')
-abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_B_map, col = 'black', lty = 4, lwd = 2)
-abline(v = sel_cof_B_mmse, col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_B_hpd[1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_B_hpd[2], col = 'blue', lty = 2, lwd = 2)
+     main = "Posterior for the selection coefficients of the chestnut phenotype")
+lines(density(s_c_chn), lwd = 2, col = 'black')
+abline(v = s_c, col = 'red', lty = 2, lwd = 2)
+abline(v = s_c_hpd[1], col = 'blue', lty = 2, lwd = 2)
+abline(v = s_c_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ################################################################################
