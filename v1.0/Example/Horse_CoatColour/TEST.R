@@ -249,14 +249,14 @@ smp_ale_cnt <- SimData$smp_ale_cnt
 pop_ale_frq <- SimData$pop_ale_frq
 
 save(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_hap_cnt, pop_hap_frq, smp_ale_cnt, pop_ale_frq,
-     file = "./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+     file = "./Output/Output v1.0/Test/SimData.rda")
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+load("./Output/Output v1.0/Test/SimData.rda")
 
 k <- min(smp_gen):max(smp_gen)
 smp_ale_frq <- smp_ale_cnt %*% diag(1 / smp_siz)
 
-pdf(file = "./Output/Output v2.1/Test v2.1/TEST_2L_SimData.pdf", width = 20, height = 10)
+pdf(file = "./Output/Output v1.0/Test/SimData.pdf", width = 20, height = 10)
 par(mfrow = c(1, 2), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 plot(k, pop_ale_frq[1, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(pop_ale_frq[1, ], smp_ale_frq[1, ]), max(pop_ale_frq[1, ], smp_ale_frq[1, ])),
@@ -269,7 +269,7 @@ plot(k, pop_ale_frq[2, ], type = 'l', lwd = 1.5,
      xlab = "Generation", ylab = "Allele frequency",
      main = "Mutant allele at locus B")
 points(smp_gen, smp_ale_frq[2, ], col = 'red', pch = 17, cex = 1)
-title("A simulated dataset without missing values generated with the Wright-Fisher model", outer = TRUE)
+title("A simulated dataset generated with the Wright-Fisher model", outer = TRUE)
 dev.off()
 
 ########################################
@@ -286,7 +286,7 @@ dev.off()
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
-load("./Output/Output v2.1/Test v2.1/TEST_2L_SimData.rda")
+load("./Output/Output v1.0/Test/SimData.rda")
 
 set.seed(test_seed)
 
