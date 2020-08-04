@@ -31,7 +31,7 @@ sourceCpp("./CFUN.cpp")
 #' parameter settings
 #' @param s_b the selection coefficient of the black phenotype
 #' @param s_c the selection coefficient of the chestnut phenotype
-#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
 #' @param N the number of individuals in the population
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
@@ -55,7 +55,7 @@ cmpsimulateTLWFMS <- cmpfun(simulateTLWFMS)
 #' Parameter setting
 #' @param s_b the selection coefficient of the black phenotype
 #' @param s_c the selection coefficient of the chestnut phenotype
-#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
 #' @param N the number of individuals in the population
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
@@ -87,9 +87,8 @@ cmpsimulateTLWFDS <- cmpfun(simulateTLWFDS)
 #' @param model = "WFM"/"WFD" (return the observations from the underlying population under the WFM or WFD)
 #' @param s_b the selection coefficient of the black phenotype
 #' @param s_c the selection coefficient of the chestnut phenotype
-#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
 #' @param N the number of individuals in the population
-#' @param init_halpo_freq the initial haplotype frequencies of the population
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
@@ -136,7 +135,7 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 #' Parameter setting
 #' @param s_b the selection coefficient of the black phenotype
 #' @param s_c the selection coefficient of the chestnut phenotype
-#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
 #' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
@@ -163,7 +162,7 @@ cmprunBPF <- cmpfun(runBPF)
 #' Parameter settings
 #' @param s_b the selection coefficient of the black phenotype
 #' @param s_c the selection coefficient of the chestnut phenotype
-#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
 #' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
@@ -188,7 +187,7 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 #' Parameter settings
 #' @param s_b the selection coefficient of the black phenotype
 #' @param s_c the selection coefficient of the chestnut phenotype
-#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
 #' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
@@ -217,20 +216,19 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' Parameter settings
 #' @param s_b the selection coefficient of the black phenotype
 #' @param s_c the selection coefficient of the chestnut phenotype
-#' @param r_cb the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
+#' @param r the recombination rate between ASIP and MC1R (r_bu = 0.5 is predetermined since ASIP and MC1R are located on a separate chromosome)
 #' @param N the number of individuals in the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt 
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
 #' @param brn_num the number of the iterations for burn-in
 #' @param thn_num the number of the iterations for thinning
-#' @param grd_num the number of the grids in the kernel density estimation
 
 #' Standard version
-runBayesianProcedure <- function(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, grd_num) {
+runBayesianProcedure <- function(s_b, s_c, r, N, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num) {
   # set the recombination rate between ASIP and MC1R to 0.5
   r <- 0.5
 
