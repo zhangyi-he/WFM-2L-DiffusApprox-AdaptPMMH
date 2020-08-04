@@ -21,7 +21,7 @@ library("ggplot2")
 #install.packages("plot3D")
 library("plot3D")
 
-setwd("~/Dropbox/Jeffery He/iResearch/Publications/2016/HE2020-WFM-3L-DiffusApprox-PMMH-Cepaea")
+setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2020-WFM-2L-DiffusApprox-PMMH-Horse")
 
 ################################################################################
 
