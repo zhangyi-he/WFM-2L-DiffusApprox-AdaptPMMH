@@ -1,0 +1,247 @@
+#' @title Inferring natural selection acting on horse coat colours and patterns during the process of domestication from ancient DNA data
+#' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
+
+#' version 1.0
+
+#' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories
+
+#' R functions
+
+#install.packages("MASS")
+library("MASS")
+
+#install.packages("coda")
+library("coda")
+
+#install.packages("inline")
+library("inline")
+#install.packages("Rcpp")
+library("Rcpp")
+#install.packages("RcppArmadillo")
+library("RcppArmadillo")
+
+#install.packages("compiler")
+library("compiler")
+#enableJIT(1)
+
+# call C++ functions
+sourceCpp("./Code/Code v1.0/CFUN_COL.cpp")
+
+################################################################################
+
+#' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher model with selection
+#' Parameter setting
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the number of the horses in the population
+#' @param int_frq the initial haplotype frequencies of the population
+#' @param int_gen the first generation of the simulated haplotype frequency trajectories
+#' @param lst_gen the last generation of the simulated haplotype frequency trajectories
+
+#' Standard version
+simulateWFM <- function(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen) {
+  fts_mat <- calculateFitnessMat_arma(sel_cof)
+
+  frq_pth <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+  frq_pth <- as.matrix(frq_pth)
+
+  return(frq_pth)
+}
+#' Compiled version
+cmpsimulateWFM <- cmpfun(simulateWFM)
+
+########################################
+
+#' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
+#' Parameter setting
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the number of the horses in the population
+#' @param int_frq the initial haplotype frequencies of the population
+#' @param int_gen the first generation of the simulated haplotype frequency trajectories
+#' @param lst_gen the last generation of the simulated haplotype frequency trajectories
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param dat_aug = TRUE/FALSE (return the simulated sample trajectory with data augmentation or not)
+
+#' Standard version
+simulateWFD <- function(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE) {
+  frq_pth <- simulateWFD_arma(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num)
+  frq_pth <- as.matrix(frq_pth)
+
+  if (dat_aug == FALSE) {
+    return(frq_pth[, (0:(lst_gen - int_gen)) * ptn_num + 1])
+  } else {
+    return(frq_pth)
+  }
+}
+#' Compiled version
+cmpsimulateWFD <- cmpfun(simulateWFD)
+
+########################################
+
+#' Simulate the hidden Markov model
+#' Parameter setting
+#' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the number of the horses in the population
+#' @param int_frq the initial haplotype frequencies of the population
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param ptn_num the number of the subintervals divided per generation in the Euler-Maruyama method for the WFD
+
+#' Standard version
+simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, ...) {
+  int_gen <- min(smp_gen)
+  lst_gen <- max(smp_gen)
+
+  # generate the population haplotype frequency trajectories and the population allele frequency trajectories
+  if (model == "WFM") {
+    pop_hap_frq <- cmpsimulateWFM(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+  }
+  if (model == "WFD") {
+    pop_hap_frq <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
+  }
+  pop_hap_frq <- as.matrix(pop_hap_frq)
+  pop_hap_frq <- pop_hap_frq[, smp_gen - int_gen + 1]
+
+  # generate the sample genotype counts at all sampling time points
+  pop_gen_frq <- matrix(NA, nrow = 10, ncol = length(smp_gen))
+  smp_gen_cnt <- matrix(NA, nrow = 10, ncol = length(smp_gen))
+  for (k in 1:length(smp_gen)) {
+    gen_frq <- pop_hap_frq[, k] %*% t(pop_hap_frq[, k])
+    pop_gen_frq[, k] <- as.vector(diag(gen_frq) + 2 * upper.tri(gen_frq, diag = FALSE))
+    smp_gen_cnt[, k] <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, k])
+  }
+
+  return(list(smp_gen = smp_gen,
+              smp_siz = smp_siz,
+              smp_gen_cnt = smp_gen_cnt,
+              pop_gen_frq = pop_gen_frq,
+              pop_hap_frq = pop_hap_frq))
+}
+#' Compiled version
+cmpsimulateHMM <- cmpfun(simulateHMM)
+
+########################################
+
+#' Run the bootstrap particle filter (BPF) with the two-locus Wright-Fisher diffusion with selection
+#' Parameter setting
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the number of the horses in the population
+#' @param int_frq the initial haplotype frequencies of the population
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param pcl_num the number of particles generated in the bootstrap particle filter
+
+#' Standard version
+runBPF <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num) {
+  # run the BPF
+  BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num)
+
+  return(list(lik = BPF$lik,
+              wght = BPF$wght,
+              pop_frq_pre_resmp = BPF$part_pre_resmp,
+              pop_frq_pst_resmp = BPF$part_pst_resmp))
+}
+#' Compiled version
+cmprunBPF <- cmpfun(runBPF)
+
+########################################
+
+#' Calculate the optimal particle number in the particle marginal Metropolis-Hastings (PMMH)
+#' Parameter settings
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the number of the horses in the population
+#' @param int_frq the initial haplotype frequencies of the population
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param pcl_num the number of particles generated in the bootstrap particle filter
+#' @param gap_num the number of particles increased or decreased in the optimal particle number search
+
+#' Standard version
+calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num) {
+  OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
+
+  return(list(opt_pcl_num = as.vector(OptNum$opt_pcl_num),
+              log_lik_sdv = as.vector(OptNum$log_lik_sdv)))
+}
+#' Compiled version
+cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
+
+########################################
+
+#' Run the particle marginal Metropolis-Hastings (PMMH)
+#' Parameter settings
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the number of the horses in the population
+#' @param int_frq the initial haplotype frequencies of the population
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param pcl_num the number of particles generated in the bootstrap particle filter
+#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
+
+#' Standard version
+runPMMH <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num) {
+  # run the PMMH
+  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+  sel_cof_chn <- as.matrix(sel_cof_chn)
+
+  return(sel_cof_chn)
+}
+#' Compiled version
+cmprunPMMH <- cmpfun(runPMMH)
+
+########################################
+
+#' Run the Bayesian procedure for the inference of natural selection
+#' Parameter settings
+#' @param sel_cof the selection coefficients at loci A and B
+#' @param dom_par the dominance parameters at loci A and B
+#' @param rec_rat the recombination rate between loci A and B
+#' @param pop_siz the number of the diploid individuals in the population
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
+#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param pcl_num the number of particles generated in the bootstrap particle filter
+#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
+#' @param brn_num the number of the iterations for burn-in
+#' @param thn_num the number of the iterations for thinning
+#' @param grd_num the number of the grids in the kernel density estimation
+
+#' Standard version
+runBayesianProcedure <- function(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, grd_num) {
+  # run the PMMH
+  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+  sel_cof_chn <- as.matrix(sel_cof_chn)
+
+  # burn-in and thinning
+  sel_cof_chn <- sel_cof_chn[, brn_num:length(sel_cof_A_chn)]
+  sel_cof_chn <- sel_cof_chn[, (1:round(length(sel_cof_A_chn) / thn_num)) * thn_num]
+
+  # MMSE estimates for the selection coefficients
+  sel_cof_est <- rowMeans(sel_cof_chn)
+
+  # 95% HPD intervals for the selection coefficients
+  sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
+  sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
+  sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
+
+  return(list(sel_cof_est = sel_cof_est,
+              sel_cof_hpd = sel_cof_hpd,
+              sel_cof_chn = sel_cof_chn))
+}
+#' Compiled version
+cmprunBayesianProcedure <- cmpfun(runBayesianProcedure)
+
+################################################################################
