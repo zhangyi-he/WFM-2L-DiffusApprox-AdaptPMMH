@@ -1,1 +1,1 @@
-# Inferring fluctuating selection acting on horse coat colour and pattern from ancient DNA data
+# Inferring natural selection acting on horse coat colours and patterns during the process of domestication from ancient DNA data
