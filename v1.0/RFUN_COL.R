@@ -7,6 +7,9 @@
 
 #' R functions
 
+#install.packages("purrr")
+library("purrr")
+
 #install.packages("MASS")
 library("MASS")
 
@@ -42,10 +45,12 @@ sourceCpp("./Code/Code v1.0/CFUN_COL.cpp")
 simulateWFM <- function(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen) {
   fts_mat <- calculateFitnessMat_arma(sel_cof)
 
-  frq_pth <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
-  frq_pth <- as.matrix(frq_pth)
+  WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+  hap_frq_pth <- as.matrix(WFM$hap_frq_pth)
+  gen_frq_pth <- as.matrix(WFM$gen_frq_pth)
 
-  return(frq_pth)
+  return(list(hap_frq_pth = hap_frq_pth,
+              gen_frq_pth = gen_frq_pth))
 }
 #' Compiled version
 cmpsimulateWFM <- cmpfun(simulateWFM)
@@ -95,28 +100,40 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_
   int_gen <- min(smp_gen)
   lst_gen <- max(smp_gen)
 
-  # generate the population haplotype frequency trajectories and the population allele frequency trajectories
+  # generate the population haplotype and genotype frequency trajectories
   if (model == "WFM") {
-    pop_hap_frq <- cmpsimulateWFM(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+    WFM <- cmpsimulateWFM(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+    pop_hap_frq <- WFM$hap_frq_pth
+    pop_gen_frq <- WFM$gen_frq_pth
   }
   if (model == "WFD") {
     pop_hap_frq <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
+    fts_mat <- calculateFitnessMat_arma(sel_cof)
+    pop_gen_frq <- matrix(NA, nrow = 10, ncol = ncol(pop_hap_frq))
+    for (k in 1:ncol(pop_hap_frq)) {
+      hap_frq <- pop_hap_frq[, k]
+      gen_frq <- fts_mat * (hap_frq %*% t(hap_frq)) / sum(fts_mat * (hap_frq %*% t(hap_frq)))
+      gen_frq[lower.tri(gen_frq, diag = FALSE)] <- NA
+      pop_gen_frq[, k] <- discard(as.vector(2 * gen_frq - diag(diag(gen_frq), nrow = 4, ncol = 4)), is.na)
+    }
   }
   pop_hap_frq <- as.matrix(pop_hap_frq)
-  pop_hap_frq <- pop_hap_frq[, smp_gen - int_gen + 1]
+  pop_gen_frq <- as.matrix(pop_gen_frq)
 
   # generate the sample genotype counts at all sampling time points
-  pop_gen_frq <- matrix(NA, nrow = 10, ncol = length(smp_gen))
-  smp_gen_cnt <- matrix(NA, nrow = 10, ncol = length(smp_gen))
+  smp_gen_cnt <- matrix(NA, nrow = 9, ncol = length(smp_gen))
+  smp_gen_frq <- matrix(NA, nrow = 9, ncol = length(smp_gen))
   for (k in 1:length(smp_gen)) {
-    gen_frq <- pop_hap_frq[, k] %*% t(pop_hap_frq[, k])
-    pop_gen_frq[, k] <- as.vector(diag(gen_frq) + 2 * upper.tri(gen_frq, diag = FALSE))
-    smp_gen_cnt[, k] <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, k])
+    gen_cnt <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
+    gen_cnt[5] <- gen_cnt[5] + gen_cnt[7]
+    smp_gen_cnt[, k] <- gen_cnt[-7]
+    smp_gen_frq[, k] <- smp_gen_cnt[, k] / smp_siz[k]
   }
 
   return(list(smp_gen = smp_gen,
               smp_siz = smp_siz,
               smp_gen_cnt = smp_gen_cnt,
+              smp_gen_frq = smp_gen_frq,
               pop_gen_frq = pop_gen_frq,
               pop_hap_frq = pop_hap_frq))
 }
@@ -142,10 +159,23 @@ runBPF <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num
   # run the BPF
   BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num)
 
-  return(list(lik = BPF$lik,
-              wght = BPF$wght,
-              pop_frq_pre_resmp = BPF$part_pre_resmp,
-              pop_frq_pst_resmp = BPF$part_pst_resmp))
+  lik <- BPF$lik
+  wght <- BPF$wght
+  hap_frq_pre_resmp <- BPF$hap_frq_pre_resmp
+  hap_frq_pst_resmp <- BPF$hap_frq_pst_resmp
+  gen_frq_pre_resmp <- BPF$gen_frq_pre_resmp
+  gen_frq_pre_resmp[5, , ] <- gen_frq_pre_resmp[5, , ] + gen_frq_pre_resmp[7, , ]
+  gen_frq_pre_resmp <- gen_frq_pre_resmp[-7, , ]
+  gen_frq_pst_resmp <- BPF$gen_frq_pst_resmp
+  gen_frq_pst_resmp[5, , ] <- gen_frq_pst_resmp[5, , ] + gen_frq_pst_resmp[7, , ]
+  gen_frq_pst_resmp <- gen_frq_pst_resmp[-7, , ]
+
+  return(list(lik = lik,
+              wght = wght,
+              hap_frq_pre_resmp = hap_frq_pre_resmp,
+              hap_frq_pst_resmp = hap_frq_pst_resmp,
+              gen_frq_pre_resmp = gen_frq_pre_resmp,
+              gen_frq_pst_resmp = gen_frq_pst_resmp))
 }
 #' Compiled version
 cmprunBPF <- cmpfun(runBPF)
@@ -217,17 +247,16 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
 #' @param brn_num the number of the iterations for burn-in
 #' @param thn_num the number of the iterations for thinning
-#' @param grd_num the number of the grids in the kernel density estimation
 
 #' Standard version
-runBayesianProcedure <- function(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, grd_num) {
+runBayesianProcedure <- function(sel_cof, dom_par, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num) {
   # run the PMMH
   sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   sel_cof_chn <- as.matrix(sel_cof_chn)
 
   # burn-in and thinning
-  sel_cof_chn <- sel_cof_chn[, brn_num:length(sel_cof_A_chn)]
-  sel_cof_chn <- sel_cof_chn[, (1:round(length(sel_cof_A_chn) / thn_num)) * thn_num]
+  sel_cof_chn <- sel_cof_chn[, brn_num:length(sel_cof_chn)]
+  sel_cof_chn <- sel_cof_chn[, (1:round(length(sel_cof_chn) / thn_num)) * thn_num]
 
   # MMSE estimates for the selection coefficients
   sel_cof_est <- rowMeans(sel_cof_chn)
