@@ -2,7 +2,6 @@
 #' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-
 #' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories (N/A is not allowed)
 
 #' R functions
@@ -108,7 +107,6 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_
   if (model == "WFD") {
     pop_hap_frq <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
     pop_hap_frq <- as.matrix(pop_hap_frq)
-
     pop_gen_frq <- matrix(NA, nrow = 10, ncol = ncol(pop_hap_frq))
     fts_mat <- calculateFitnessMat_arma(sel_cof)
     for (k in 1:ncol(pop_hap_frq)) {
