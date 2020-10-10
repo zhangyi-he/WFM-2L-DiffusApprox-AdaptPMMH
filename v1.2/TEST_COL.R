@@ -3,7 +3,7 @@
 
 #' version 1.2
 
-#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and demographic histories (N/A is not allowed)
+#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -112,7 +112,7 @@ evt_gen <- 210
 int_gen <- 0
 lst_gen <- 500
 ptn_num <- 5e+00
-sim_num <- 1e+05
+sim_num <- 1e+06
 
 smp_WFM <- matrix(NA, nrow = 4, ncol = sim_num)
 smp_WFD <- matrix(NA, nrow = 4, ncol = sim_num)
