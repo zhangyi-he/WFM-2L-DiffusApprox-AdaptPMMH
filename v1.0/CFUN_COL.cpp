@@ -3,7 +3,7 @@
 
 // version 1.0
 
-// Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories
+// Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories (N/A is not allowed)
 
 // C functions
 
@@ -553,7 +553,8 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
     cout << "iteration: " << i + 1 << endl;
 
     // draw the candidates of the selection coefficients from the random walk proposal
-    sel_cof_chn.col(i) = sel_cof_chn.col(i - 1) + sel_cof_sd % arma::randu<arma::dcolvec>(2);
+    sel_cof_chn.col(i) = sel_cof_chn.col(i - 1) - sel_cof_sd % arma::randn<arma::dcolvec>(2);
+    // cout << sel_cof_chn.col(i) << endl;
 
     if (arma::any(sel_cof_chn.col(i) < -1)) {
       sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
@@ -565,10 +566,12 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
       // calculate the likelihood
       log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
+      // cout << log_lik_chn(i) << endl;
 
       // calculate the acceptance ratio
       apt_rto = exp(log_lik_chn(i) - log_lik_chn(i - 1));
       //apt_rto = exp((log_pri_chn(i) + log_lik_chn(i) + log_psl_old_new) - (log_pri_chn(i - 1) + log_lik_chn(i - 1) + log_psl_new_old));
+      // cout << apt_rto << endl;
 
       if (arma::randu() > apt_rto) {
         sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
@@ -580,3 +583,4 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
   return sel_cof_chn;
 }
 /*************************/
+
