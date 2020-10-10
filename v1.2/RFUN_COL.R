@@ -2,7 +2,6 @@
 #' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.2
-
 #' Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 #' R functions
@@ -148,19 +147,20 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, evt_gen, smp_
     pop_hap_frq <- as.matrix(pop_hap_frq)
 
     pop_gen_frq <- matrix(NA, nrow = 10, ncol = ncol(pop_hap_frq))
-
-
-
-    fts_mat <- calculateFitnessMat_arma(sel_cof)
-    for (k in 1:ncol(pop_hap_frq)) {
+    fts_mat <- calculateFitnessMat_arma(sel_cof[, 1])
+    for (k in 1:(evt_gen - int_gen)) {
       hap_frq <- pop_hap_frq[, k]
       gen_frq <- fts_mat * (hap_frq %*% t(hap_frq)) / sum(fts_mat * (hap_frq %*% t(hap_frq)))
       gen_frq[lower.tri(gen_frq, diag = FALSE)] <- NA
       pop_gen_frq[, k] <- discard(as.vector(2 * gen_frq - diag(diag(gen_frq), nrow = 4, ncol = 4)), is.na)
     }
-
-
-
+    fts_mat <- calculateFitnessMat_arma(sel_cof[, 2])
+    for (k in (evt_gen - int_gen + 1):ncol(pop_hap_frq)) {
+      hap_frq <- pop_hap_frq[, k]
+      gen_frq <- fts_mat * (hap_frq %*% t(hap_frq)) / sum(fts_mat * (hap_frq %*% t(hap_frq)))
+      gen_frq[lower.tri(gen_frq, diag = FALSE)] <- NA
+      pop_gen_frq[, k] <- discard(as.vector(2 * gen_frq - diag(diag(gen_frq), nrow = 4, ncol = 4)), is.na)
+    }
     pop_gen_frq <- as.matrix(pop_gen_frq)
   }
 
