@@ -3,7 +3,7 @@
 
 // version 1.2
 
-// Horse coat colours (ASIP & MC1R) under non-constant natural selection and demographic histories (N/A is not allowed)
+// Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 // C functions
 
@@ -296,8 +296,6 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
 
   double lik = 1;
 
-  arma::dmat fts_mat = arma::zeros<arma::dmat>(4, 4);
-
   arma::uword evt_ind = arma::as_scalar(arma::find(smp_siz == 0));
 
   arma::dmat wght = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
@@ -309,6 +307,9 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
   arma::dcolvec wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat hap_frq_tmp = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat gen_frq_tmp = arma::zeros<arma::dmat>(10, pcl_num);
+
+  // before the event of interest
+  arma::dmat fts_mat = fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
 
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
@@ -349,9 +350,6 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
   }
 
   // run the bootstrap particle filter
-  
-  // before the event of interest
-  fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
   for (arma::uword k = 1; k < evt_ind; k++) {
     cout << "generation: " << smp_gen(k) << endl;
     wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
@@ -396,6 +394,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
 
   // after the event of interest
   fts_mat = calculateFitnessMat_arma(sel_cof.col(1));
+
   if (smp_gen(evt_ind) == smp_gen(evt_ind - 1)) {
     hap_frq_pre.slice(evt_ind) = hap_frq_pre.slice(evt_ind - 1);
     hap_frq_pst.slice(evt_ind) = hap_frq_pst.slice(evt_ind - 1);
@@ -479,13 +478,14 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
 
   double log_lik = 0;
 
-  arma::dmat fts_mat = arma::zeros<arma::dmat>(4, 4);
-
   arma::uword evt_ind = arma::as_scalar(arma::find(smp_siz == 0));
 
   arma::dcolvec wght = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat hap_frq_pre = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat hap_frq_pst = arma::zeros<arma::dmat>(4, pcl_num);
+
+  // before the event of interest
+  arma::dmat fts_mat = fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
 
   // initialise the particles
   hap_frq_pre = initialiseParticle(pcl_num);
@@ -509,8 +509,6 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
   }
 
   // run the bootstrap particle filter
-  // before the event of interest
-  fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
   for (arma::uword k = 1; k < evt_ind; k++) {
     wght = arma::zeros<arma::dcolvec>(pcl_num);
     arma::imat smp_gen_cnt = ptl_gen_cnt(k);
@@ -537,6 +535,7 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
 
   // after the event of interest
   fts_mat = calculateFitnessMat_arma(sel_cof.col(1));
+  
   if (smp_gen(evt_ind) != smp_gen(evt_ind - 1)) {
     for (arma::uword i = 0; i < pcl_num; i++) {
       hap_frq_pre.col(i) = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(evt_ind - 1), smp_gen(evt_ind)), ref_siz, hap_frq_pst.col(i), smp_gen(evt_ind - 1), smp_gen(evt_ind), ptn_num);
