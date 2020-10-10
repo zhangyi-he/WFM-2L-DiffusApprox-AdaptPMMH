@@ -31,8 +31,8 @@ source("./Code/Code v1.0/RFUN_COL.R")
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
-#' @param int_gen the first generation of the simulated haplotype frequency trajectories
-#' @param lst_gen the last generation of the simulated haplotype frequency trajectories
+#' @param int_gen the generation that the simulated haplotype frequency trajectories started
+#' @param lst_gen the generation that the simulated haplotype frequency trajectories ended
 
 sel_cof <- c(1e-02, 5e-03)
 rec_rat <- 5e-01
@@ -46,16 +46,16 @@ frq_pth <- cmpsimulateWFM(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen)$
 k <- int_gen:lst_gen
 plot(k, frq_pth[1, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the AE haplotype generated with the Wright-Fisher model")
+     main = "WFM: the AE haplotype frequency trajectory")
 plot(k, frq_pth[2, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the Ae haplotype generated with the Wright-Fisher model")
+     main = "WFM: the Ae haplotype frequency trajectory")
 plot(k, frq_pth[3, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the aE haplotype generated with the Wright-Fisher model")
+     main = "WFM: the aE haplotype frequency trajectory")
 plot(k, frq_pth[4, ], type = "l", lwd = 1.5,
      xlab = "Generation", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the ae haplotype generated with the Wright-Fisher model")
+     main = "WFM: the ae haplotype frequency trajectory")
 
 ########################################
 
@@ -65,8 +65,8 @@ plot(k, frq_pth[4, ], type = "l", lwd = 1.5,
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
-#' @param int_gen the first generation of the simulated haplotype frequency trajectories
-#' @param lst_gen the last generation of the simulated haplotype frequency trajectories
+#' @param int_gen the generation that the simulated haplotype frequency trajectories started
+#' @param lst_gen the generation that the simulated haplotype frequency trajectories ended
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param dat_aug = TRUE/FALSE (return the simulated sample trajectory with data augmentation or not)
 
@@ -83,16 +83,16 @@ frq_pth <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, 
 t <- (int_gen:(int_gen + (lst_gen - int_gen) * ptn_num)) / 2 / pop_siz
 plot(t, frq_pth[1, ], type = "l", lwd = 1.5,
      xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the AE haplotype generated with the Wright-Fisher diffusion")
+     main = "WFD: the AE haplotype frequency trajectory")
 plot(t, frq_pth[2, ], type = "l", lwd = 1.5,
      xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the Ae haplotype generated with the Wright-Fisher diffusion")
+     main = "WFD: the Ae haplotype frequency trajectory")
 plot(t, frq_pth[3, ], type = "l", lwd = 1.5,
      xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the aE haplotype generated with the Wright-Fisher diffusion")
+     main = "WFD: the aE haplotype frequency trajectory")
 plot(t, frq_pth[4, ], type = "l", lwd = 1.5,
      xlab = "Time", ylab = "Haplotype frequency",
-     main = "A frequency trajectory of the ae haplotype generated with the Wright-Fisher diffusion")
+     main = "WFD: the ae haplotype frequency trajectory")
 
 ########################################
 
@@ -171,47 +171,47 @@ k <- min(smp_gen):max(smp_gen)
 plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[1, ], pop_gen_frq[1, ]), max(smp_gen_frq[1, ], pop_gen_frq[1, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the AA/EE genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the AA/EE genotype")
 points(smp_gen, smp_gen_frq[1, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[2, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[2, ], pop_gen_frq[2, ]), max(smp_gen_frq[2, ], pop_gen_frq[2, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the AA/Ee genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the AA/Ee genotype")
 points(smp_gen, smp_gen_frq[2, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[3, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[3, ], pop_gen_frq[3, ]), max(smp_gen_frq[3, ], pop_gen_frq[3, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the AA/ee genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the AA/ee genotype")
 points(smp_gen, smp_gen_frq[3, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[4, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[4, ], pop_gen_frq[4, ]), max(smp_gen_frq[4, ], pop_gen_frq[4, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the Aa/EE genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the Aa/EE genotype")
 points(smp_gen, smp_gen_frq[4, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[5, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[5, ], pop_gen_frq[5, ]), max(smp_gen_frq[5, ], pop_gen_frq[5, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the Aa/Ee genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the Aa/Ee genotype")
 points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the aa/EE genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the aa/EE genotype")
 points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the Aa/ee genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the Aa/ee genotype")
 points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the aa/Ee genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the aa/Ee genotype")
 points(smp_gen, smp_gen_frq[8, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the aa/ee genotype generated with the Wright-Fisher model")
+     main = "WFM-HMM: the aa/ee genotype")
 points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 
 ####################
@@ -240,47 +240,47 @@ k <- min(smp_gen):max(smp_gen)
 plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[1, ], pop_gen_frq[1, ]), max(smp_gen_frq[1, ], pop_gen_frq[1, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the AA/EE genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the AA/EE genotype")
 points(smp_gen, smp_gen_frq[1, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[2, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[2, ], pop_gen_frq[2, ]), max(smp_gen_frq[2, ], pop_gen_frq[2, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the AA/Ee genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the AA/Ee genotype")
 points(smp_gen, smp_gen_frq[2, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[3, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[3, ], pop_gen_frq[3, ]), max(smp_gen_frq[3, ], pop_gen_frq[3, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the AA/ee genotype generated with the Wright-Fisher model")
+     main = "WFD-HMM: the AA/ee genotype")
 points(smp_gen, smp_gen_frq[3, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[4, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[4, ], pop_gen_frq[4, ]), max(smp_gen_frq[4, ], pop_gen_frq[4, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the Aa/EE genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the Aa/EE genotype")
 points(smp_gen, smp_gen_frq[4, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[5, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[5, ], pop_gen_frq[5, ]), max(smp_gen_frq[5, ], pop_gen_frq[5, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the Aa/Ee genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the Aa/Ee genotype")
 points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the aa/EE genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the aa/EE genotype")
 points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the Aa/ee genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the Aa/ee genotype")
 points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the aa/Ee genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the aa/Ee genotype")
 points(smp_gen, smp_gen_frq[8, ], col = 'red', pch = 17, cex = 1)
 plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
      xlab = "Generation", ylab = "Genotype frequency",
-     main = "A simulated dataset of the aa/ee genotype generated with the Wright-Fisher diffusion")
+     main = "WFD-HMM: the aa/ee genotype")
 points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 
 ################################################################################
@@ -370,7 +370,6 @@ dev.off()
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (constant)
-#' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -505,7 +504,6 @@ dev.off()
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (constant)
-#' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -553,7 +551,6 @@ dev.off()
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (constant)
-#' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -633,13 +630,12 @@ dev.off()
 
 #' Run the Bayesian procedure for the inference of natural selection
 #' Parameter settings
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
-#' @param pop_siz the number of the diploid individuals in the population
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
