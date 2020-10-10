@@ -107,7 +107,7 @@ int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 int_gen <- 0
 lst_gen <- 500
 ptn_num <- 5e+00
-sim_num <- 1e+05
+sim_num <- 1e+06
 
 smp_WFM <- matrix(NA, nrow = 4, ncol = sim_num)
 smp_WFD <- matrix(NA, nrow = 4, ncol = sim_num)
