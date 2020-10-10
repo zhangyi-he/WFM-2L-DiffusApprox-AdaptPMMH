@@ -35,7 +35,7 @@ source("./Code/Code v1.2/RFUN_COL.R")
 #' @param int_gen the generation that the simulated haplotype frequency trajectories started
 #' @param lst_gen the generation that the simulated haplotype frequency trajectories ended
 
-sel_cof <- c(1e-02, 5e-03)
+sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
@@ -74,7 +74,7 @@ plot(k, frq_pth[4, ], type = "l", lwd = 1.5,
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param dat_aug = TRUE/FALSE (return the simulated sample trajectory with data augmentation or not)
 
-sel_cof <- c(1e-02, 5e-03)
+sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 ref_siz <- 1e+04
@@ -103,7 +103,7 @@ plot(t, frq_pth[4, ], type = "l", lwd = 1.5,
 ########################################
 
 #' Compare the simulation generated with the Wright-Fisher model and the Wright-Fisher diffusion
-sel_cof <- c(1e-02, 5e-03)
+sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 ref_siz <- 1e+04
@@ -159,7 +159,7 @@ hist(smp_WFD[4, ], breaks = seq(min(smp_WFM[4, ], smp_WFD[4, ]), max(smp_WFM[4, 
 
 #' Simulate the dataset under the Wright-Fisher model
 model <- "WFM"
-sel_cof <- c(1e-02, 5e-03)
+sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
@@ -229,7 +229,7 @@ points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 
 #' Simulate the dataset under the Wright-Fisher diffusion
 model <- "WFD"
-sel_cof <- c(1e-02, 5e-03)
+sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
@@ -300,14 +300,13 @@ points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 21
+test_seed <- 27
 set.seed(test_seed)
 
 model <- "WFM"
-sel_cof <- c(1e-02, 5e-03)
+sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-ref_siz <- 1e+04
 int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 evt_gen <- 210
 smp_gen <- (0:10) * 50
@@ -401,7 +400,7 @@ set.seed(test_seed)
 sel_cof
 rec_rat
 pop_siz
-ref_siz
+ref_siz <- 1e+04
 evt_gen
 smp_gen
 smp_siz
@@ -540,6 +539,7 @@ set.seed(test_seed)
 sel_cof
 rec_rat
 pop_siz
+ref_siz <- 1e+04
 evt_gen
 smp_gen
 smp_siz
@@ -590,7 +590,7 @@ set.seed(test_seed)
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat
 pop_siz
-ref_siz
+ref_siz <- 1e+04
 evt_gen
 smp_gen
 smp_siz
@@ -612,74 +612,74 @@ pdf(file = "./Output/Output v1.2/TEST_PMMH_Traceplot.pdf", width = 12, height = 
 par(mfrow = c(4, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient of the black phenotype before the event")
+     main = "Trace plot of the black before the event")
 abline(h = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 plot(1:itn_num, sel_cof_chn[2, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient of the chestnut phenotype before the event")
+     main = "Trace plot of the chestnut before the event")
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient of the black phenotype after the event")
+     main = "Trace plot of the black after the event")
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient of the chestnut phenotype after the event")
+     main = "Trace plot of the chestnut after the event")
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
 brn_num <- 1e+04
-sel_cof_chn <- sel_cof_chn[, , brn_num:length(sel_cof_chn)]
+sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
 
 thn_num <- 8e+00
-sel_cof_chn <- sel_cof_chn[, , (1:round(length(sel_cof_chn) / thn_num)) * thn_num]
+sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
 
 sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
 sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
 sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
 
 sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
-sel_cof_hpd[, 1, 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
-sel_cof_hpd[, 2, 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
-sel_cof_hpd[, 1, 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
-sel_cof_hpd[, 2, 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
+sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
+sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
+sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
+sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
 pdf(file = "./Output/Output v1.2/TEST_PMMH_Posterior.pdf", width = 12, height = 9)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the black phenotype before the event")
+     main = "Posterior for the black before the event")
 lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the chestnut phenotype before the event")
+     main = "Posterior for the chestnut before the event")
 lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the black phenotype after the event")
+     main = "Posterior for the black after the event")
 lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the chestnut phenotype after the event")
+     main = "Posterior for the chestnut after the event")
 lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
@@ -708,16 +708,16 @@ set.seed(test_seed)
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat
 pop_siz
-ref_siz
+ref_siz <- 1e+04
 evt_gen
 smp_gen
 smp_siz
 smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
-itn_num <- 5e+04
-brn_num <- 1e+04
-thn_num <- 8e+00
+itn_num <- 1e+04
+brn_num <- 4e+03
+thn_num <- 3e+00
 
 system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
 
@@ -738,38 +738,38 @@ pdf(file = "./Output/Output v1.2/TEST_BayesianProcedure_Posterior.pdf", width = 
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the black phenotype before the event")
+     main = "Posterior for the black before the event")
 lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the chestnut phenotype before the event")
+     main = "Posterior for the chestnut before the event")
 lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the black phenotype after the event")
+     main = "Posterior for the black after the event")
 lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the chestnut phenotype after the event")
+     main = "Posterior for the chestnut after the event")
 lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
