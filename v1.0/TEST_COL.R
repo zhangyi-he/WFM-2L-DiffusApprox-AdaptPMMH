@@ -3,7 +3,7 @@
 
 #' version 1.0
 
-#' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories
+#' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories (N/A is not allowed)
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -29,7 +29,7 @@ source("./Code/Code v1.0/RFUN_COL.R")
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
 #' @param lst_gen the last generation of the simulated haplotype frequency trajectories
@@ -63,7 +63,7 @@ plot(k, frq_pth[4, ], type = "l", lwd = 1.5,
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
 #' @param lst_gen the last generation of the simulated haplotype frequency trajectories
@@ -141,7 +141,7 @@ hist(smp_WFD[4, ], breaks = seq(min(smp_WFM[4, ], smp_WFD[4, ]), max(smp_WFM[4, 
 #' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -163,6 +163,9 @@ smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
 smp_gen_frq <- sim_HMM_WFM$smp_gen_frq
 pop_gen_frq <- sim_HMM_WFM$pop_gen_frq
 pop_hap_frq <- sim_HMM_WFM$pop_hap_frq
+
+pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
+pop_gen_frq <- pop_gen_frq[-7, ]
 
 k <- min(smp_gen):max(smp_gen)
 plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
@@ -230,6 +233,9 @@ smp_gen_frq <- sim_HMM_WFD$smp_gen_frq
 pop_gen_frq <- sim_HMM_WFD$pop_gen_frq
 pop_hap_frq <- sim_HMM_WFD$pop_hap_frq
 
+pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
+pop_gen_frq <- pop_gen_frq[-7, ]
+
 k <- min(smp_gen):max(smp_gen)
 plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[1, ], pop_gen_frq[1, ]), max(smp_gen_frq[1, ], pop_gen_frq[1, ])),
@@ -280,7 +286,7 @@ points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 7
+test_seed <- 21
 set.seed(test_seed)
 
 model <- "WFM"
@@ -294,15 +300,18 @@ smp_siz <- rep(100, 11)
 sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 smp_gen <- sim_HMM_WFM$smp_gen
 smp_siz <- sim_HMM_WFM$smp_siz
-smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
+smp_cnt <- sim_HMM_WFM$smp_gen_cnt
 smp_gen_frq <- sim_HMM_WFM$smp_gen_frq
 pop_gen_frq <- sim_HMM_WFM$pop_gen_frq
 pop_hap_frq <- sim_HMM_WFM$pop_hap_frq
 
-save(sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, smp_gen_cnt, smp_gen_frq, pop_hap_frq, pop_gen_frq, pop_hap_frq,
+save(sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, smp_cnt, smp_gen_frq, pop_hap_frq, pop_gen_frq, pop_hap_frq,
      file = "./Output/Output v1.0/TEST_SimData.rda")
 
 load("./Output/Output v1.0/TEST_SimData.rda")
+
+pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
+pop_gen_frq <- pop_gen_frq[-7, ]
 
 pdf(file = "./Output/Output v1.0/TEST_SimData.pdf", width = 16, height = 12)
 par(mfrow = c(3, 3), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
@@ -360,7 +369,7 @@ dev.off()
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -377,13 +386,13 @@ rec_rat
 pop_siz
 smp_gen
 smp_siz
-smp_gen_cnt
+smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+05
 
-system.time(BPF <- cmprunBPF(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num))
+system.time(BPF <- cmprunBPF(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num))
 
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num, BPF,
+save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF,
      file = "./Output/Output v1.0/TEST_BPF.rda")
 
 load("./Output/Output v1.0/TEST_BPF.rda")
@@ -495,7 +504,7 @@ dev.off()
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -513,14 +522,14 @@ rec_rat
 pop_siz
 smp_gen
 smp_siz
-smp_gen_cnt
+smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
 gap_num <- 1e+02
 
-system.time(OptNum <- calculateOptimalParticleNum(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num, gap_num))
+system.time(OptNum <- calculateOptimalParticleNum(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num))
 
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num, gap_num, OptNum,
+save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num, OptNum,
      file = "./Output/Output v1.0/TEST_OptNum.rda")
 
 load("./Output/Output v1.0/TEST_OptNum.rda")
@@ -543,7 +552,7 @@ dev.off()
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -561,16 +570,16 @@ rec_rat
 pop_siz
 smp_gen
 smp_siz
-smp_gen_cnt
+smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
 itn_num <- 5e+04
 
-system.time(sel_cof_chn <- cmprunPMMH(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num, itn_num))
+system.time(sel_cof_chn <- cmprunPMMH(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num))
 
 load("./Output/Output v1.0/TEST_SimData.rda")
 
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
+save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
      file = "./Output/Output v1.0/TEST_PMMH.rda")
 
 load("./Output/Output v1.0/TEST_PMMH.rda")
@@ -646,18 +655,18 @@ rec_rat
 pop_siz
 smp_gen
 smp_siz
-smp_gen_cnt
+smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
 itn_num <- 5e+04
 brn_num <- 1e+04
 thn_num <- 8e+00
 
-system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
+system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
 
 load("./Output/Output v1.0/TEST_SimData.rda")
 
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_gen_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
+save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
      file = "./Output/Output v1.0/TEST_BayesianProcedure.rda")
 
 load("./Output/Output v1.0/TEST_BayesianProcedure.rda")
