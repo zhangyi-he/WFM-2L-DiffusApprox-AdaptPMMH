@@ -38,8 +38,8 @@ sourceCpp("./Code/Code v1.1/CFUN_COL.cpp")
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param int_frq the initial haplotype frequencies of the population
-#' @param int_gen the first generation of the simulated haplotype frequency trajectories
-#' @param lst_gen the last generation of the simulated haplotype frequency trajectories
+#' @param int_gen the generation that the simulated haplotype frequency trajectories started
+#' @param lst_gen the generation that the simulated haplotype frequency trajectories ended
 
 #' Standard version
 simulateWFM <- function(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen) {
@@ -64,8 +64,8 @@ cmpsimulateWFM <- cmpfun(simulateWFM)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param int_frq the initial haplotype frequencies of the population
-#' @param int_gen the first generation of the simulated haplotype frequency trajectories
-#' @param lst_gen the last generation of the simulated haplotype frequency trajectories
+#' @param int_gen the generation that the simulated haplotype frequency trajectories started
+#' @param lst_gen the generation that the simulated haplotype frequency trajectories ended
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param dat_aug = TRUE/FALSE (return the simulated sample trajectory with data augmentation or not)
 
@@ -110,17 +110,18 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_
   }
   if (model == "WFD") {
     pop_hap_frq <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
-    fts_mat <- calculateFitnessMat_arma(sel_cof)
+    pop_hap_frq <- as.matrix(pop_hap_frq)
+
     pop_gen_frq <- matrix(NA, nrow = 10, ncol = ncol(pop_hap_frq))
+    fts_mat <- calculateFitnessMat_arma(sel_cof)
     for (k in 1:ncol(pop_hap_frq)) {
       hap_frq <- pop_hap_frq[, k]
       gen_frq <- fts_mat * (hap_frq %*% t(hap_frq)) / sum(fts_mat * (hap_frq %*% t(hap_frq)))
       gen_frq[lower.tri(gen_frq, diag = FALSE)] <- NA
       pop_gen_frq[, k] <- discard(as.vector(2 * gen_frq - diag(diag(gen_frq), nrow = 4, ncol = 4)), is.na)
     }
+    pop_gen_frq <- as.matrix(pop_gen_frq)
   }
-  pop_hap_frq <- as.matrix(pop_hap_frq)
-  pop_gen_frq <- as.matrix(pop_gen_frq)
 
   # generate the sample genotype counts at all sampling time points
   smp_gen_cnt <- matrix(NA, nrow = 9, ncol = length(smp_gen))
@@ -150,7 +151,6 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
-#' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -191,7 +191,6 @@ cmprunBPF <- cmpfun(runBPF)
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
-#' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -201,6 +200,7 @@ cmprunBPF <- cmpfun(runBPF)
 
 #' Standard version
 calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num) {
+  # calculate the optimal particle number
   OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
 
   return(list(opt_pcl_num = as.vector(OptNum$opt_pcl_num),
@@ -217,7 +217,6 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
-#' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -240,9 +239,8 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 #' Run the Bayesian procedure for the inference of natural selection
 #' Parameter settings
-#' @param sel_cof the selection coefficients at loci A and B
-#' @param dom_par the dominance parameters at loci A and B
-#' @param rec_rat the recombination rate between loci A and B
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param smp_gen the sampling time points measured in one generation
@@ -255,7 +253,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param thn_num the number of the iterations for thinning
 
 #' Standard version
-runBayesianProcedure <- function(sel_cof, dom_par, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num) {
+runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num) {
   # run the PMMH
   sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   sel_cof_chn <- as.matrix(sel_cof_chn)
