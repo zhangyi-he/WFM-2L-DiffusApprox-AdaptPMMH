@@ -296,8 +296,6 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma
 
   double lik = 1;
 
-  arma::dmat fts_mat = arma::zeros<arma::dmat>(4, 4);
-
   arma::dmat wght = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
   arma::dcube hap_frq_pre = arma::zeros<arma::dcube>(4, pcl_num, smp_gen.n_elem);
   arma::dcube hap_frq_pst = arma::zeros<arma::dcube>(4, pcl_num, smp_gen.n_elem);
@@ -307,6 +305,8 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma
   arma::dcolvec wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat hap_frq_tmp = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat gen_frq_tmp = arma::zeros<arma::dmat>(10, pcl_num);
+
+  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
 
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
@@ -347,7 +347,6 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma
   }
 
   // run the bootstrap particle filter
-  fts_mat = calculateFitnessMat_arma(sel_cof);
   for (arma::uword k = 1; k < smp_gen.n_elem; k++) {
     cout << "generation: " << smp_gen(k) << endl;
     wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
@@ -404,11 +403,11 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
 
   double log_lik = 0;
 
-  arma::dmat fts_mat = arma::zeros<arma::dmat>(4, 4);
-
   arma::dcolvec wght = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat hap_frq_pre = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat hap_frq_pst = arma::zeros<arma::dmat>(4, pcl_num);
+
+  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
 
   // initialise the particles
   hap_frq_pre = initialiseParticle(pcl_num);
