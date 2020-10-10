@@ -287,8 +287,6 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
 
   double lik = 1;
 
-  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
-
   arma::dmat wght = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
   arma::dcube hap_frq_pre = arma::zeros<arma::dcube>(4, pcl_num, smp_gen.n_elem);
   arma::dcube hap_frq_pst = arma::zeros<arma::dcube>(4, pcl_num, smp_gen.n_elem);
@@ -298,6 +296,8 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
   arma::dcolvec wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat hap_frq_tmp = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat gen_frq_tmp = arma::zeros<arma::dmat>(10, pcl_num);
+
+  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
 
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
@@ -370,6 +370,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
       hap_frq_pst.shed_slices(k, smp_gen.n_elem - 1);
       gen_frq_pre.shed_slices(k, smp_gen.n_elem - 1);
       gen_frq_pst.shed_slices(k, smp_gen.n_elem - 1);
+
       break;
     }
   }
@@ -393,11 +394,11 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
 
   double log_lik = 0;
 
-  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
-
   arma::dcolvec wght = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat hap_frq_pre = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat hap_frq_pst = arma::zeros<arma::dmat>(4, pcl_num);
+
+  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
 
   // initialise the particles
   hap_frq_pre = initialiseParticle(pcl_num);
@@ -416,6 +417,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
     hap_frq_pst = hap_frq_pre.cols(indx);
   } else {
     log_lik = -(arma::datum::inf);
+
     return log_lik;
   }
 
@@ -439,6 +441,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
       hap_frq_pst = hap_frq_pre.cols(indx);
     } else {
       log_lik = -(arma::datum::inf);
+
       return log_lik;
     }
   }
@@ -554,24 +557,21 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
     // draw the candidates of the selection coefficients from the random walk proposal
     sel_cof_chn.col(i) = sel_cof_chn.col(i - 1) - sel_cof_sd % arma::randn<arma::dcolvec>(2);
-    // cout << sel_cof_chn.col(i) << endl;
 
     if (arma::any(sel_cof_chn.col(i) < -1)) {
       sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
       log_lik_chn(i) = log_lik_chn(i - 1);
     } else {
       // calculate the proposal
-      //double log_psl_old_new = log(arma::normpdf(sel_cof_chn(i - 1, 0), sel_cof_chn(i, 0), sel_cof_sd)) + log(arma::normpdf(sel_cof_chn(i - 1, 1), sel_cof_chn(i, 1), sel_cof_sd));
-      //double log_psl_new_old = log(arma::normpdf(sel_cof_chn(i, 0), sel_cof_chn(i - 1, 0), sel_cof_sd)) + log(arma::normpdf(sel_cof_chn(i, 1), sel_cof_chn(i - 1, 1), sel_cof_sd));
+      //double log_psl_old_new
+      //double log_psl_new_old
 
       // calculate the likelihood
       log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
-      // cout << log_lik_chn(i) << endl;
 
       // calculate the acceptance ratio
       apt_rto = exp(log_lik_chn(i) - log_lik_chn(i - 1));
       //apt_rto = exp((log_pri_chn(i) + log_lik_chn(i) + log_psl_old_new) - (log_pri_chn(i - 1) + log_lik_chn(i - 1) + log_psl_new_old));
-      // cout << apt_rto << endl;
 
       if (arma::randu() > apt_rto) {
         sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
