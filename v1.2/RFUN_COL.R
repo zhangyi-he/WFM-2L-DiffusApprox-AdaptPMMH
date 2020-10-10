@@ -28,7 +28,7 @@ library("compiler")
 #enableJIT(1)
 
 # call C++ functions
-sourceCpp("./Code/Code v1.1/CFUN_COL.cpp")
+sourceCpp("./Code/Code v1.2/CFUN_COL.cpp")
 
 ################################################################################
 
@@ -206,12 +206,12 @@ runBPF <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
-    
+
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
@@ -221,7 +221,7 @@ runBPF <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
@@ -275,12 +275,12 @@ calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
-    
+
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
@@ -290,7 +290,7 @@ calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
@@ -329,12 +329,12 @@ runPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_si
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
-    
+
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
@@ -344,7 +344,7 @@ runPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_si
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
@@ -385,12 +385,12 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
-    
+
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
@@ -400,7 +400,7 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
-    
+
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
@@ -412,8 +412,8 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
   sel_cof_chn <- as.array(sel_cof_chn)
 
   # burn-in and thinning
-  sel_cof_chn <- sel_cof_chn[, , brn_num:length(sel_cof_chn)]
-  sel_cof_chn <- sel_cof_chn[, , (1:round(length(sel_cof_chn) / thn_num)) * thn_num]
+  sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
+  sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
 
   # MMSE estimates for the selection coefficients
   sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
@@ -422,11 +422,10 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
 
   # 95% HPD intervals for the selection coefficients
   sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
-  sel_cof_hpd[1, 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
-  sel_cof_hpd[2, 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
-  sel_cof_hpd[1, 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
-  sel_cof_hpd[2, 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
-
+  sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
+  sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
+  sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
+  sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
   return(list(sel_cof_est = sel_cof_est,
               sel_cof_hpd = sel_cof_hpd,
