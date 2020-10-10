@@ -105,8 +105,8 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_
   # generate the population haplotype and genotype frequency trajectories
   if (model == "WFM") {
     WFM <- cmpsimulateWFM(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
-    pop_hap_frq <- WFM$hap_frq_pth
-    pop_gen_frq <- WFM$gen_frq_pth
+    pop_hap_frq <- as.matrix(WFM$hap_frq_pth)
+    pop_gen_frq <- as.matrix(WFM$gen_frq_pth)
   }
   if (model == "WFD") {
     pop_hap_frq <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
