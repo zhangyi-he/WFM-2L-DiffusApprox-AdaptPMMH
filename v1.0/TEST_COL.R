@@ -286,7 +286,7 @@ points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 21
+test_seed <- 27
 set.seed(test_seed)
 
 model <- "WFM"
@@ -585,19 +585,19 @@ pdf(file = "./Output/Output v1.0/TEST_PMMH_Traceplot.pdf", width = 12, height = 
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient of the black phenotype")
+     main = "Trace plot of the black")
 abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot of the selection coefficient of the chestnut phenotype")
+     main = "Trace plot of the chestnut")
 abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
 brn_num <- 1e+04
-sel_cof_chn <- sel_cof_chn[, brn_num:length(sel_cof_chn)]
+sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
 
 thn_num <- 8e+00
-sel_cof_chn <- sel_cof_chn[, (1:round(length(sel_cof_chn) / thn_num)) * thn_num]
+sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
 
 sel_cof_est <- rowMeans(sel_cof_chn)
 
@@ -609,20 +609,20 @@ pdf(file = "./Output/Output v1.0/TEST_PMMH_Posterior.pdf", width = 12, height = 
 par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the black phenotype")
+     main = "Posterior for the black")
 lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the chestnut phenotype")
+     main = "Posterior for the chestnut")
 lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
@@ -654,9 +654,9 @@ smp_siz
 smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
-itn_num <- 5e+04
-brn_num <- 1e+04
-thn_num <- 8e+00
+itn_num <- 1e+04
+brn_num <- 4e+03
+thn_num <- 3e+00
 
 system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
 
@@ -677,20 +677,20 @@ pdf(file = "./Output/Output v1.0/TEST_BayesianProcedure_Posterior.pdf", width = 
 par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the black phenotype")
+     main = "Posterior for the black")
 lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the selection coefficients of the chestnut phenotype")
+     main = "Posterior for the chestnut")
 lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
