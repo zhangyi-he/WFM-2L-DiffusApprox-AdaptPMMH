@@ -309,7 +309,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
   arma::dmat gen_frq_tmp = arma::zeros<arma::dmat>(10, pcl_num);
 
   // before the event of interest
-  arma::dmat fts_mat = fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
+  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
 
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
@@ -485,7 +485,7 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
   arma::dmat hap_frq_pst = arma::zeros<arma::dmat>(4, pcl_num);
 
   // before the event of interest
-  arma::dmat fts_mat = fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
+  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
 
   // initialise the particles
   hap_frq_pre = initialiseParticle(pcl_num);
@@ -535,10 +535,11 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
 
   // after the event of interest
   fts_mat = calculateFitnessMat_arma(sel_cof.col(1));
-  
+
   if (smp_gen(evt_ind) != smp_gen(evt_ind - 1)) {
     for (arma::uword i = 0; i < pcl_num; i++) {
-      hap_frq_pre.col(i) = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(evt_ind - 1), smp_gen(evt_ind)), ref_siz, hap_frq_pst.col(i), smp_gen(evt_ind - 1), smp_gen(evt_ind), ptn_num);
+      arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(evt_ind - 1), smp_gen(evt_ind)), ref_siz, hap_frq_pst.col(i), smp_gen(evt_ind - 1), smp_gen(evt_ind), ptn_num);
+      hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
     }
     hap_frq_pst = hap_frq_pre;
   }
@@ -657,12 +658,13 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
     ptl_gen_cnt(k) = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
   }
 
-  arma::dcube sel_cof_chn = arma::zeros<arma::dmat>(2, 2, itn_num);
+  arma::dcube sel_cof_chn = arma::zeros<arma::dcube>(2, 2, itn_num);
 
   //arma::drowvec log_pri_chn = arma::zeros<arma::drowvec>(itn_num);
   arma::drowvec log_lik_chn = arma::zeros<arma::drowvec>(itn_num);
 
-  arma::dmat sel_cof_sd = {{5e-03, 5e-03}, {5e-03, 5e-03}};
+  arma::dmat sel_cof_sd = {{5e-03, 5e-03},
+                           {5e-03, 5e-03}};
 
   // initialise the population genetic parameters
   cout << "iteration: " << 1 << endl;
@@ -679,7 +681,7 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
     // draw the candidates of the selection coefficients from the random walk proposal
     sel_cof_chn.slice(i) = sel_cof_chn.slice(i - 1) + sel_cof_sd % arma::randn<arma::dmat>(2, 2);
 
-    if (arma::any(sel_cof_chn.slice(i) < -1)) {
+    if (arma::any(arma::any(sel_cof_chn.slice(i) < -1, 1))) {
       sel_cof_chn.slice(i) = sel_cof_chn.slice(i - 1);
       log_lik_chn(i) = log_lik_chn(i - 1);
     } else {
