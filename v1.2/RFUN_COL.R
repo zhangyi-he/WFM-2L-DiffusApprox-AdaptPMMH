@@ -3,7 +3,7 @@
 
 #' version 1.2
 
-#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and demographic histories (N/A is not allowed)
+#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 #' R functions
 
