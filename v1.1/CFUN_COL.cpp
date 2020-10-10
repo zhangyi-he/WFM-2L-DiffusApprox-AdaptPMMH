@@ -2,7 +2,6 @@
 // Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.1
-
 // Horse coat colours (ASIP & MC1R) under constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 // C functions
