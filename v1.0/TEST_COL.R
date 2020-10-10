@@ -2,8 +2,10 @@
 #' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-
 #' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories (N/A is not allowed)
+
+# set the directory
+setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2021-WFM-2L-DiffusApprox-PMMH-Horse-MolEcol")
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -16,9 +18,6 @@ library("ggplot2")
 
 #install.packages("plot3D")
 library("plot3D")
-
-# set the directory
-setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2021-WFM-2L-DiffusApprox-PMMH-Horse-MolEcol")
 
 # call R functions
 source("./Code/Code v1.0/RFUN_COL.R")
