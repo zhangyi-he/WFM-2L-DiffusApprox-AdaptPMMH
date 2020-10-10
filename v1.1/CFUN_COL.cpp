@@ -296,7 +296,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma
 
   double lik = 1;
 
-  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
+  arma::dmat fts_mat = arma::zeros<arma::dmat>(4, 4);
 
   arma::dmat wght = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
   arma::dcube hap_frq_pre = arma::zeros<arma::dcube>(4, pcl_num, smp_gen.n_elem);
@@ -347,6 +347,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma
   }
 
   // run the bootstrap particle filter
+  fts_mat = calculateFitnessMat_arma(sel_cof);
   for (arma::uword k = 1; k < smp_gen.n_elem; k++) {
     cout << "generation: " << smp_gen(k) << endl;
     wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
@@ -379,6 +380,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma
       hap_frq_pst.shed_slices(k, smp_gen.n_elem - 1);
       gen_frq_pre.shed_slices(k, smp_gen.n_elem - 1);
       gen_frq_pst.shed_slices(k, smp_gen.n_elem - 1);
+
       break;
     }
   }
@@ -402,7 +404,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
 
   double log_lik = 0;
 
-  arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof);
+  arma::dmat fts_mat = arma::zeros<arma::dmat>(4, 4);
 
   arma::dcolvec wght = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat hap_frq_pre = arma::zeros<arma::dmat>(4, pcl_num);
@@ -425,6 +427,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
     hap_frq_pst = hap_frq_pre.cols(indx);
   } else {
     log_lik = -(arma::datum::inf);
+
     return log_lik;
   }
 
@@ -448,6 +451,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
       hap_frq_pst = hap_frq_pre.cols(indx);
     } else {
       log_lik = -(arma::datum::inf);
+
       return log_lik;
     }
   }
@@ -569,8 +573,8 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
       log_lik_chn(i) = log_lik_chn(i - 1);
     } else {
       // calculate the proposal
-      //double log_psl_old_new = log(arma::normpdf(sel_cof_chn(i - 1, 0), sel_cof_chn(i, 0), sel_cof_sd)) + log(arma::normpdf(sel_cof_chn(i - 1, 1), sel_cof_chn(i, 1), sel_cof_sd));
-      //double log_psl_new_old = log(arma::normpdf(sel_cof_chn(i, 0), sel_cof_chn(i - 1, 0), sel_cof_sd)) + log(arma::normpdf(sel_cof_chn(i, 1), sel_cof_chn(i - 1, 1), sel_cof_sd));
+      //double log_psl_old_new
+      //double log_psl_new_old
 
       // calculate the likelihood
       log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
