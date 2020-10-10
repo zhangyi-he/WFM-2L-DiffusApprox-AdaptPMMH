@@ -3,7 +3,7 @@
 
 #' version 1.0
 
-#' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories
+#' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories (N/A is not allowed)
 
 #' R functions
 
@@ -36,7 +36,7 @@ sourceCpp("./Code/Code v1.0/CFUN_COL.cpp")
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
 #' @param lst_gen the last generation of the simulated haplotype frequency trajectories
@@ -61,7 +61,7 @@ cmpsimulateWFM <- cmpfun(simulateWFM)
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the first generation of the simulated haplotype frequency trajectories
 #' @param lst_gen the last generation of the simulated haplotype frequency trajectories
@@ -89,7 +89,7 @@ cmpsimulateWFD <- cmpfun(simulateWFD)
 #' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -146,7 +146,7 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -186,7 +186,7 @@ cmprunBPF <- cmpfun(runBPF)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -211,7 +211,7 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the number of the horses in the population
+#' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
