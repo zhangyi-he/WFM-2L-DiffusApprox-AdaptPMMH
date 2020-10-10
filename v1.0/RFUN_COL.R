@@ -252,8 +252,8 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, sm
   sel_cof_chn <- as.matrix(sel_cof_chn)
 
   # burn-in and thinning
-  sel_cof_chn <- sel_cof_chn[, brn_num:length(sel_cof_chn)]
-  sel_cof_chn <- sel_cof_chn[, (1:round(length(sel_cof_chn) / thn_num)) * thn_num]
+  sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
+  sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
 
   # MMSE estimates for the selection coefficients
   sel_cof_est <- rowMeans(sel_cof_chn)
