@@ -56,8 +56,8 @@ List simulateWFM_arma(const arma::dmat& fts_mat, const double& rec_rat, const ar
   RNGScope scope;
 
   // declare the haplotype and genotype frequency trajectories
-  arma::dmat hap_frq_pth(4, arma::uword(lst_gen - int_gen) + 1);
-  arma::dmat gen_frq_pth(10, arma::uword(lst_gen - int_gen) + 1);
+  arma::dmat hap_frq_pth = arma::zeros<arma::dmat>(4, arma::uword(lst_gen - int_gen) + 1);
+  arma::dmat gen_frq_pth = arma::zeros<arma::dmat>(10, arma::uword(lst_gen - int_gen) + 1);
 
   // initialise the haplotype and genotype frequencies in generation 0
   arma::dcolvec hap_frq = int_frq;
@@ -225,7 +225,7 @@ arma::imat calculateGenoCnt_arma(const int& smp_siz, const arma::icolvec& smp_cn
   }
 }
 
-// Calculate the genotype frequencies in the population
+// Calculate the genotype frequencies in the adult stage with the haplotype frequencies
 // [[Rcpp::export]]
 arma::dcolvec calculateGenoFrq_arma(const arma::dmat& fts_mat, const arma::dcolvec& hap_frq) {
   // ensure RNG gets set/reset
