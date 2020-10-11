@@ -291,7 +291,7 @@ points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 27
+test_seed <- 21
 set.seed(test_seed)
 
 model <- "WFM"
