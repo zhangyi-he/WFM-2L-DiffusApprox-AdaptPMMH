@@ -1,8 +1,8 @@
 // Inferring natural selection acting on horse coat colours and patterns during the process of domestication from ancient DNA data
 // Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
-// version 1.2
-// Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
+// version 1.3
+// Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is allowed)
 
 // C functions
 
@@ -192,40 +192,693 @@ arma::dmat simulateWFD_arma(const arma::dcolvec& sel_cof, const double& rec_rat,
 
 
 /********** BPF **********/
-// Calculate the possible genotype counts in the sample
+// Calculate the possible genotype counts in the sample due to missingness
 // [[Rcpp::export]]
-arma::imat calculateGenoCnt_arma(const int& smp_siz, const arma::icolvec& smp_cnt) {
+arma::imat calculateGenoCnt_Mis_arma(const arma::icolvec& smp_cnt, const arma::icolvec& mis_cnt) {
+  // ensure RNG gets set/reset
+  RNGScope scope;
+
+  arma::imat ptl_smp_cnt(9, 1);
+  ptl_smp_cnt.col(0) = smp_cnt;
+
+  arma::icolvec ptl_mis_cnt(9);
+
+  // A1A1/?B1
+  if (mis_cnt(0) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_1101 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(0); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(0) = k;
+      ptl_mis_cnt(1) = mis_cnt(0) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_1101;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // A1A1/?B2
+  if (mis_cnt(1) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_1102 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(1); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(1) = k;
+      ptl_mis_cnt(2) = mis_cnt(1) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_1102;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // A1A2/?B1
+  if (mis_cnt(2) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_1201 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(2); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(3) = k;
+      ptl_mis_cnt(4) = mis_cnt(2) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_1201;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // A1A2/?B2
+  if (mis_cnt(3) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_1202 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(3); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(4) = k;
+      ptl_mis_cnt(6) = mis_cnt(3) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_1202;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // A2A2/?B1
+  if (mis_cnt(4) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_2201 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(4); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(5) = k;
+      ptl_mis_cnt(7) = mis_cnt(4) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_2201;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // A2A2/?B2
+  if (mis_cnt(5) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_2202 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(5); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(7) = k;
+      ptl_mis_cnt(8) = mis_cnt(5) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_2202;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // ?A1/B1B1
+  if (mis_cnt(6) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0111 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(6); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(0) = k;
+      ptl_mis_cnt(3) = mis_cnt(6) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0111;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // ?A2/B1B1
+  if (mis_cnt(7) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0211 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(7); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(3) = k;
+      ptl_mis_cnt(5) = mis_cnt(7) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0211;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // ?A1/B1B2
+  if (mis_cnt(8) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0112 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(8); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(1) = k;
+      ptl_mis_cnt(4) = mis_cnt(8) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0112;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // ?A2/B1B2
+  if (mis_cnt(9) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0212 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(9); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(4) = k;
+      ptl_mis_cnt(7) = mis_cnt(9) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0212;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // ?A1/B2B2
+  if (mis_cnt(10) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0122 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(10); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(2) = k;
+      ptl_mis_cnt(6) = mis_cnt(10) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0122;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // ?A2//B2B2
+  if (mis_cnt(11) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0222 = ptl_smp_cnt;
+    for (arma::uword k = 0; k <= mis_cnt(11); k++) {
+      ptl_mis_cnt.zeros();
+      ptl_mis_cnt(6) = k;
+      ptl_mis_cnt(8) = mis_cnt(11) - k;
+      arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0222;
+      ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+      if (cnt > 0) {
+        ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+      } else {
+        ptl_smp_cnt = ptl_smp_cnt_tmp;
+      }
+      cnt += 1;
+    }
+  }
+
+  // A1A1/??
+  if (mis_cnt(12) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_1100 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(12); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(12) - i; j++) {
+        ptl_mis_cnt.zeros();
+        ptl_mis_cnt(0) = i;
+        ptl_mis_cnt(1) = j;
+        ptl_mis_cnt(2) = mis_cnt(12) - i - j;
+        arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_1100;
+        ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+        if (cnt > 0) {
+          ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+        } else {
+          ptl_smp_cnt = ptl_smp_cnt_tmp;
+        }
+        cnt += 1;
+      }
+    }
+  }
+
+  // A1A2/??
+  if (mis_cnt(13) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_1200 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(13); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(13) - i; j++) {
+        ptl_mis_cnt.zeros();
+        ptl_mis_cnt(3) = i;
+        ptl_mis_cnt(4) = j;
+        ptl_mis_cnt(6) = mis_cnt(13) - i - j;
+        arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_1200;
+        ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+        if (cnt > 0) {
+          ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+        } else {
+          ptl_smp_cnt = ptl_smp_cnt_tmp;
+        }
+        cnt += 1;
+      }
+    }
+  }
+
+  // A2A2/??
+  if (mis_cnt(14) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_2200 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(14); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(14) - i; j++) {
+        ptl_mis_cnt.zeros();
+        ptl_mis_cnt(5) = i;
+        ptl_mis_cnt(7) = j;
+        ptl_mis_cnt(8) = mis_cnt(14) - i - j;
+        arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_2200;
+        ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+        if (cnt > 0) {
+          ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+        } else {
+          ptl_smp_cnt = ptl_smp_cnt_tmp;
+        }
+        cnt += 1;
+      }
+    }
+  }
+
+  // ??/B1B1
+  if (mis_cnt(15) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0011 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(15); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(15) - i; j++) {
+        ptl_mis_cnt.zeros();
+        ptl_mis_cnt(0) = i;
+        ptl_mis_cnt(3) = j;
+        ptl_mis_cnt(5) = mis_cnt(15) - i - j;
+        arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0011;
+        ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+        if (cnt > 0) {
+          ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+        } else {
+          ptl_smp_cnt = ptl_smp_cnt_tmp;
+        }
+        cnt += 1;
+      }
+    }
+  }
+
+  // ??/B1B2
+  if (mis_cnt(16) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0012 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(16); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(16) - i; j++) {
+        ptl_mis_cnt.zeros();
+        ptl_mis_cnt(1) = i;
+        ptl_mis_cnt(4) = j;
+        ptl_mis_cnt(7) = mis_cnt(16) - i - j;
+        arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0012;
+        ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+        if (cnt > 0) {
+          ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+        } else {
+          ptl_smp_cnt = ptl_smp_cnt_tmp;
+        }
+        cnt += 1;
+      }
+    }
+  }
+
+  // ??/B2B2
+  if (mis_cnt(17) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0022 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(17); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(17) - i; j++) {
+        ptl_mis_cnt.zeros();
+        ptl_mis_cnt(2) = i;
+        ptl_mis_cnt(6) = j;
+        ptl_mis_cnt(8) = mis_cnt(17) - i - j;
+        arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0022;
+        ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+        if (cnt > 0) {
+          ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+        } else {
+          ptl_smp_cnt = ptl_smp_cnt_tmp;
+        }
+        cnt += 1;
+      }
+    }
+  }
+
+  // ?A1/?B1
+  if (mis_cnt(18) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0101 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(18); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(18) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(18) - i - j; k++) {
+          ptl_mis_cnt.zeros();
+          ptl_mis_cnt(0) = i;
+          ptl_mis_cnt(1) = j;
+          ptl_mis_cnt(3) = k;
+          ptl_mis_cnt(4) = mis_cnt(18) - i - j - k;
+          arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0101;
+          ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+          if (cnt > 0) {
+            ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+          } else {
+            ptl_smp_cnt = ptl_smp_cnt_tmp;
+          }
+          cnt += 1;
+        }
+      }
+    }
+  }
+
+  // ?A1/?B2
+  if (mis_cnt(19) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0102 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(19); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(19) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(19) - i - j; k++) {
+          ptl_mis_cnt.zeros();
+          ptl_mis_cnt(1) = i;
+          ptl_mis_cnt(2) = j;
+          ptl_mis_cnt(4) = k;
+          ptl_mis_cnt(6) = mis_cnt(19) - i - j - k;
+          arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0102;
+          ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+          if (cnt > 0) {
+            ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+          } else {
+            ptl_smp_cnt = ptl_smp_cnt_tmp;
+          }
+          cnt += 1;
+        }
+      }
+    }
+  }
+
+  // ?A2/?B1
+  if (mis_cnt(20) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0201 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(20); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(20) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(20) - i - j; k++) {
+          ptl_mis_cnt.zeros();
+          ptl_mis_cnt(3) = i;
+          ptl_mis_cnt(4) = j;
+          ptl_mis_cnt(5) = k;
+          ptl_mis_cnt(7) = mis_cnt(20) - i - j - k;
+          arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0201;
+          ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+          if (cnt > 0) {
+            ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+          } else {
+            ptl_smp_cnt = ptl_smp_cnt_tmp;
+          }
+          cnt += 1;
+        }
+      }
+    }
+  }
+
+  // ?A2/?B2
+  if (mis_cnt(21) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0202 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(21); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(21) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(21) - i - j; k++) {
+          ptl_mis_cnt.zeros();
+          ptl_mis_cnt(4) = i;
+          ptl_mis_cnt(6) = j;
+          ptl_mis_cnt(7) = k;
+          ptl_mis_cnt(8) = mis_cnt(21) - i - j - k;
+          arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0202;
+          ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+          if (cnt > 0) {
+            ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+          } else {
+            ptl_smp_cnt = ptl_smp_cnt_tmp;
+          }
+          cnt += 1;
+        }
+      }
+    }
+  }
+
+  // ?A1/??
+  if (mis_cnt(22) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0100 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(22); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(22) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(22) - i - j; k++) {
+          for (arma::sword l = 0; l <= mis_cnt(22) - i - j - k; l++) {
+            for (arma::sword m = 0; m <= mis_cnt(22) - i - j - k - l; m++) {
+              ptl_mis_cnt.zeros();
+              ptl_mis_cnt(0) = i;
+              ptl_mis_cnt(1) = j;
+              ptl_mis_cnt(2) = k;
+              ptl_mis_cnt(3) = l;
+              ptl_mis_cnt(4) = m;
+              ptl_mis_cnt(6) = mis_cnt(22) - i - j - k - l - m;
+              arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0100;
+              ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+              if (cnt > 0) {
+                ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+              } else {
+                ptl_smp_cnt = ptl_smp_cnt_tmp;
+              }
+              cnt += 1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ?A2/??
+  if (mis_cnt(23) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0200 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(23); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(23) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(23) - i - j; k++) {
+          for (arma::sword l = 0; l <= mis_cnt(23) - i - j - k; l++) {
+            for (arma::sword m = 0; m <= mis_cnt(23) - i - j - k - l; m++) {
+              ptl_mis_cnt.zeros();
+              ptl_mis_cnt(3) = i;
+              ptl_mis_cnt(4) = j;
+              ptl_mis_cnt(5) = k;
+              ptl_mis_cnt(6) = l;
+              ptl_mis_cnt(7) = m;
+              ptl_mis_cnt(8) = mis_cnt(23) - i - j - k - l - m;
+              arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0200;
+              ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+              if (cnt > 0) {
+                ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+              } else {
+                ptl_smp_cnt = ptl_smp_cnt_tmp;
+              }
+              cnt += 1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ??/?B1
+  if (mis_cnt(24) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0001 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(24); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(24) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(24) - i - j; k++) {
+          for (arma::sword l = 0; l <= mis_cnt(24) - i - j - k; l++) {
+            for (arma::sword m = 0; m <= mis_cnt(24) - i - j - k - l; m++) {
+              ptl_mis_cnt.zeros();
+              ptl_mis_cnt(0) = i;
+              ptl_mis_cnt(1) = j;
+              ptl_mis_cnt(3) = k;
+              ptl_mis_cnt(4) = l;
+              ptl_mis_cnt(5)= m;
+              ptl_mis_cnt(7) = mis_cnt(24) - i - j - k - l - m;
+              arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0001;
+              ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+              if (cnt > 0) {
+                ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+              } else {
+                ptl_smp_cnt = ptl_smp_cnt_tmp;
+              }
+              cnt += 1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ??/?B2
+  if (mis_cnt(25) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0002 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(25); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(25) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(25) - i - j; k++) {
+          for (arma::sword l = 0; l <= mis_cnt(25) - i - j - k; l++) {
+            for (arma::sword m = 0; m <= mis_cnt(25) - i - j - k - l; m++) {
+              ptl_mis_cnt.zeros();
+              ptl_mis_cnt(1) = i;
+              ptl_mis_cnt(2) = j;
+              ptl_mis_cnt(4) = k;
+              ptl_mis_cnt(6) = l;
+              ptl_mis_cnt(7) = m;
+              ptl_mis_cnt(8) = mis_cnt(25) - i - j - k - l - m;
+              arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0002;
+              ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+              if (cnt > 0) {
+                ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+              } else {
+                ptl_smp_cnt = ptl_smp_cnt_tmp;
+              }
+              cnt += 1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ??/??
+  if (mis_cnt(26) > 0) {
+    arma::uword cnt = 0;
+    arma::imat ptl_smp_cnt_0000 = ptl_smp_cnt;
+    for (arma::sword i = 0; i <= mis_cnt(26); i++) {
+      for (arma::sword j = 0; j <= mis_cnt(26) - i; j++) {
+        for (arma::sword k = 0; k <= mis_cnt(26) - i - j; k++) {
+          for (arma::sword l = 0; l <= mis_cnt(26) - i - j - k; l++) {
+            for (arma::sword m = 0; m <= mis_cnt(26) - i - j - k - l; m++) {
+              for (arma::sword n = 0; n <= mis_cnt(26) - i - j - k - l - m; n++) {
+                for (arma::sword o = 0; o <= mis_cnt(26) - i - j - k - l - m - n; o++) {
+                  for (arma::sword p = 0; p <= mis_cnt(26) - i - j - k - l - m - n - o; p++) {
+                    ptl_mis_cnt.zeros();
+                    ptl_mis_cnt(0) = i;
+                    ptl_mis_cnt(1) = j;
+                    ptl_mis_cnt(2) = k;
+                    ptl_mis_cnt(3) = l;
+                    ptl_mis_cnt(4) = m;
+                    ptl_mis_cnt(5) = n;
+                    ptl_mis_cnt(6) = o;
+                    ptl_mis_cnt(7) = p;
+                    ptl_mis_cnt(8) = mis_cnt(26) - i - j - k - l - m - n - o - p;
+                    arma::imat ptl_smp_cnt_tmp = ptl_smp_cnt_0000;
+                    ptl_smp_cnt_tmp.each_col() += ptl_mis_cnt;
+                    if (cnt > 0) {
+                      ptl_smp_cnt.insert_cols(0, ptl_smp_cnt_tmp);
+                    } else {
+                      ptl_smp_cnt = ptl_smp_cnt_tmp;
+                    }
+                    cnt += 1;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return ptl_smp_cnt;
+}
+
+// Calculate the possible genotype counts in the sample due to heterozygosity
+// [[Rcpp::export]]
+arma::imat calculateGenoCnt_Het_arma(const arma::icolvec& smp_cnt) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
   if (smp_cnt.n_elem == 9) {
-    arma::imat smp_gen_cnt = arma::zeros<arma::imat>(10, 1);
+    arma::imat gen_cnt = arma::zeros<arma::imat>(10, smp_cnt(5) + 1);
 
-    for (int i = 0; i <= smp_cnt(5); i++) {
-      smp_gen_cnt(0, 0) = smp_cnt(0);
-      smp_gen_cnt(1, 0) = smp_cnt(1);
-      smp_gen_cnt(2, 0) = smp_cnt(2);
-      smp_gen_cnt(3, 0) = smp_cnt(3);
-      smp_gen_cnt(4, 0) = smp_cnt(4);
-      smp_gen_cnt(5, 0) = i;
-      smp_gen_cnt(6, 0) = smp_cnt(6);
-      smp_gen_cnt(7, 0) = smp_cnt(5) - i;
-      smp_gen_cnt(8, 0) = smp_cnt(7);
-      smp_gen_cnt(9, 0) = smp_cnt(8);
-      smp_gen_cnt.insert_cols(0, 1);
+    for (int j = 0; j <= smp_cnt(5); j++) {
+      gen_cnt(0, j) = smp_cnt(0);
+      gen_cnt(1, j) = smp_cnt(1);
+      gen_cnt(2, j) = smp_cnt(2);
+      gen_cnt(3, j) = smp_cnt(3);
+      gen_cnt(4, j) = smp_cnt(4);
+      gen_cnt(5, j) = j;
+      gen_cnt(6, j) = smp_cnt(6);
+      gen_cnt(7, j) = smp_cnt(5) - j;
+      gen_cnt(8, j) = smp_cnt(7);
+      gen_cnt(9, j) = smp_cnt(8);
     }
-    smp_gen_cnt.shed_cols(0, 0);
 
-    return smp_gen_cnt;
+    return gen_cnt;
   } else {
-    arma::imat smp_gen_cnt = arma::zeros<arma::imat>(10, 1);
-    smp_gen_cnt.col(0) = smp_cnt;
+    arma::imat gen_cnt = arma::zeros<arma::imat>(10, 1);
+    gen_cnt.col(0) = smp_cnt;
 
-    return smp_gen_cnt;
+    return gen_cnt;
   }
 }
 
-// Calculate the genotype frequencies in the adult stage with the haplotype frequencies
+// Calculate the possible genotype counts in the sample
+// [[Rcpp::export]]
+arma::imat calculateGenoCnt_arma(const arma::icolvec& smp_cnt, const arma::icolvec& mis_cnt) {
+  // ensure RNG gets set/reset
+  RNGScope scope;
+
+  arma::imat gen_cnt = calculateGenoCnt_Mis_arma(smp_cnt, mis_cnt);
+
+  arma::imat ptl_cnt = calculateGenoCnt_Het_arma(gen_cnt.col(0));
+  for (arma::uword k = 1; k < gen_cnt.n_cols; k++) {
+    arma::imat gen_cnt_tmp = calculateGenoCnt_Het_arma(gen_cnt.col(k));
+    ptl_cnt.insert_cols(0, gen_cnt_tmp);
+  }
+
+  return ptl_cnt;
+}
+
+// Calculate the genotype frequencies in the adult with the haplotype frequencies
 // [[Rcpp::export]]
 arma::dcolvec calculateGenoFrq_arma(const arma::dmat& fts_mat, const arma::dcolvec& hap_frq) {
   // ensure RNG gets set/reset
@@ -260,7 +913,7 @@ double calculateMultinomProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
 
 // Calculate the emission probabilities
 // [[Rcpp::export]]
-double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_siz, const arma::dmat& fts_mat, const arma::dcolvec& hap_frq) {
+double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const arma::icolvec& mis_cnt, const int& smp_siz, const arma::dmat& fts_mat, const arma::dcolvec& hap_frq) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -289,7 +942,7 @@ arma::dmat initialiseParticle(const arma::uword& pcl_num){
 
 // Run the bootstrap particle filter
 // [[Rcpp::export]]
-List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
+List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::imat& mis_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -313,11 +966,11 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
   hap_frq_tmp = initialiseParticle(pcl_num);
-  arma::imat smp_gen_cnt = calculateGenoCnt_arma(smp_siz(0), smp_cnt.col(0));
+  arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(0), mis_cnt.col(0));
   for (arma::uword i = 0; i < pcl_num; i++) {
     gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
-    for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-      wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(smp_gen_cnt.col(j), smp_siz(0), gen_frq_tmp.col(i));
+    for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+      wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(gen_cnt.col(j), smp_siz(0), gen_frq_tmp.col(i));
     }
   }
 
@@ -353,13 +1006,13 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     cout << "generation: " << smp_gen(k) << endl;
     wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
     hap_frq_tmp = hap_frq_pst.slice(k - 1);
-    arma::imat smp_gen_cnt = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
+    arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k), mis_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(0), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
-      for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-        wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(smp_gen_cnt.col(j), smp_siz(k), gen_frq_tmp.col(i));
+      for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+        wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(gen_cnt.col(j), smp_siz(k), gen_frq_tmp.col(i));
       }
     }
 
@@ -417,13 +1070,13 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     cout << "generation: " << smp_gen(k) << endl;
     wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
     hap_frq_tmp = hap_frq_pst.slice(k - 1);
-    arma::imat smp_gen_cnt = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
+    arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k), mis_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
-      for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-        wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(smp_gen_cnt.col(j), smp_siz(k), gen_frq_tmp.col(i));
+      for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+        wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(gen_cnt.col(j), smp_siz(k), gen_frq_tmp.col(i));
       }
     }
 
@@ -471,7 +1124,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
 /********** PMMH **********/
 // Calculate the log-likelihood using the bootstrap particle filter
 // [[Rcpp::export]]
-double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::field<arma::imat>& ptl_gen_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
+double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::field<arma::imat>& ptl_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -488,10 +1141,10 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
 
   // initialise the particles
   hap_frq_pre = initialiseParticle(pcl_num);
-  arma::imat smp_gen_cnt = ptl_gen_cnt(0);
+  arma::imat gen_cnt = ptl_cnt(0);
   for (arma::uword i = 0; i < pcl_num; i++) {
-    for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-      wght(i) = wght(i) + calculateEmissionProb_arma(smp_gen_cnt.col(j), smp_siz(0), fts_mat, hap_frq_pre.col(i));
+    for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+      wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(0), fts_mat, hap_frq_pre.col(i));
     }
   }
 
@@ -510,12 +1163,12 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
   // run the bootstrap particle filter
   for (arma::uword k = 1; k < evt_ind; k++) {
     wght = arma::zeros<arma::dcolvec>(pcl_num);
-    arma::imat smp_gen_cnt = ptl_gen_cnt(k);
+    arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(0), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
-      for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-        wght(i) = wght(i) + calculateEmissionProb_arma(smp_gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
+      for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+        wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
       }
     }
 
@@ -545,12 +1198,12 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
 
   for (arma::uword k = evt_ind + 1; k < smp_gen.n_elem; k++) {
     wght = arma::zeros<arma::dcolvec>(pcl_num);
-    arma::imat smp_gen_cnt = ptl_gen_cnt(k);
+    arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
-      for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-        wght(i) = wght(i) + calculateEmissionProb_arma(smp_gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
+      for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+        wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
       }
     }
 
@@ -572,18 +1225,18 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
 
 // Calculate the optimal particle number in the particle marginal Metropolis-Hastings
 // [[Rcpp::export]]
-List calculateOptimalParticleNum_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& gap_num) {
+List calculateOptimalParticleNum_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::imat& mis_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& gap_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
-  arma::field<arma::imat> ptl_gen_cnt(smp_gen.n_elem);
+  arma::field<arma::imat> ptl_cnt(smp_gen.n_elem);
   for (arma::uword k = 0; k < smp_gen.n_elem; k++) {
-    ptl_gen_cnt(k) = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
+    ptl_cnt(k) = calculateGenoCnt_arma(smp_cnt.col(k), mis_cnt.col(k));
   }
 
   arma::drowvec log_lik(300);
   for (arma::uword i = 0; i < 300; i++) {
-    log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
+    log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
   }
 
   arma::drowvec log_lik_sdv(1);
@@ -597,7 +1250,7 @@ List calculateOptimalParticleNum_arma(const arma::dmat& sel_cof, const double& r
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) + gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -610,7 +1263,7 @@ List calculateOptimalParticleNum_arma(const arma::dmat& sel_cof, const double& r
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) - gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -621,7 +1274,7 @@ List calculateOptimalParticleNum_arma(const arma::dmat& sel_cof, const double& r
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) + gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -634,7 +1287,7 @@ List calculateOptimalParticleNum_arma(const arma::dmat& sel_cof, const double& r
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) - gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -648,13 +1301,13 @@ List calculateOptimalParticleNum_arma(const arma::dmat& sel_cof, const double& r
 
 // Run the particle marginal Metropolis-Hastings
 //[[Rcpp::export]]
-arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num) {
+arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::imat& mis_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
-  arma::field<arma::imat> ptl_gen_cnt(smp_gen.n_elem);
+  arma::field<arma::imat> ptl_cnt(smp_gen.n_elem);
   for (arma::uword k = 0; k < smp_gen.n_elem; k++) {
-    ptl_gen_cnt(k) = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
+    ptl_cnt(k) = calculateGenoCnt_arma(smp_cnt.col(k), mis_cnt.col(k));
   }
 
   arma::dcube sel_cof_chn = arma::zeros<arma::dcube>(2, 2, itn_num);
@@ -671,7 +1324,7 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
   // or take the beta prior with alpha = 1 and beta = 3
   sel_cof_chn.slice(0) = sel_cof;
 
-  log_lik_chn(0) = calculateLogLikelihood_arma(sel_cof_chn.slice(0), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
+  log_lik_chn(0) = calculateLogLikelihood_arma(sel_cof_chn.slice(0), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
   double apt_rto = 0;
   for (arma::uword i = 1; i < itn_num; i++) {
@@ -689,7 +1342,7 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
       //double log_psl_new_old
 
       // calculate the likelihood
-      log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.slice(i), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
+      log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.slice(i), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
       // calculate the acceptance ratio
       apt_rto = exp(log_lik_chn(i) - log_lik_chn(i - 1));
