@@ -427,13 +427,13 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
   sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
   sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-  # calculate the change in selection coefficients before and after the event
+  # calculate the changes in the selection coefficients before and after the event
   dif_sel_chn <- sel_cof_chn[, 2, ] - sel_cof_chn[, 1, ]
 
-  # MMSE estimates for the change in selection coefficients
+  # MMSE estimates for the changes in the selection coefficients before and after the event
   dif_sel_est <- rowMeans(dif_sel_chn)
 
-  # 95% HPD intervals for the change in selection coefficients
+  # 95% HPD intervals for the changes in the selection coefficients before and after the event
   dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
   dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
   dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
