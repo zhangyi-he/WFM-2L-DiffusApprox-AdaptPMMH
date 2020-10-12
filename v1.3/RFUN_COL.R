@@ -1,8 +1,8 @@
 #' @title Inferring natural selection acting on horse coat colours and patterns during the process of domestication from ancient DNA data
 #' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.2
-#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
+#' version 1.3
+#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is allowed)
 
 #' R functions
 
@@ -27,7 +27,7 @@ library("compiler")
 #enableJIT(1)
 
 # call C++ functions
-sourceCpp("./Code/Code v1.0/Code v1.2/CFUN_COL.cpp")
+sourceCpp("./Code/Code v1.0/Code v1.3/CFUN_COL.cpp")
 
 ################################################################################
 
@@ -196,40 +196,46 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param mis_cnt the count of the genotypes with unknown alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
 #' Standard version
-runBPF <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num) {
+runBPF <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num) {
   # combine the sampling time points and the event time point
   if (evt_gen %in% smp_gen) {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
 
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
+      mis_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- mis_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
     }
   } else {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
   }
 
   # run the BPF
-  BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num)
+  BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num)
 
   lik <- BPF$lik
   wght <- BPF$wght
@@ -264,41 +270,47 @@ cmprunBPF <- cmpfun(runBPF)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param mis_cnt the count of the genotypes with unknown alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
 
 #' Standard version
-calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num) {
+calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, gap_num) {
   # combine the sampling time points and the event time point
   if (evt_gen %in% smp_gen) {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
 
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
+      mis_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- mis_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
     }
   } else {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
   }
 
   # calculate the optimal particle number
-  OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
+  OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, gap_num)
 
   return(list(opt_pcl_num = as.vector(OptNum$opt_pcl_num),
               log_lik_sdv = as.vector(OptNum$log_lik_sdv)))
@@ -318,41 +330,47 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param mis_cnt the count of the genotypes with unknown alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
 
 #' Standard version
-runPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num) {
+runPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num) {
   # combine the sampling time points and the event time point
   if (evt_gen %in% smp_gen) {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
 
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
+      mis_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- mis_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
     }
   } else {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
   }
 
   # run the PMMH
-  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num)
   sel_cof_chn <- as.array(sel_cof_chn)
 
   return(sel_cof_chn)
@@ -372,6 +390,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
 #' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param mis_cnt the count of the genotypes with unknown alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
@@ -379,36 +398,41 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param thn_num the number of the iterations for thinning
 
 #' Standard version
-runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num) {
+runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num) {
   # combine the sampling time points and the event time point
   if (evt_gen %in% smp_gen) {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
 
     if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
       smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
       smp_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
+      mis_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- mis_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
     }
   } else {
     smp_gen <- append(smp_gen, evt_gen)
     smp_siz <- append(smp_siz, 0)
     smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+    mis_cnt <- cbind(mis_cnt, matrix(0, nrow = nrow(mis_cnt), ncol = 1))
 
     odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
     smp_gen <- smp_gen[odr_ind]
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
+    mis_cnt <- mis_cnt[, odr_ind]
   }
 
   # run the PMMH
-  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num)
   sel_cof_chn <- as.array(sel_cof_chn)
 
   # burn-in and thinning
