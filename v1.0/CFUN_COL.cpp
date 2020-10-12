@@ -185,38 +185,36 @@ arma::dmat simulateWFD_arma(const arma::dcolvec& sel_cof, const double& rec_rat,
 /********** BPF **********/
 // Calculate the possible genotype counts in the sample
 // [[Rcpp::export]]
-arma::imat calculateGenoCnt_arma(const int& smp_siz, const arma::icolvec& smp_cnt) {
+arma::imat calculateGenoCnt_arma(const arma::icolvec& smp_cnt) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
   if (smp_cnt.n_elem == 9) {
-    arma::imat smp_gen_cnt = arma::zeros<arma::imat>(10, 1);
+    arma::imat gen_cnt = arma::zeros<arma::imat>(10, smp_cnt(5) + 1);
 
-    for (int i = 0; i <= smp_cnt(5); i++) {
-      smp_gen_cnt(0, 0) = smp_cnt(0);
-      smp_gen_cnt(1, 0) = smp_cnt(1);
-      smp_gen_cnt(2, 0) = smp_cnt(2);
-      smp_gen_cnt(3, 0) = smp_cnt(3);
-      smp_gen_cnt(4, 0) = smp_cnt(4);
-      smp_gen_cnt(5, 0) = i;
-      smp_gen_cnt(6, 0) = smp_cnt(6);
-      smp_gen_cnt(7, 0) = smp_cnt(5) - i;
-      smp_gen_cnt(8, 0) = smp_cnt(7);
-      smp_gen_cnt(9, 0) = smp_cnt(8);
-      smp_gen_cnt.insert_cols(0, 1);
+    for (int j = 0; j <= smp_cnt(5); j++) {
+      gen_cnt(0, j) = smp_cnt(0);
+      gen_cnt(1, j) = smp_cnt(1);
+      gen_cnt(2, j) = smp_cnt(2);
+      gen_cnt(3, j) = smp_cnt(3);
+      gen_cnt(4, j) = smp_cnt(4);
+      gen_cnt(5, j) = j;
+      gen_cnt(6, j) = smp_cnt(6);
+      gen_cnt(7, j) = smp_cnt(5) - j;
+      gen_cnt(8, j) = smp_cnt(7);
+      gen_cnt(9, j) = smp_cnt(8);
     }
-    smp_gen_cnt.shed_cols(0, 0);
 
-    return smp_gen_cnt;
+    return gen_cnt;
   } else {
-    arma::imat smp_gen_cnt = arma::zeros<arma::imat>(10, 1);
-    smp_gen_cnt.col(0) = smp_cnt;
+    arma::imat gen_cnt = arma::zeros<arma::imat>(10, 1);
+    gen_cnt.col(0) = smp_cnt;
 
-    return smp_gen_cnt;
+    return gen_cnt;
   }
 }
 
-// Calculate the genotype frequencies in the adult stage with the haplotype frequencies
+// Calculate the genotype frequencies in the adult with the haplotype frequencies
 // [[Rcpp::export]]
 arma::dcolvec calculateGenoFrq_arma(const arma::dmat& fts_mat, const arma::dcolvec& hap_frq) {
   // ensure RNG gets set/reset
@@ -301,11 +299,11 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
   hap_frq_tmp = initialiseParticle(pcl_num);
-  arma::imat smp_gen_cnt = calculateGenoCnt_arma(smp_siz(0), smp_cnt.col(0));
+  arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(0));
   for (arma::uword i = 0; i < pcl_num; i++) {
     gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
-    for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-      wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(smp_gen_cnt.col(j), smp_siz(0), gen_frq_tmp.col(i));
+    for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+      wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(gen_cnt.col(j), smp_siz(0), gen_frq_tmp.col(i));
     }
   }
 
@@ -341,13 +339,13 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
     cout << "generation: " << smp_gen(k) << endl;
     wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
     hap_frq_tmp = hap_frq_pst.slice(k - 1);
-    arma::imat smp_gen_cnt = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
+    arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof, rec_rat, pop_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
-      for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-        wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(smp_gen_cnt.col(j), smp_siz(k), gen_frq_tmp.col(i));
+      for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+        wght_tmp(i) = wght_tmp(i) + calculateMultinomProb_arma(gen_cnt.col(j), smp_siz(k), gen_frq_tmp.col(i));
       }
     }
 
@@ -387,7 +385,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
 /********** PMMH **********/
 // Calculate the log-likelihood using the bootstrap particle filter
 // [[Rcpp::export]]
-double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::field<arma::imat>& ptl_gen_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
+double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::field<arma::imat>& ptl_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -401,10 +399,10 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
 
   // initialise the particles
   hap_frq_pre = initialiseParticle(pcl_num);
-  arma::imat smp_gen_cnt = ptl_gen_cnt(0);
+  arma::imat gen_cnt = ptl_cnt(0);
   for (arma::uword i = 0; i < pcl_num; i++) {
-    for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-      wght(i) = wght(i) + calculateEmissionProb_arma(smp_gen_cnt.col(j), smp_siz(0), fts_mat, hap_frq_pre.col(i));
+    for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+      wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(0), fts_mat, hap_frq_pre.col(i));
     }
   }
 
@@ -423,12 +421,12 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
   // run the bootstrap particle filter
   for (arma::uword k = 1; k < smp_gen.n_elem; k++) {
     wght = arma::zeros<arma::dcolvec>(pcl_num);
-    arma::imat smp_gen_cnt = ptl_gen_cnt(k);
+    arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof, rec_rat, pop_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
-      for (arma::uword j = 0; j < smp_gen_cnt.n_cols; j++) {
-        wght(i) = wght(i) + calculateEmissionProb_arma(smp_gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
+      for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
+        wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
       }
     }
 
@@ -454,14 +452,14 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
   // ensure RNG gets set/reset
   RNGScope scope;
 
-  arma::field<arma::imat> ptl_gen_cnt(smp_gen.n_elem);
+  arma::field<arma::imat> ptl_cnt(smp_gen.n_elem);
   for (arma::uword k = 0; k < smp_gen.n_elem; k++) {
-    ptl_gen_cnt(k) = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
+    ptl_cnt(k) = calculateGenoCnt_arma(smp_cnt.col(k));
   }
 
   arma::drowvec log_lik(300);
   for (arma::uword i = 0; i < 300; i++) {
-    log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
+    log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
   }
 
   arma::drowvec log_lik_sdv(1);
@@ -475,7 +473,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) + gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -488,7 +486,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) - gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -499,7 +497,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) + gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -512,7 +510,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) - gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -530,9 +528,9 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
   // ensure RNG gets set/reset
   RNGScope scope;
 
-  arma::field<arma::imat> ptl_gen_cnt(smp_gen.n_elem);
+  arma::field<arma::imat> ptl_cnt(smp_gen.n_elem);
   for (arma::uword k = 0; k < smp_gen.n_elem; k++) {
-    ptl_gen_cnt(k) = calculateGenoCnt_arma(smp_siz(k), smp_cnt.col(k));
+    ptl_cnt(k) = calculateGenoCnt_arma(smp_cnt.col(k));
   }
 
   arma::dmat sel_cof_chn = arma::zeros<arma::dmat>(2, itn_num);
@@ -548,7 +546,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
   // or take the beta prior with alpha = 1 and beta = 3
   sel_cof_chn.col(0) = sel_cof;
 
-  log_lik_chn(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
+  log_lik_chn(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
   double apt_rto = 0;
   for (arma::uword i = 1; i < itn_num; i++) {
@@ -566,7 +564,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
       //double log_psl_new_old
 
       // calculate the likelihood
-      log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_gen_cnt, ptn_num, pcl_num);
+      log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
       // calculate the acceptance ratio
       apt_rto = exp(log_lik_chn(i) - log_lik_chn(i - 1));
