@@ -48,19 +48,19 @@ simulateWFM <- function(sel_cof, rec_rat, pop_siz, int_frq, evt_gen, int_gen, ls
     WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
     hap_frq_pth <- as.matrix(WFM$hap_frq_pth)
     gen_frq_pth <- as.matrix(WFM$gen_frq_pth)
-  } else if (evt_gen < lst_gen) {
+  } else if (evt_gen < int_gen) {
     fts_mat <- calculateFitnessMat_arma(sel_cof[, 2])
     WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
     hap_frq_pth <- as.matrix(WFM$hap_frq_pth)
     gen_frq_pth <- as.matrix(WFM$gen_frq_pth)
   } else {
     fts_mat <- calculateFitnessMat_arma(sel_cof[, 1])
-    WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+    WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, evt_gen)
     hap_frq_pth_pre_evt <- as.matrix(WFM$hap_frq_pth)
     gen_frq_pth_pre_evt <- as.matrix(WFM$gen_frq_pth)
 
     fts_mat <- calculateFitnessMat_arma(sel_cof[, 2])
-    WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
+    WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, hap_frq_pth_pre_evt[, ncol(hap_frq_pth_pre_evt)], evt_gen, lst_gen)
     hap_frq_pth_pst_evt <- as.matrix(WFM$hap_frq_pth)
     gen_frq_pth_pst_evt <- as.matrix(WFM$gen_frq_pth)
 
@@ -94,14 +94,14 @@ simulateWFD <- function(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, evt_gen, in
   if (evt_gen >= lst_gen) {
     frq_pth <- simulateWFD_arma(sel_cof[, 1], rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num)
     frq_pth <- as.matrix(frq_pth)
-  } else if (evt_gen < lst_gen) {
+  } else if (evt_gen < int_gen) {
     frq_pth <- simulateWFD_arma(sel_cof[, 2], rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num)
     frq_pth <- as.matrix(frq_pth)
   } else {
-    frq_pth_pre_evt <- simulateWFD_arma(sel_cof[, 1], rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num)
+    frq_pth_pre_evt <- simulateWFD_arma(sel_cof[, 1], rec_rat, pop_siz, ref_siz, int_frq, int_gen, evt_gen, ptn_num)
     frq_pth_pre_evt <- as.matrix(frq_pth_pre_evt)
 
-    frq_pth_pst_evt <- simulateWFD_arma(sel_cof[, 2], rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num)
+    frq_pth_pst_evt <- simulateWFD_arma(sel_cof[, 2], rec_rat, pop_siz, ref_siz, frq_pth_pre_evt[, ncol(frq_pth_pre_evt)], evt_gen, lst_gen, ptn_num)
     frq_pth_pst_evt <- as.matrix(frq_pth_pst_evt)
 
     frq_pth <- cbind(frq_pth_pre_evt, frq_pth_pst_evt[, -1])
@@ -161,7 +161,6 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, evt_gen, smp_
       gen_frq[lower.tri(gen_frq, diag = FALSE)] <- NA
       pop_gen_frq[, k] <- discard(as.vector(2 * gen_frq - diag(diag(gen_frq), nrow = 4, ncol = 4)), is.na)
     }
-    pop_gen_frq <- as.matrix(pop_gen_frq)
   }
 
   # generate the sample genotype counts at all sampling time points
