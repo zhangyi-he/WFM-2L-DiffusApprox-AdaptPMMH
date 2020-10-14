@@ -35,10 +35,10 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
-# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 200))
+# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # int_gen <- 0
-# lst_gen <- 600
+# lst_gen <- 500
 #
 # frq_pth <- cmpsimulateWFM(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen)$hap_frq_pth
 #
@@ -72,11 +72,11 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
-# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 200))
+# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
 # int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # int_gen <- 0
-# lst_gen <- 600
+# lst_gen <- 500
 # ptn_num <- 5e+00
 #
 # frq_pth <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE)
@@ -100,11 +100,11 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 #' Compare the simulation generated with the Wright-Fisher model and the Wright-Fisher diffusion
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
-# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 200))
+# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
 # int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # int_gen <- 0
-# lst_gen <- 600
+# lst_gen <- 500
 # ptn_num <- 5e+00
 # sim_num <- 1e+06
 #
@@ -151,10 +151,10 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 # model <- "WFM"
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
-# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 200))
+# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-# smp_gen <- (0:20) * 30
-# smp_siz <- rep(100, 21)
+# smp_gen <- (0:10) * 50
+# smp_siz <- rep(100, 11)
 #
 # sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 # smp_gen <- sim_HMM_WFM$smp_gen
@@ -218,10 +218,10 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 # model <- "WFD"
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
-# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 200))
+# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-# smp_gen <- (0:20) * 30
-# smp_siz <- rep(100, 21)
+# smp_gen <- (0:10) * 50
+# smp_siz <- rep(100, 11)
 # ref_siz <- 1e+04
 # ptn_num <- 5e+00
 #
@@ -290,10 +290,10 @@ set.seed(test_seed)
 model <- "WFM"
 sel_cof <- c(1e-02, 5e-03)
 rec_rat <- 5e-01
-pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 200))
+pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-smp_gen <- (0:20) * 30
-smp_siz <- rep(100, 21)
+smp_gen <- (0:10) * 50
+smp_siz <- rep(100, 11)
 
 sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 smp_gen <- sim_HMM_WFM$smp_gen
