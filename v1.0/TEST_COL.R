@@ -36,7 +36,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 #
@@ -72,7 +72,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -99,7 +99,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -148,7 +148,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 #
@@ -215,7 +215,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 #
@@ -285,9 +285,9 @@ model <- "WFM"
 sel_cof <- c(1e-02, 5e-03)
 rec_rat <- 5e-01
 pop_siz <- 5e+03
-int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-smp_gen <- (0:10) * 50
-smp_siz <- rep(100, 11)
+int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+smp_gen <- (0:20) * 25
+smp_siz <- rep(100, 21)
 
 sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 smp_gen <- sim_HMM_WFM$smp_gen
