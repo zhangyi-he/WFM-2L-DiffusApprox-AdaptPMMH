@@ -284,7 +284,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 21
+test_seed <- 1
 set.seed(test_seed)
 
 model <- "WFM"
