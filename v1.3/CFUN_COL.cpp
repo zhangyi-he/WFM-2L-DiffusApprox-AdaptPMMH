@@ -70,7 +70,7 @@ List simulateWFM_arma(const arma::dmat& fts_mat, const double& rec_rat, const ar
   arma::dcolvec eta = {-1.0, 1.0, 1.0, -1.0};
 
   // simulate the haplotype and genotype frequency trajectories
-  for(arma::uword k = 1; k < arma::uword(lst_gen - int_gen) + 1; k++) {
+  for (arma::uword k = 1; k < arma::uword(lst_gen - int_gen) + 1; k++) {
     // calculate the sampling probabilities
     arma::dcolvec prob = hap_frq;
     prob = hap_frq % (fts_mat * hap_frq) / arma::as_scalar(hap_frq.t() * fts_mat * hap_frq);
@@ -174,11 +174,11 @@ arma::dmat simulateWFD_arma(const arma::dcolvec& sel_cof, const double& rec_rat,
     frq_pth.col(t) = frq_pth.col(t - 1) + mu * dt + sigma * dW.col(t - 1);
 
     // remove the noise from the numerical techniques
-    for(arma::uword i = 0; i < 4; i++) {
-      if(frq_pth(i, t) < 0) {
+    for (arma::uword i = 0; i < 4; i++) {
+      if (frq_pth(i, t) < 0) {
         frq_pth(i, t) = 0;
       }
-      if(frq_pth(i, t) > 1) {
+      if (frq_pth(i, t) > 1) {
         frq_pth(i, t) = 1;
       }
     }
@@ -925,15 +925,15 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const arma::icol
 
 // Initialise the particles in the particle filter (uniform generation from the flat Dirichlet distribution)
 // [[Rcpp::export]]
-arma::dmat initialiseParticle(const arma::uword& pcl_num){
+arma::dmat initialiseParticle(const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
   NumericMatrix part(pcl_num, 4);
-  for(int j = 0; j < 4; j++){
+  for (int j = 0; j < 4; j++) {
     part(_, j) = rgamma(pcl_num, 1.0, 1.0);
   }
-  for(int i = 0; i < pcl_num; i++){
+  for (int i = 0; i < pcl_num; i++) {
     part(i, _) = part(i, _) / sum(part(i, _));
   }
 
