@@ -122,12 +122,15 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_
   }
 
   # generate the sample genotype counts at all sampling time points
-  smp_gen_cnt <- matrix(NA, nrow = 9, ncol = length(smp_gen))
-  smp_gen_frq <- matrix(NA, nrow = 9, ncol = length(smp_gen))
+  # smp_gen_cnt <- matrix(NA, nrow = 9, ncol = length(smp_gen))
+  # smp_gen_frq <- matrix(NA, nrow = 9, ncol = length(smp_gen))
+  smp_gen_cnt <- matrix(NA, nrow = 10, ncol = length(smp_gen))
+  smp_gen_frq <- matrix(NA, nrow = 10, ncol = length(smp_gen))
   for (k in 1:length(smp_gen)) {
-    gen_cnt <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
-    gen_cnt[5] <- gen_cnt[5] + gen_cnt[7]
-    smp_gen_cnt[, k] <- gen_cnt[-7]
+    smp_gen_cnt[, k]  <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
+    # gen_cnt <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
+    # gen_cnt[5] <- gen_cnt[5] + gen_cnt[7]
+    # smp_gen_cnt[, k] <- gen_cnt[-7]
     smp_gen_frq[, k] <- smp_gen_cnt[, k] / smp_siz[k]
   }
 
