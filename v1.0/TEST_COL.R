@@ -36,7 +36,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 #
@@ -72,7 +72,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -99,7 +99,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -148,9 +148,9 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # smp_gen <- (0:10) * 50
-# smp_siz <- rep(100, 11)
+# smp_siz <- rep(500, 11)
 #
 # sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 # smp_gen <- sim_HMM_WFM$smp_gen
@@ -215,9 +215,9 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # smp_gen <- (0:10) * 50
-# smp_siz <- rep(100, 11)
+# smp_siz <- rep(500, 11)
 #
 # sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 # smp_gen <- sim_HMM_WFD$smp_gen
@@ -285,9 +285,9 @@ model <- "WFM"
 sel_cof <- c(1e-02, 5e-03)
 rec_rat <- 5e-01
 pop_siz <- 5e+03
-int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
-smp_gen <- (0:20) * 25
-smp_siz <- rep(100, 21)
+int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
+smp_gen <- (0:10) * 50
+smp_siz <- rep(500, 11)
 
 sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
 smp_gen <- sim_HMM_WFM$smp_gen
@@ -295,8 +295,8 @@ smp_siz <- sim_HMM_WFM$smp_siz
 smp_cnt <- sim_HMM_WFM$smp_gen_cnt
 smp_frq <- sim_HMM_WFM$smp_gen_frq
 pop_frq <- sim_HMM_WFM$pop_gen_frq
-pop_frq[5, ] <- pop_frq[5, ] + pop_frq[7, ]
-pop_frq <- pop_frq[-7, ]
+# pop_frq[5, ] <- pop_frq[5, ] + pop_frq[7, ]
+# pop_frq <- pop_frq[-7, ]
 
 save(sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, smp_cnt, smp_frq, pop_frq,
      file = "./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
@@ -692,11 +692,11 @@ thn_num <- 3e+00
 
 system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
 
-load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
-
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
-     file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
-
+# load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
+#
+# save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
+#      file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
+#
 # load("./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
 #
 # sel_cof_chn <- BayesianProcedure$sel_cof_chn
