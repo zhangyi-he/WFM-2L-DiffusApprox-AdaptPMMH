@@ -141,6 +141,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param obs_hap = TRUE/FALSE (return the simulated sample genotypes with haplotype information or not)
 #' @param ptn_num the number of the subintervals divided per generation in the Euler-Maruyama method for the WFD
 
 #' Simulate the dataset under the Wright-Fisher model
@@ -151,8 +152,9 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(500, 11)
+# obs_hap <- FALSE
 #
-# sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
+# sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap)
 # smp_gen <- sim_HMM_WFM$smp_gen
 # smp_siz <- sim_HMM_WFM$smp_siz
 # smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
@@ -218,8 +220,10 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(500, 11)
+# obs_hap <- FALSE
+# ptn_num <- 5e+00
 #
-# sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
+# sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap, ptn_num)
 # smp_gen <- sim_HMM_WFD$smp_gen
 # smp_siz <- sim_HMM_WFD$smp_siz
 # smp_gen_cnt <- sim_HMM_WFD$smp_gen_cnt
@@ -278,7 +282,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 1
+test_seed <- 9
 set.seed(test_seed)
 
 model <- "WFM"
@@ -288,8 +292,9 @@ pop_siz <- 5e+03
 int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 smp_gen <- (0:10) * 50
 smp_siz <- rep(500, 11)
+obs_hap <- FALSE
 
-sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz)
+sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap)
 smp_gen <- sim_HMM_WFM$smp_gen
 smp_siz <- sim_HMM_WFM$smp_siz
 smp_cnt <- sim_HMM_WFM$smp_gen_cnt
@@ -298,68 +303,68 @@ pop_frq <- sim_HMM_WFM$pop_gen_frq
 # pop_frq[5, ] <- pop_frq[5, ] + pop_frq[7, ]
 # pop_frq <- pop_frq[-7, ]
 
-save(sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, smp_cnt, smp_frq, pop_frq,
+save(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap, smp_cnt, smp_frq, pop_frq,
      file = "./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
 
-# load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
-#
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_SimData.pdf", width = 24, height = 18)
-# par(mfrow = c(3, 3), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# k <- min(smp_gen):max(smp_gen)
-# plot(k, pop_frq[1, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[1, ], pop_frq[1, ]), max(smp_frq[1, ], pop_frq[1, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype AA/EE")
-# points(smp_gen, smp_frq[1, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[2, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[2, ], pop_frq[2, ]), max(smp_frq[2, ], pop_frq[2, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype AA/Ee")
-# points(smp_gen, smp_frq[2, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[3, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[3, ], pop_frq[3, ]), max(smp_frq[3, ], pop_frq[3, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype AA/ee")
-# points(smp_gen, smp_frq[3, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[4, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[4, ], pop_frq[4, ]), max(smp_frq[4, ], pop_frq[4, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype Aa/EE")
-# points(smp_gen, smp_frq[4, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[5, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[5, ], pop_frq[5, ]), max(smp_frq[5, ], pop_frq[5, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype Aa/Ee")
-# points(smp_gen, smp_frq[5, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[6, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[6, ], pop_frq[6, ]), max(smp_frq[6, ], pop_frq[6, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype aa/EE")
-# points(smp_gen, smp_frq[6, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[7, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[7, ], pop_frq[7, ]), max(smp_frq[7, ], pop_frq[7, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype Aa/ee")
-# points(smp_gen, smp_frq[7, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[8, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[8, ], pop_frq[8, ]), max(smp_frq[8, ], pop_frq[8, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype aa/Ee")
-# points(smp_gen, smp_frq[8, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[9, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[9, ], pop_frq[9, ]), max(smp_frq[9, ], pop_frq[9, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype aa/ee")
-# points(smp_gen, smp_frq[9, ], col = 'red', pch = 17, cex = 1)
-# dev.off()
+load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_SimData.pdf", width = 24, height = 18)
+par(mfrow = c(3, 3), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+k <- min(smp_gen):max(smp_gen)
+plot(k, pop_frq[1, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[1, ], pop_frq[1, ]), max(smp_frq[1, ], pop_frq[1, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype AA/EE")
+points(smp_gen, smp_frq[1, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[2, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[2, ], pop_frq[2, ]), max(smp_frq[2, ], pop_frq[2, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype AA/Ee")
+points(smp_gen, smp_frq[2, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[3, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[3, ], pop_frq[3, ]), max(smp_frq[3, ], pop_frq[3, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype AA/ee")
+points(smp_gen, smp_frq[3, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[4, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[4, ], pop_frq[4, ]), max(smp_frq[4, ], pop_frq[4, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype Aa/EE")
+points(smp_gen, smp_frq[4, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[5, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[5, ], pop_frq[5, ]), max(smp_frq[5, ], pop_frq[5, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype Aa/Ee")
+points(smp_gen, smp_frq[5, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[6, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[6, ], pop_frq[6, ]), max(smp_frq[6, ], pop_frq[6, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype aa/EE")
+points(smp_gen, smp_frq[6, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[7, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[7, ], pop_frq[7, ]), max(smp_frq[7, ], pop_frq[7, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype Aa/ee")
+points(smp_gen, smp_frq[7, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[8, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[8, ], pop_frq[8, ]), max(smp_frq[8, ], pop_frq[8, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype aa/Ee")
+points(smp_gen, smp_frq[8, ], col = 'red', pch = 17, cex = 1)
+
+plot(k, pop_frq[9, ], type = 'l', lwd = 1.5,
+     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[9, ], pop_frq[9, ]), max(smp_frq[9, ], pop_frq[9, ])),
+     xlab = "Generation", ylab = "Genotype frequency",
+     main = "Genotype aa/ee")
+points(smp_gen, smp_frq[9, ], col = 'red', pch = 17, cex = 1)
+dev.off()
 
 ########################################
 
@@ -534,7 +539,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap
 # opt_pcl_num <- OptNum$opt_pcl_num
 # log_lik_sdv <- OptNum$log_lik_sdv
 #
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_OptNum.rda.pdf", width = 8, height = 6)
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_OptNum.pdf", width = 8, height = 6)
 # par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # plot(opt_pcl_num, log_lik_sdv, type = 'b', lwd = 2,
 #      xlab = "Particle number", ylab = "Log-likelihood standard deviation",
@@ -692,11 +697,11 @@ thn_num <- 3e+00
 
 system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
 
-# load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
-#
-# save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
-#      file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
-#
+load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
+
+save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
+     file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
+
 # load("./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
 #
 # sel_cof_chn <- BayesianProcedure$sel_cof_chn
