@@ -93,11 +93,12 @@ cmpsimulateWFD <- cmpfun(simulateWFD)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param obs_hap = TRUE/FALSE (return the simulated sample genotypes with haplotype information or not)
 #' @param ref_siz the reference size of the horse population
 #' @param ptn_num the number of the subintervals divided per generation in the Euler-Maruyama method for the WFD
 
 #' Standard version
-simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, ...) {
+simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap = FALSE, ...) {
   int_gen <- min(smp_gen)
   lst_gen <- max(smp_gen)
 
@@ -122,16 +123,24 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_
   }
 
   # generate the sample genotype counts at all sampling time points
-  # smp_gen_cnt <- matrix(NA, nrow = 9, ncol = length(smp_gen))
-  # smp_gen_frq <- matrix(NA, nrow = 9, ncol = length(smp_gen))
-  smp_gen_cnt <- matrix(NA, nrow = 10, ncol = length(smp_gen))
-  smp_gen_frq <- matrix(NA, nrow = 10, ncol = length(smp_gen))
-  for (k in 1:length(smp_gen)) {
-    smp_gen_cnt[, k]  <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
-    # gen_cnt <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
-    # gen_cnt[5] <- gen_cnt[5] + gen_cnt[7]
-    # smp_gen_cnt[, k] <- gen_cnt[-7]
-    smp_gen_frq[, k] <- smp_gen_cnt[, k] / smp_siz[k]
+  if (obs_hap == TRUE) {
+    smp_gen_cnt <- matrix(NA, nrow = 10, ncol = length(smp_gen))
+    smp_gen_frq <- matrix(NA, nrow = 10, ncol = length(smp_gen))
+    for (k in 1:length(smp_gen)) {
+      smp_gen_cnt[, k]  <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
+      smp_gen_frq[, k] <- smp_gen_cnt[, k] / smp_siz[k]
+    }
+  } else {
+    smp_gen_cnt <- matrix(NA, nrow = 9, ncol = length(smp_gen))
+    smp_gen_frq <- matrix(NA, nrow = 9, ncol = length(smp_gen))
+    for (k in 1:length(smp_gen)) {
+      gen_cnt <- rmultinom(1, size = smp_siz[k], prob = pop_gen_frq[, smp_gen[k] - int_gen + 1])
+      gen_cnt[5] <- gen_cnt[5] + gen_cnt[7]
+      smp_gen_cnt[, k] <- gen_cnt[-7]
+      smp_gen_frq[, k] <- smp_gen_cnt[, k] / smp_siz[k]
+    }
+    pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
+    pop_gen_frq <- pop_gen_frq[-7, ]
   }
 
   return(list(smp_gen = smp_gen,
