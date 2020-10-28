@@ -274,15 +274,15 @@ arma::dmat initialiseParticle(const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
-  NumericMatrix part(pcl_num, 4);
-  for (int j = 0; j < 4; j++) {
-    part(_, j) = rgamma(pcl_num, 1.0, 1.0);
+  NumericMatrix part(4, pcl_num);
+  for (int i = 0; i < 4; i++) {
+    part(i, _) = rgamma(pcl_num, 1.0, 1.0);
   }
-  for (int i = 0; i < pcl_num; i++) {
-    part(i, _) = part(i, _) / sum(part(i, _));
+  for (int j = 0; j < pcl_num; j++) {
+    part(_, j) = part(_, j) / sum(part(_, j));
   }
 
-  return as<arma::dmat>(transpose(part));
+  return as<arma::dmat>(part);
 }
 
 // Run the bootstrap particle filter
@@ -544,8 +544,8 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
   arma::dmat sel_cof_chn = arma::zeros<arma::dmat>(2, itn_num);
 
-  //arma::drowvec log_pri_chn = arma::zeros<arma::drowvec>(itn_num);
-  arma::drowvec log_lik_chn = arma::zeros<arma::drowvec>(itn_num);
+  //arma::drowvec log_pri = arma::zeros<arma::drowvec>(2);
+  arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
   arma::dcolvec sel_cof_sd = {5e-03, 5e-03};
 
@@ -555,7 +555,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
   // or take the beta prior with alpha = 1 and beta = 3
   sel_cof_chn.col(0) = sel_cof;
 
-  log_lik_chn(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+  log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
   double apt_rto = 0;
   for (arma::uword i = 1; i < itn_num; i++) {
@@ -566,22 +566,23 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
     if (arma::any(sel_cof_chn.col(i) < -1)) {
       sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
-      log_lik_chn(i) = log_lik_chn(i - 1);
+      log_lik(1) = log_lik(0);
     } else {
       // calculate the proposal
-      //double log_psl_old_new
-      //double log_psl_new_old
+      //arma::drowvec log_psl = arma::zeros<arma::drowvec>(2);
 
       // calculate the likelihood
-      log_lik_chn(i) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+      log_lik(1) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
       // calculate the acceptance ratio
-      apt_rto = exp(log_lik_chn(i) - log_lik_chn(i - 1));
-      //apt_rto = exp((log_pri_chn(i) + log_lik_chn(i) + log_psl_old_new) - (log_pri_chn(i - 1) + log_lik_chn(i - 1) + log_psl_new_old));
+      apt_rto = exp(log_lik(1) - log_lik(0));
+      //apt_rto = exp((log_pri(1) + log_lik(1) + log_psl(1)) - (log_pri(0) + log_lik(0) + log_psl(0)));
 
       if (arma::randu() > apt_rto) {
         sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
-        log_lik_chn(i) = log_lik_chn(i - 1);
+        log_lik(1) = log_lik(0);
+      } else {
+        log_lik(0) = log_lik(1);
       }
     }
   }
