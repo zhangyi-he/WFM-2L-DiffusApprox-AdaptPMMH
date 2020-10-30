@@ -155,7 +155,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # smp_gen <- (0:10) * 50
-# smp_siz <- rep(500, 11)
+# smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
 #
 # sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap)
@@ -223,7 +223,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 # smp_gen <- (0:10) * 50
-# smp_siz <- rep(500, 11)
+# smp_siz <- rep(100, 11)
 # ref_siz <- 1e+04
 # obs_hap <- FALSE
 # ptn_num <- 5e+00
@@ -296,7 +296,7 @@ rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
 smp_gen <- (0:10) * 50
-smp_siz <- rep(500, 11)
+smp_siz <- rep(100, 11)
 obs_hap <- FALSE
 
 sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap)
