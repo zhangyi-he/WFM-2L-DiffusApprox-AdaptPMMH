@@ -36,7 +36,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
+# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 #
@@ -72,7 +72,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
+# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -99,7 +99,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
+# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -149,7 +149,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
+# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
@@ -217,7 +217,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # sel_cof <- c(1e-02, 5e-03)
 # rec_rat <- 5e-01
 # pop_siz <- 5e+03
-# int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
+# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
@@ -282,14 +282,14 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 9
+test_seed <- 1
 set.seed(test_seed)
 
 model <- "WFM"
 sel_cof <- c(1e-02, 5e-03)
 rec_rat <- 5e-01
 pop_siz <- 5e+03
-int_frq <- c(3e-01, 3e-01, 3e-01, 1e-01)
+int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
 smp_gen <- (0:10) * 50
 smp_siz <- rep(100, 11)
 obs_hap <- FALSE
@@ -397,109 +397,109 @@ system.time(BPF <- cmprunBPF(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cn
 save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF,
      file = "./Output/Output v1.0/Test v1.0/TEST_COL_BPF.rda")
 
-# load("./Output/Output v1.0/Test v1.0/TEST_COL_BPF.rda")
-#
-# lik <- rep(1, pcl_num)
-# wght <- BPF$wght
-# for (k in 1:length(smp_gen)) {
-#   lik <- lik * (cumsum(wght[, k]) / (1:pcl_num))
-# }
-#
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BPF_Likelihood.pdf", width = 8, height = 6)
-# par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# plot(1:pcl_num, log(lik), type = 'l',
-#      xlab = "Number of particles", ylab = "Log likelihood",
-#      main = "Log likelihood through the bootstrap particle filter")
-# dev.off()
-#
-# pop_frq_pre_resmp <- BPF$gen_frq_pre_resmp
-# pop_frq_pst_resmp <- BPF$gen_frq_pst_resmp
-#
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BPF_Particle.pdf", width = 72, height = 66)
-# par(mfrow = c(11, 9), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# for (k in 1:length(smp_gen)) {
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k], smp_frq[1, k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k], smp_frq[1, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype AA/EE at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[1, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k], smp_frq[2, k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k], smp_frq[2, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype AA/Ee at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[2, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k], smp_frq[3, k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k], smp_frq[3, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype AA/ee at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[3, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k], smp_frq[4, k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k], smp_frq[4, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype Aa/EE at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[4, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k], smp_frq[5, k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k], smp_frq[5, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype Aa/Ee at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[5, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype aa/EE at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[6, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k], smp_frq[7, k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k], smp_frq[7, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype Aa/ee at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[7, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k], smp_frq[8, k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k], smp_frq[8, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype aa/Ee at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[8, k], col = 'red', lty = 2, lwd = 2)
-#
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k], smp_frq[9, k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k], smp_frq[9, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype aa/ee at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[9, k], col = 'red', lty = 2, lwd = 2)
-# }
-# dev.off()
+load("./Output/Output v1.0/Test v1.0/TEST_COL_BPF.rda")
+
+lik <- rep(1, pcl_num)
+wght <- BPF$wght
+for (k in 1:length(smp_gen)) {
+  lik <- lik * (cumsum(wght[, k]) / (1:pcl_num))
+}
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BPF_Likelihood.pdf", width = 8, height = 6)
+par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(1:pcl_num, log(lik), type = 'l',
+     xlab = "Number of particles", ylab = "Log likelihood",
+     main = "Log likelihood through the bootstrap particle filter")
+dev.off()
+
+pop_frq_pre_resmp <- BPF$gen_frq_pre_resmp
+pop_frq_pst_resmp <- BPF$gen_frq_pst_resmp
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BPF_Particle.pdf", width = 72, height = 66)
+par(mfrow = c(11, 9), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+for (k in 1:length(smp_gen)) {
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k], smp_frq[1, k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k], smp_frq[1, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype AA/EE at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[1, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k], smp_frq[2, k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k], smp_frq[2, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype AA/Ee at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[2, , k], breaks = seq(min(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), max(pop_frq_pst_resmp[2, , k], pop_frq_pre_resmp[2, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[2, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k], smp_frq[3, k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k], smp_frq[3, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype AA/ee at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[3, , k], breaks = seq(min(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), max(pop_frq_pst_resmp[3, , k], pop_frq_pre_resmp[3, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[3, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k], smp_frq[4, k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k], smp_frq[4, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype Aa/EE at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[4, , k], breaks = seq(min(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), max(pop_frq_pst_resmp[4, , k], pop_frq_pre_resmp[4, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[4, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k], smp_frq[5, k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k], smp_frq[5, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype Aa/Ee at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[5, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype aa/EE at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[6, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k], smp_frq[7, k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k], smp_frq[7, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype Aa/ee at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[7, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k], smp_frq[8, k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k], smp_frq[8, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype aa/Ee at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[8, k], col = 'red', lty = 2, lwd = 2)
+
+  hist_pst_resmp <- hist(pop_frq_pst_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), plot = FALSE)
+  hist_pre_resmp <- hist(pop_frq_pre_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), plot = FALSE)
+  hist(pop_frq_pst_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+       xlim = c(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k], smp_frq[9, k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k], smp_frq[9, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+       xlab = "Genotype frequency",
+       main = paste("Genotype aa/ee at generation", smp_gen[k]))
+  hist(pop_frq_pre_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+  abline(v = smp_frq[9, k], col = 'red', lty = 2, lwd = 2)
+}
+dev.off()
 
 ########################################
 
@@ -534,19 +534,19 @@ system.time(OptNum <- calculateOptimalParticleNum(sel_cof, rec_rat, pop_siz, smp
 save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num, OptNum,
      file = "./Output/Output v1.0/Test v1.0/TEST_COL_OptNum.rda")
 
-# load("./Output/Output v1.0/Test v1.0/TEST_COL_OptNum.rda")
-#
-# opt_pcl_num <- OptNum$opt_pcl_num
-# log_lik_sdv <- OptNum$log_lik_sdv
-#
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_OptNum.pdf", width = 8, height = 6)
-# par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# plot(opt_pcl_num, log_lik_sdv, type = 'b', lwd = 2,
-#      xlab = "Particle number", ylab = "Log-likelihood standard deviation",
-#      main = "Optimal particle number in the PMMH")
-# abline(h = 1.7, col = 'red', lty = 2, lwd = 2)
-# abline(h = 1.0, col = 'red', lty = 2, lwd = 2)
-# dev.off()
+load("./Output/Output v1.0/Test v1.0/TEST_COL_OptNum.rda")
+
+opt_pcl_num <- OptNum$opt_pcl_num
+log_lik_sdv <- OptNum$log_lik_sdv
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_OptNum.pdf", width = 8, height = 6)
+par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(opt_pcl_num, log_lik_sdv, type = 'b', lwd = 2,
+     xlab = "Particle number", ylab = "Log-likelihood standard deviation",
+     main = "Optimal particle number in the PMMH")
+abline(h = 1.7, col = 'red', lty = 2, lwd = 2)
+abline(h = 1.0, col = 'red', lty = 2, lwd = 2)
+dev.off()
 
 ########################################
 
@@ -583,70 +583,38 @@ load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
 save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
      file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH.rda")
 
-# load("./Output/Output v1.0/Test v1.0/TEST_COL_PMMH.rda")
-#
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Traceplot.pdf", width = 8, height = 12)
-# par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
-#      xlab = "Iteration", ylab = "Selection coefficient",
-#      main = "Trace plot for the sel coeff of the black")
-# abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-#
-# plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
-#      xlab = "Iteration", ylab = "Selection coefficient",
-#      main = "Trace plot for the sel coeff of the chestnut")
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# dev.off()
-#
-# brn_num <- 1e+04
-# sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
-#
-# thn_num <- 8e+00
-# sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
-#
-# sel_cof_est <- rowMeans(sel_cof_chn)
-#
-# sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
-# sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
-# sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
-#
-# # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 6)
-# # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
-# #      xlab = "Selection coefficient",
-# #      main = "Posterior for the sel coeff of the black")
-# # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
-# # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-# # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
-# #
-# # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
-# #      xlab = "Selection coefficient",
-# #      main = "Posterior for the sel coeff of the chestnut")
-# # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
-# # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-# # dev.off()
-#
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 8)
-# par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
-# grd_num <- 1e+03
-# sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
-# image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-#       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-#       main = "Joint posterior for the sel coeff")
-# abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-# abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-#
+load("./Output/Output v1.0/Test v1.0/TEST_COL_PMMH.rda")
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Traceplot.pdf", width = 8, height = 12)
+par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
+     xlab = "Iteration", ylab = "Selection coefficient",
+     main = "Trace plot for the sel coeff of the black")
+abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+
+plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
+     xlab = "Iteration", ylab = "Selection coefficient",
+     main = "Trace plot for the sel coeff of the chestnut")
+abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+dev.off()
+
+brn_num <- 1e+04
+sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
+
+thn_num <- 8e+00
+sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
+
+sel_cof_est <- rowMeans(sel_cof_chn)
+
+sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
+sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
+sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
+
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 6)
+# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the black")
+#      main = "Posterior for the sel coeff of the black")
 # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -655,13 +623,45 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 #
 # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the chestnut")
+#      main = "Posterior for the sel coeff of the chestnut")
 # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 8)
+par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+      main = "Joint posterior for the sel coeff")
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the black")
+lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the chestnut")
+lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
 
 ########################################
 
@@ -702,51 +702,19 @@ load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
 save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
      file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
 
-# load("./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
-#
-# sel_cof_chn <- BayesianProcedure$sel_cof_chn
-#
-# sel_cof_est <- BayesianProcedure$sel_cof_est
-#
-# sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
-#
-# # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 6)
-# # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
-# #      xlab = "Selection coefficient",
-# #      main = "Posterior for the sel coeff of the black")
-# # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
-# # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-# # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
-# #
-# # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
-# #      xlab = "Selection coefficient",
-# #      main = "Posterior for the sel coeff of the chestnut")
-# # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
-# # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
-# # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-# # dev.off()
-#
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 8)
-# par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
-# grd_num <- 1e+03
-# sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
-# image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-#       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-#       main = "Joint posterior for the sel coeff")
-# abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-# abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-#
+load("./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
+
+sel_cof_chn <- BayesianProcedure$sel_cof_chn
+
+sel_cof_est <- BayesianProcedure$sel_cof_est
+
+sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
+
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 6)
+# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the black")
+#      main = "Posterior for the sel coeff of the black")
 # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -755,12 +723,44 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 #
 # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the chestnut")
+#      main = "Posterior for the sel coeff of the chestnut")
 # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 8)
+par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+      main = "Joint posterior for the sel coeff")
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the black")
+lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the chestnut")
+lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
 
 ################################################################################
