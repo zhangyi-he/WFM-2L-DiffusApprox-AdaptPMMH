@@ -560,7 +560,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
-#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
+#' @param itn_num the number of the iterations carried out in the PMMH
 
 load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
 
@@ -665,6 +665,125 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 
 ########################################
 
+#' Run the adaptive particle marginal Metropolis-Hastings (PMMH)
+#' Parameter settings
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the size of the horse population (constant)
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param pcl_num the number of particles generated in the bootstrap particle filter
+#' @param itn_num the number of the iterations carried out in the PMMH
+#' @param stp_siz the step size sequence in the adaptive PMMH (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive PMMH
+
+load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
+
+set.seed(test_seed)
+
+sel_cof <- c(0e+00, 0e+00)
+rec_rat
+pop_siz
+smp_gen
+smp_siz
+smp_cnt
+ptn_num <- 5e+00
+pcl_num <- 1e+03
+itn_num <- 5e+04
+stp_siz <- (1:itn_num)^(-2 / 3)
+apt_rto <- 4e-01
+
+system.time(sel_cof_chn <- cmprunAdaptivePMMH(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+
+load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
+
+save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+     file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptivePMMH.rda")
+
+# load("./Output/Output v1.0/Test v1.0/TEST_COL_AdaptivePMMH.rda")
+#
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptivePMMH_Traceplot.pdf", width = 8, height = 12)
+# par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
+#      xlab = "Iteration", ylab = "Selection coefficient",
+#      main = "Trace plot for the sel coeff of the black")
+# abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+#
+# plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
+#      xlab = "Iteration", ylab = "Selection coefficient",
+#      main = "Trace plot for the sel coeff of the chestnut")
+# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+# dev.off()
+#
+# brn_num <- 1e+04
+# sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
+#
+# thn_num <- 8e+00
+# sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
+#
+# sel_cof_est <- rowMeans(sel_cof_chn)
+#
+# sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
+# sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
+# sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
+#
+# # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptivePMMH_Posterior.pdf", width = 16, height = 6)
+# # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
+# #      xlab = "Selection coefficient",
+# #      main = "Posterior for the sel coeff of the black")
+# # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
+# # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+# # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+# # abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+# # abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+# #
+# # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
+# #      xlab = "Selection coefficient",
+# #      main = "Posterior for the sel coeff of the chestnut")
+# # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
+# # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+# # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+# # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+# # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+# # dev.off()
+#
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptivePMMH_Posterior.pdf", width = 16, height = 8)
+# par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
+# grd_num <- 1e+03
+# sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
+# image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+#       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+#       main = "Joint posterior for the sel coeff")
+# abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+# abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+# abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+#
+# hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Marginal posterior for the sel coeff of the black")
+# lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
+# abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+# abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+#
+# hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Marginal posterior for the sel coeff of the chestnut")
+# lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
+# abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+# abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+# dev.off()
+
+########################################
+
 #' Run the Bayesian procedure for the inference of natural selection
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
@@ -675,9 +794,12 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
-#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
+#' @param itn_num the number of the iterations carried out in the PMMH
 #' @param brn_num the number of the iterations for burn-in
 #' @param thn_num the number of the iterations for thinning
+#' @param adp_set = TRUE/FALSE (return the result with the adaptive setting or not)
+#' @param stp_siz the step size sequence in the adaptive PMMH (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive PMMH
 
 load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
 
@@ -694,12 +816,15 @@ pcl_num <- 1e+03
 itn_num <- 2e+04
 brn_num <- 5e+03
 thn_num <- 3e+00
+adp_set <- TRUE
+stp_siz <- (1:itn_num)^(-2 / 3)
+apt_rto <- 4e-01
 
-system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
+system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, stp_siz, apt_rto))
 
 load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
 
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
+save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, stp_siz, apt_rto, BayesianProcedure,
      file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
 
 # load("./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc.rda")
