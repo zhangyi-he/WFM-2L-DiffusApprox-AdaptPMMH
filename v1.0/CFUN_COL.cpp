@@ -587,7 +587,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
   return sel_cof_chn;
 }
 
-// Run the particle marginal Metropolis-Hastings
+// Run the adaptive particle marginal Metropolis-Hastings
 //[[Rcpp::export]]
 arma::dmat runAdaptivePMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
   // ensure RNG gets set/reset
