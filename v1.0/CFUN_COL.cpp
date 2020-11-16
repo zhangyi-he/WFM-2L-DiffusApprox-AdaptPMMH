@@ -535,7 +535,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
   arma::dmat sel_cof_chn = arma::zeros<arma::dmat>(2, itn_num);
 
-  //arma::drowvec log_pri = arma::zeros<arma::drowvec>(2);
+  // arma::drowvec log_pri = arma::zeros<arma::drowvec>(2);
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
   arma::dcolvec sel_cof_sd = {5e-03, 5e-03};
@@ -548,7 +548,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
   log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
-  double apt_rto = 0;
+  double apt_cnt = 0;
   for (arma::uword i = 1; i < itn_num; i++) {
     cout << "iteration: " << i + 1 << endl;
 
@@ -558,24 +558,107 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
     if (arma::any(sel_cof_chn.col(i) < -1)) {
       sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
       log_lik(1) = log_lik(0);
+      // apt_cnt = apt_cnt + 0;
+      cout << "acceptance: " << apt_cnt / i << endl;
     } else {
       // calculate the proposal
-      //arma::drowvec log_psl = arma::zeros<arma::drowvec>(2);
+      // arma::drowvec log_psl = arma::zeros<arma::drowvec>(2);
 
       // calculate the likelihood
       log_lik(1) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
       // calculate the acceptance ratio
-      apt_rto = exp(log_lik(1) - log_lik(0));
-      //apt_rto = exp((log_pri(1) + log_lik(1) + log_psl(1)) - (log_pri(0) + log_lik(0) + log_psl(0)));
+      // double apt_rto = exp(log_lik(1) - log_lik(0));
+      // double apt_rto = exp((log_pri(1) + log_lik(1) + log_psl(1)) - (log_pri(0) + log_lik(0) + log_psl(0)));
 
-      if (arma::randu() > apt_rto) {
+      if (arma::randu() > exp(log_lik(1) - log_lik(0))) {
         sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
         log_lik(1) = log_lik(0);
+        // apt_cnt = apt_cnt + 0;
+        cout << "acceptance: " << apt_cnt / i << endl;
       } else {
         log_lik(0) = log_lik(1);
+        apt_cnt = apt_cnt + 1;
+        cout << "acceptance: " << apt_cnt / i << endl;
       }
     }
+  }
+
+  return sel_cof_chn;
+}
+
+// Run the particle marginal Metropolis-Hastings
+//[[Rcpp::export]]
+arma::dmat runAdaptivePMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
+  // ensure RNG gets set/reset
+  RNGScope scope;
+
+  arma::field<arma::imat> ptl_cnt(smp_gen.n_elem);
+  for (arma::uword k = 0; k < smp_gen.n_elem; k++) {
+    ptl_cnt(k) = calculateGenoCnt_arma(smp_cnt.col(k));
+  }
+
+  arma::dmat sel_cof_chn = arma::zeros<arma::dmat>(2, itn_num);
+
+  // arma::drowvec log_pri = arma::zeros<arma::drowvec>(2);
+  arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
+
+  arma::dcolvec U = arma::zeros<arma::dcolvec>(2);
+  arma::dmat S = {{5e-03, 0e-00}, {0e-00, 5e-03}};
+  arma::dmat M = arma::zeros<arma::dmat>(2, 2);
+  arma::dmat I = arma::eye<arma::dmat>(2, 2);
+
+  // initialise the population genetic parameters
+  cout << "iteration: " << 1 << endl;
+  // take the uniform prior and fix the initial value of the selection coefficient to zero
+  // or take the beta prior with alpha = 1 and beta = 3
+  sel_cof_chn.col(0) = sel_cof;
+
+  log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+
+  double apt_cnt = 0;
+  for (arma::uword i = 1; i < itn_num; i++) {
+    cout << "iteration: " << i + 1 << endl;
+
+    // draw the candidates of the selection coefficients from the random walk proposal
+    U = arma::randn<arma::dcolvec>(2);
+    sel_cof_chn.col(i) = sel_cof_chn.col(i - 1) + S * U;
+
+    double alpha = 0;
+    if (arma::any(sel_cof_chn.col(i) < -1)) {
+      sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
+      log_lik(1) = log_lik(0);
+      // apt_cnt = apt_cnt + 0;
+      cout << "acceptance: " << apt_cnt / i << endl;
+    } else {
+      // calculate the proposal
+      // arma::drowvec log_psl = arma::zeros<arma::drowvec>(2);
+
+      // calculate the likelihood
+      log_lik(1) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+
+      // calculate the acceptance ratio
+      // double apt_rto = exp(log_lik(1) - log_lik(0));
+      // double apt_rto = exp((log_pri(1) + log_lik(1) + log_psl(1)) - (log_pri(0) + log_lik(0) + log_psl(0)));
+
+      alpha = exp(log_lik(1) - log_lik(0));
+      alpha = (alpha > 1) ? 1 : alpha;
+      if (arma::randu() > alpha) {
+        sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
+        log_lik(1) = log_lik(0);
+        // apt_cnt = apt_cnt + 0;
+        cout << "acceptance: " << apt_cnt / i << endl;
+      } else {
+        log_lik(0) = log_lik(1);
+        apt_cnt = apt_cnt + 1;
+        cout << "acceptance: " << apt_cnt / i << endl;
+      }
+    }
+
+    U = arma::normalise(U);
+    M = S * (I + stp_siz(i) * (alpha - apt_rto) * (U * U.t())) * S.t();
+    S = arma::chol(M, "lower");
+    cout << S << endl;
   }
 
   return sel_cof_chn;
