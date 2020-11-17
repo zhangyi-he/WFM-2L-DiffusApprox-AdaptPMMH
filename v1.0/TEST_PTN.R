@@ -600,10 +600,10 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 #      main = "Trace plot for the sel coeff of the sabino")
 # abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 #
-# plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
+# plot(1:itn_num, sel_cof_chn[3, 1:itn_num], type = 'l',
 #      xlab = "Iteration", ylab = "Selection coefficient",
 #      main = "Trace plot for the sel coeff of the mixed")
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+# abline(h = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 # dev.off()
 #
 # brn_num <- 1e+04
@@ -614,7 +614,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 #
 # sel_cof_est <- rowMeans(sel_cof_chn)
 #
-# sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
+# sel_cof_hpd <- matrix(NA, nrow = 3, ncol = 2)
 # sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 # sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 # sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
@@ -702,10 +702,10 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 #      main = "Trace plot for the sel coeff of the sabino")
 # abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 #
-# plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
+# plot(1:itn_num, sel_cof_chn[3, 1:itn_num], type = 'l',
 #      xlab = "Iteration", ylab = "Selection coefficient",
 #      main = "Trace plot for the sel coeff of the mixed")
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+# abline(h = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 # dev.off()
 #
 # brn_num <- 1e+04
@@ -716,7 +716,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 #
 # sel_cof_est <- rowMeans(sel_cof_chn)
 #
-# sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
+# sel_cof_hpd <- matrix(NA, nrow = 3, ncol = 2)
 # sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 # sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 # sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
