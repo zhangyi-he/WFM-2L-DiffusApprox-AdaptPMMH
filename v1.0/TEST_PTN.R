@@ -192,16 +192,16 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "WFM-HMM: the KM0KM1/sb1SB1 genotype")
 # points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
-# plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "WFM-HMM: the KM1KM1/SB1SB1 genotype")
-# points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
 # plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "WFM-HMM: the KM0KM1/SB1SB1 genotype")
 # points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the KM1KM1/sb1sb1 genotype")
+# points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
 # plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
@@ -210,7 +210,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "WFM-HMM: the KM1KM1/sb1sb1 genotype")
+#      main = "WFM-HMM: the KM1KM1/SB1SB1 genotype")
 # points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 
 ####################
@@ -261,16 +261,16 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "WFD-HMM: the KM0KM1/sb1SB1 genotype")
 # points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
-# plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "WFD-HMM: the KM1KM1/SB1SB1 genotype")
-# points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
 # plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "WFD-HMM: the KM0KM1/SB1SB1 genotype")
 # points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the KM1KM1/sb1sb1 genotype")
+# points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
 # plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
@@ -279,7 +279,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "WFD-HMM: the KM1KM1/sb1sb1 genotype")
+#      main = "WFD-HMM: the KM1KM1/SB1SB1 genotype")
 # points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 
 ################################################################################
@@ -319,53 +319,53 @@ save(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap, smp_c
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM0/sb1sb1")
 # points(smp_gen, smp_frq[1, ], col = 'red', pch = 17, cex = 1)
-#
+# 
 # plot(k, pop_frq[2, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[2, ], pop_frq[2, ]), max(smp_frq[2, ], pop_frq[2, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM0/sb1SB1")
 # points(smp_gen, smp_frq[2, ], col = 'red', pch = 17, cex = 1)
-#
+# 
 # plot(k, pop_frq[3, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[3, ], pop_frq[3, ]), max(smp_frq[3, ], pop_frq[3, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM0/SB1SB1")
 # points(smp_gen, smp_frq[3, ], col = 'red', pch = 17, cex = 1)
-#
+# 
 # plot(k, pop_frq[4, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[4, ], pop_frq[4, ]), max(smp_frq[4, ], pop_frq[4, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM1/sb1sb1")
 # points(smp_gen, smp_frq[4, ], col = 'red', pch = 17, cex = 1)
-#
+# 
 # plot(k, pop_frq[5, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[5, ], pop_frq[5, ]), max(smp_frq[5, ], pop_frq[5, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM1/sb1SB1")
 # points(smp_gen, smp_frq[5, ], col = 'red', pch = 17, cex = 1)
-#
-# plot(k, pop_frq[6, ], type = 'l', lwd = 1.5,
-#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[6, ], pop_frq[6, ]), max(smp_frq[6, ], pop_frq[6, ])),
-#      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype KM1KM1/SB1SB1")
-# points(smp_gen, smp_frq[6, ], col = 'red', pch = 17, cex = 1)
-#
+# 
 # plot(k, pop_frq[7, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[7, ], pop_frq[7, ]), max(smp_frq[7, ], pop_frq[7, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM1/SB1SB1")
 # points(smp_gen, smp_frq[7, ], col = 'red', pch = 17, cex = 1)
-#
+# 
+# plot(k, pop_frq[6, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[6, ], pop_frq[6, ]), max(smp_frq[6, ], pop_frq[6, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "Genotype KM1KM1/sb1sb1")
+# points(smp_gen, smp_frq[6, ], col = 'red', pch = 17, cex = 1)
+# 
 # plot(k, pop_frq[8, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[8, ], pop_frq[8, ]), max(smp_frq[8, ], pop_frq[8, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM1KM1/SB1sb1")
 # points(smp_gen, smp_frq[8, ], col = 'red', pch = 17, cex = 1)
-#
+# 
 # plot(k, pop_frq[9, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[9, ], pop_frq[9, ]), max(smp_frq[9, ], pop_frq[9, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
-#      main = "Genotype KM1KM1/sb1sb1")
+#      main = "Genotype KM1KM1/SB1SB1")
 # points(smp_gen, smp_frq[9, ], col = 'red', pch = 17, cex = 1)
 # dev.off()
 
@@ -466,15 +466,6 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF
 #   hist(pop_frq_pre_resmp[5, , k], breaks = seq(min(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), max(pop_frq_pst_resmp[5, , k], pop_frq_pre_resmp[5, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
 #   abline(v = smp_frq[5, k], col = 'red', lty = 2, lwd = 2)
 #
-#   hist_pst_resmp <- hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
-#   hist_pre_resmp <- hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
-#   hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
-#        xlim = c(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
-#        xlab = "Genotype frequency",
-#        main = paste("Genotype KM1KM1/SB1SB1 at generation", smp_gen[k]))
-#   hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
-#   abline(v = smp_frq[6, k], col = 'red', lty = 2, lwd = 2)
-#
 #   hist_pst_resmp <- hist(pop_frq_pst_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), plot = FALSE)
 #   hist_pre_resmp <- hist(pop_frq_pre_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), plot = FALSE)
 #   hist(pop_frq_pst_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
@@ -483,6 +474,15 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF
 #        main = paste("Genotype KM0KM1/SB1SB1 at generation", smp_gen[k]))
 #   hist(pop_frq_pre_resmp[7, , k], breaks = seq(min(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), max(pop_frq_pst_resmp[7, , k], pop_frq_pre_resmp[7, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
 #   abline(v = smp_frq[7, k], col = 'red', lty = 2, lwd = 2)
+#
+#   hist_pst_resmp <- hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
+#   hist_pre_resmp <- hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), plot = FALSE)
+#   hist(pop_frq_pst_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
+#        xlim = c(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k], smp_frq[6, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
+#        xlab = "Genotype frequency",
+#        main = paste("Genotype KM1KM1/sb1sb1 at generation", smp_gen[k]))
+#   hist(pop_frq_pre_resmp[6, , k], breaks = seq(min(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), max(pop_frq_pst_resmp[6, , k], pop_frq_pre_resmp[6, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
+#   abline(v = smp_frq[6, k], col = 'red', lty = 2, lwd = 2)
 #
 #   hist_pst_resmp <- hist(pop_frq_pst_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), plot = FALSE)
 #   hist_pre_resmp <- hist(pop_frq_pre_resmp[8, , k], breaks = seq(min(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), max(pop_frq_pst_resmp[8, , k], pop_frq_pre_resmp[8, , k]), length.out = 50), plot = FALSE)
@@ -498,7 +498,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF
 #   hist(pop_frq_pst_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), freq = FALSE, col = rgb(0.1, 0.1, 0.1, 0.5),
 #        xlim = c(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k], smp_frq[9, k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k], smp_frq[9, k])), ylim = c(0, max(hist_pst_resmp$density, hist_pre_resmp$density)),
 #        xlab = "Genotype frequency",
-#        main = paste("Genotype KM1KM1/sb1sb1 at generation", smp_gen[k]))
+#        main = paste("Genotype KM1KM1/SB1SB1 at generation", smp_gen[k]))
 #   hist(pop_frq_pre_resmp[9, , k], breaks = seq(min(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), max(pop_frq_pst_resmp[9, , k], pop_frq_pre_resmp[9, , k]), length.out = 50), freq = FALSE, col = rgb(0.8, 0.8, 0.8, 0.5), add = TRUE)
 #   abline(v = smp_frq[9, k], col = 'red', lty = 2, lwd = 2)
 # }
