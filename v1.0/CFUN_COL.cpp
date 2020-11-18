@@ -267,7 +267,7 @@ arma::dmat initialiseParticle_arma(const arma::uword& pcl_num) {
 
   arma::dmat part = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat mut_frq = arma::randu<arma::dmat>(2, pcl_num);
-  arma::rowvec ld = arma::randu<arma::rowvec>(pcl_num);
+  arma::drowvec ld = arma::randu<arma::drowvec>(pcl_num);
   for (arma::uword i = 0; i < pcl_num; i++) {
     double a = -mut_frq(0, i) * mut_frq(1, i);
     a = (a >= -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i)))? a : -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i));
