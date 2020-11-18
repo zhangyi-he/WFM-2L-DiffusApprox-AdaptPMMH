@@ -85,19 +85,30 @@ cmpsimulateWFD <- cmpfun(simulateWFD)
 #' Simulate the hidden Markov model
 #' Parameter setting
 #' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
-#' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (constant)
-#' @param int_frq the initial haplotype frequencies of the population
+#' @param int_con the initial haplotype frequencies of the population / the initial mutant allele frequencies and the linkage disequilibrium of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param obs_hap = TRUE/FALSE (return the simulated sample genotypes with haplotype information or not)
 #' @param ptn_num the number of the subintervals divided per generation in the Euler-Maruyama method for the WFD
 
 #' Standard version
-simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap = FALSE, ...) {
+simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_siz, obs_hap = FALSE, ...) {
   int_gen <- min(smp_gen)
   lst_gen <- max(smp_gen)
+
+  # calculate the initial population haplotype frequencies
+  int_frq <- rep(0, length.out = 4)
+  if (length(int_con) == 3) {
+    int_frq(1) <- (1 - int_con[1]) * (1 - int_con[2]) + int_con[3]
+    int_frq(2) <- (1 - int_con[1]) * int_con[2] - int_con[3]
+    int_frq(3) <- int_con[1] * (1 - int_con[2]) - int_con[3]
+    int_frq(4) <- int_con[1] * int_con[2] + int_con[3]
+  } else {
+    int_frq <- int_con
+  }
 
   # generate the population haplotype and genotype frequency trajectories
   if (model == "WFM") {
