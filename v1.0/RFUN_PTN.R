@@ -102,10 +102,10 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_
   # calculate the initial population haplotype frequencies
   int_frq <- rep(0, length.out = 4)
   if (length(int_con) == 3) {
-    int_frq(1) <- (1 - int_con[1]) * (1 - int_con[2]) + int_con[3]
-    int_frq(2) <- (1 - int_con[1]) * int_con[2] - int_con[3]
-    int_frq(3) <- int_con[1] * (1 - int_con[2]) - int_con[3]
-    int_frq(4) <- int_con[1] * int_con[2] + int_con[3]
+    int_frq[1] <- (1 - int_con[1]) * (1 - int_con[2]) + int_con[3]
+    int_frq[2] <- (1 - int_con[1]) * int_con[2] - int_con[3]
+    int_frq[3] <- int_con[1] * (1 - int_con[2]) - int_con[3]
+    int_frq[4] <- int_con[1] * int_con[2] + int_con[3]
   } else {
     int_frq <- int_con
   }
