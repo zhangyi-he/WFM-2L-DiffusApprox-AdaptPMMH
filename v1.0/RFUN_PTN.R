@@ -315,9 +315,10 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, sm
   sel_cof_est <- rowMeans(sel_cof_chn)
 
   # 95% HPD intervals for the selection coefficients
-  sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
+  sel_cof_hpd <- matrix(NA, nrow = 3, ncol = 2)
   sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
   sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
+  sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
 
   return(list(sel_cof_est = sel_cof_est,
               sel_cof_hpd = sel_cof_hpd,
