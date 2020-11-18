@@ -141,7 +141,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
-#' @param int_frq the initial haplotype frequencies of the population
+#' @param int_con the initial haplotype frequencies of the population / the initial mutant allele frequencies and the linkage disequilibrium of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param obs_hap = TRUE/FALSE (return the simulated sample genotypes with haplotype information or not)
@@ -152,12 +152,12 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- 5e+03
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_con <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
 #
-# sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap)
+# sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_siz, obs_hap)
 # smp_gen <- sim_HMM_WFM$smp_gen
 # smp_siz <- sim_HMM_WFM$smp_siz
 # smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
@@ -220,13 +220,13 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- 5e+03
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_con <- c(6e-01, 2e-01, 1e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
 # ptn_num <- 5e+00
 #
-# sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap, ptn_num)
+# sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_siz, obs_hap, ptn_num)
 # smp_gen <- sim_HMM_WFD$smp_gen
 # smp_siz <- sim_HMM_WFD$smp_siz
 # smp_gen_cnt <- sim_HMM_WFD$smp_gen_cnt
@@ -285,19 +285,19 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 1
+test_seed <- 2
 set.seed(test_seed)
 
 model <- "WFM"
-sel_cof <- c(1e-02, 5e-03, 1e-03)
+sel_cof <- c(1e-02, 5e-03, 0e-00)
 rec_rat <- 5e-05
 pop_siz <- 5e+03
-int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+int_con <- c(7e-01, 1e-01, 1e-01, 1e-01)
 smp_gen <- (0:10) * 50
 smp_siz <- rep(100, 11)
 obs_hap <- FALSE
 
-sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap)
+sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_siz, obs_hap)
 smp_gen <- sim_HMM_WFM$smp_gen
 smp_siz <- sim_HMM_WFM$smp_siz
 smp_cnt <- sim_HMM_WFM$smp_gen_cnt
@@ -306,7 +306,7 @@ pop_frq <- sim_HMM_WFM$pop_gen_frq
 # pop_frq[5, ] <- pop_frq[5, ] + pop_frq[7, ]
 # pop_frq <- pop_frq[-7, ]
 
-save(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap, smp_cnt, smp_frq, pop_frq,
+save(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_siz, obs_hap, smp_cnt, smp_frq, pop_frq,
      file = "./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
 
 # load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
@@ -319,49 +319,49 @@ save(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap, smp_c
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM0/sb1sb1")
 # points(smp_gen, smp_frq[1, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[2, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[2, ], pop_frq[2, ]), max(smp_frq[2, ], pop_frq[2, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM0/sb1SB1")
 # points(smp_gen, smp_frq[2, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[3, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[3, ], pop_frq[3, ]), max(smp_frq[3, ], pop_frq[3, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM0/SB1SB1")
 # points(smp_gen, smp_frq[3, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[4, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[4, ], pop_frq[4, ]), max(smp_frq[4, ], pop_frq[4, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM1/sb1sb1")
 # points(smp_gen, smp_frq[4, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[5, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[5, ], pop_frq[5, ]), max(smp_frq[5, ], pop_frq[5, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM1/sb1SB1")
 # points(smp_gen, smp_frq[5, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[7, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[7, ], pop_frq[7, ]), max(smp_frq[7, ], pop_frq[7, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM0KM1/SB1SB1")
 # points(smp_gen, smp_frq[7, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[6, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[6, ], pop_frq[6, ]), max(smp_frq[6, ], pop_frq[6, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM1KM1/sb1sb1")
 # points(smp_gen, smp_frq[6, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[8, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[8, ], pop_frq[8, ]), max(smp_frq[8, ], pop_frq[8, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
 #      main = "Genotype KM1KM1/SB1sb1")
 # points(smp_gen, smp_frq[8, ], col = 'red', pch = 17, cex = 1)
-# 
+#
 # plot(k, pop_frq[9, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[9, ], pop_frq[9, ]), max(smp_frq[9, ], pop_frq[9, ])),
 #      xlab = "Generation", ylab = "Genotype frequency",
@@ -382,24 +382,24 @@ save(model, sel_cof, rec_rat, pop_siz, int_frq, smp_gen, smp_siz, obs_hap, smp_c
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
-load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
-
-set.seed(test_seed)
-
-sel_cof
-rec_rat
-pop_siz
-smp_gen
-smp_siz
-smp_cnt
-ptn_num <- 5e+00
-pcl_num <- 1e+05
-
-system.time(BPF <- cmprunBPF(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num))
-
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF,
-     file = "./Output/Output v1.0/Test v1.0/TEST_PTN_BPF.rda")
-
+# load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
+#
+# set.seed(test_seed)
+#
+# sel_cof
+# rec_rat
+# pop_siz
+# smp_gen
+# smp_siz
+# smp_cnt
+# ptn_num <- 5e+00
+# pcl_num <- 1e+05
+#
+# system.time(BPF <- cmprunBPF(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num))
+#
+# save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF,
+#      file = "./Output/Output v1.0/Test v1.0/TEST_PTN_BPF.rda")
+#
 # load("./Output/Output v1.0/Test v1.0/TEST_PTN_BPF.rda")
 #
 # lik <- rep(1, pcl_num)
@@ -518,25 +518,25 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
 
-load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
-
-set.seed(test_seed)
-
-sel_cof
-rec_rat
-pop_siz
-smp_gen
-smp_siz
-smp_cnt
-ptn_num <- 5e+00
-pcl_num <- 1e+03
-gap_num <- 1e+02
-
-system.time(OptNum <- calculateOptimalParticleNum(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num))
-
-save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num, OptNum,
-     file = "./Output/Output v1.0/Test v1.0/TEST_PTN_OptNum.rda")
-
+# load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
+#
+# set.seed(test_seed)
+#
+# sel_cof
+# rec_rat
+# pop_siz
+# smp_gen
+# smp_siz
+# smp_cnt
+# ptn_num <- 5e+00
+# pcl_num <- 1e+03
+# gap_num <- 1e+02
+#
+# system.time(OptNum <- calculateOptimalParticleNum(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num))
+#
+# save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num, OptNum,
+#      file = "./Output/Output v1.0/Test v1.0/TEST_PTN_OptNum.rda")
+#
 # load("./Output/Output v1.0/Test v1.0/TEST_PTN_OptNum.rda")
 #
 # opt_pcl_num <- OptNum$opt_pcl_num
