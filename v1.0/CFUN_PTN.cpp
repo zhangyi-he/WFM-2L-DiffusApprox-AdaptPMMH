@@ -269,15 +269,32 @@ arma::dmat initialiseParticle(const arma::uword& pcl_num){
   // ensure RNG gets set/reset
   RNGScope scope;
 
-  NumericMatrix part(pcl_num, 4);
-  for(int j = 0; j < 4; j++){
-    part(_, j) = rgamma(pcl_num, 1.0, 1.0);
+  arma::dmat part = arma::zeros<arma::dmat>(4, pcl_num);
+  arma::dmat mut_frq = arma::randu<arma::dmat>(2, pcl_num);
+  arma::rowvec ld = arma::randu<arma::rowvec>(pcl_num);
+  for (arma::uword i = 0; i < pcl_num; i++) {
+    double a = -mut_frq(0, i) * mut_frq(1, i);
+    a = (a >= -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i)))? a : -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i));
+    double b = mut_frq(0, i) * (1 - mut_frq(1, i));
+    b = (b <= (1 - mut_frq(0, i)) * mut_frq(1, i))? b : (1 - mut_frq(0, i)) * mut_frq(1, i);
+    ld(i) = a + (b - a) * ld(i);
   }
-  for(int i = 0; i < pcl_num; i++){
-    part(i, _) = part(i, _) / sum(part(i, _));
-  }
+  part.row(0) = (1 - mut_frq.row(0)) % (1 - mut_frq.row(1)) + ld;
+  part.row(1) = (1 - mut_frq.row(0)) % mut_frq.row(1) - ld;
+  part.row(2) = mut_frq.row(0) % (1 - mut_frq.row(1)) - ld;
+  part.row(3) = mut_frq.row(0) % mut_frq.row(1) + ld;
 
-  return as<arma::dmat>(transpose(part));
+  return part;
+
+  // NumericMatrix part(4, pcl_num);
+  // for (int i = 0; i < 4; i++) {
+  //   part(i, _) = rgamma(pcl_num, 1.0, 1.0);
+  // }
+  // for (int j = 0; j < pcl_num; j++) {
+  //   part(_, j) = part(_, j) / sum(part(_, j));
+  // }
+  //
+  // return as<arma::dmat>(part);
 }
 
 // Run the bootstrap particle filter
@@ -557,7 +574,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
     cout << "iteration: " << i + 1 << endl;
 
     // draw the candidates of the selection coefficients from the random walk proposal
-    sel_cof_chn.col(i) = sel_cof_chn.col(i - 1) + sel_cof_sd % arma::randn<arma::dcolvec>(2);
+    sel_cof_chn.col(i) = sel_cof_chn.col(i - 1) + sel_cof_sd % arma::randn<arma::dcolvec>(3);
 
     if (arma::any(sel_cof_chn.col(i) < -1)) {
       sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
