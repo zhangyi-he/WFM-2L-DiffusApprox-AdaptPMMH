@@ -312,7 +312,7 @@ save(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_siz, obs_hap, smp_c
 # load("./Output/Output v1.0/Test v1.0/TEST_COL_SimData.rda")
 #
 # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_SimData.pdf", width = 24, height = 18)
-# par(mfrow = c(3, 3), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# par(mfrow = c(3, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # k <- min(smp_gen):max(smp_gen)
 # plot(k, pop_frq[1, ], type = 'l', lwd = 1.5,
 #      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_frq[1, ], pop_frq[1, ]), max(smp_frq[1, ], pop_frq[1, ])),
@@ -419,7 +419,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF
 # pop_frq_pst_resmp <- BPF$gen_frq_pst_resmp
 #
 # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BPF_Particle.pdf", width = 72, height = 66)
-# par(mfrow = c(11, 9), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# par(mfrow = c(11, 9), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # for (k in 1:length(smp_gen)) {
 #   hist_pst_resmp <- hist(pop_frq_pst_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), plot = FALSE)
 #   hist_pre_resmp <- hist(pop_frq_pre_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), plot = FALSE)
@@ -635,7 +635,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 # dev.off()
 #
 # # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 8)
-# # par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# # par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # # layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
 # # grd_num <- 1e+03
 # # sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
@@ -754,7 +754,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 # dev.off()
 #
 # # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptivePMMH_Posterior.pdf", width = 16, height = 8)
-# # par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# # par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # # layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
 # # grd_num <- 1e+03
 # # sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
@@ -860,7 +860,7 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 # dev.off()
 #
 # # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 8)
-# # par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# # par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # # layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
 # # grd_num <- 1e+03
 # # sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
