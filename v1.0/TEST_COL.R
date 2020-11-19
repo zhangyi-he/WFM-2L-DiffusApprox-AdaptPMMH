@@ -601,17 +601,24 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 # abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 # dev.off()
 #
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Autocorrplot.pdf", width = 16, height = 12)
+# par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+#
 # brn_num <- 1e+04
 # sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+#
+# autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before thinning")
+# autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before thinning")
 #
 # thn_num <- 8e+00
 # sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
 #
-# sel_cof_est <- rowMeans(sel_cof_chn)
-#
-# sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
-# sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
-# sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
+# autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after thinning")
+# autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after thinning")
+# dev.off()
 #
 # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 6)
 # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -720,11 +727,24 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 # abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 # dev.off()
 #
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptivePMMH_Autocorrplot.pdf", width = 16, height = 12)
+# par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+#
 # brn_num <- 1e+04
 # sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+#
+# autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before thinning")
+# autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before thinning")
 #
 # thn_num <- 8e+00
 # sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+#
+# autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after thinning")
+# autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after thinning")
+# dev.off()
 #
 # sel_cof_est <- rowMeans(sel_cof_chn)
 #
