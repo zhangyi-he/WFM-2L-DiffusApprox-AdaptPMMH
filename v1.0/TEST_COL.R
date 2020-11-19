@@ -620,6 +620,12 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 # autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after thinning")
 # dev.off()
 #
+# sel_cof_est <- rowMeans(sel_cof_chn)
+#
+# sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
+# sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
+# sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
+#
 # pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 6)
 # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
