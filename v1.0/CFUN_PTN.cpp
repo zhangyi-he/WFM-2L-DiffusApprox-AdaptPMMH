@@ -679,7 +679,7 @@ arma::dmat runAdaptivePMMH_arma(const arma::dcolvec& sel_cof, const double& rec_
     U = arma::normalise(U);
     M = S * (I + stp_siz(i) * (alpha - apt_rto) * (U * U.t())) * S.t();
     S = arma::chol(M, "lower");
-    cout << S << endl;
+    cout << M << endl;
   }
 
   return sel_cof_chn;
