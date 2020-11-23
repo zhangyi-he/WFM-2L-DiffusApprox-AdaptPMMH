@@ -253,7 +253,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 ########################################
 
-#' Run the adaptive particle marginal Metropolis-Hastings (PMMH)
+#' Run the adaptive particle marginal Metropolis-Hastings (AdaptivePMMH)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
