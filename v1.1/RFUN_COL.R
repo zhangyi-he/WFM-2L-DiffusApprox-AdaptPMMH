@@ -258,7 +258,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 ########################################
 
-#' Run the adaptive particle marginal Metropolis-Hastings (PMMH)
+#' Run the adaptive particle marginal Metropolis-Hastings (AdaptivePMMH)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
