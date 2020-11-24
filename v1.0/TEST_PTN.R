@@ -677,8 +677,8 @@ dev.off()
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the PMMH
-#' @param stp_siz the step size sequence in the adaptive PMMH (decaying to zero)
-#' @param apt_rto the target mean acceptance probability of the adaptive PMMH
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
 
 load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
 
@@ -696,16 +696,16 @@ itn_num <- 5e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-system.time(sel_cof_chn <- cmprunAdaptivePMMH(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
 load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
 
 save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
-     file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptivePMMH.rda")
+     file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH.rda")
 
-load("./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptivePMMH.rda")
+load("./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH.rda")
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptivePMMH_Traceplot.pdf", width = 16, height = 12)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH_Traceplot.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -723,7 +723,7 @@ plot(1:itn_num, sel_cof_chn[3, 1:itn_num], type = 'l',
 abline(h = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptivePMMH_Autocorrplot.pdf", width = 24, height = 12)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH_Autocorrplot.pdf", width = 24, height = 12)
 par(mfrow = c(2, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 effectiveSize(as.mcmc(t(sel_cof_chn)))
 
@@ -751,7 +751,7 @@ sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptivePMMH_Posterior.pdf", width = 16, height = 12)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH_Posterior.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -797,8 +797,8 @@ dev.off()
 #' @param brn_num the number of the iterations for burn-in
 #' @param thn_num the number of the iterations for thinning
 #' @param adp_set = TRUE/FALSE (return the result with the adaptive setting or not)
-#' @param stp_siz the step size sequence in the adaptive PMMH (decaying to zero)
-#' @param apt_rto the target mean acceptance probability of the adaptive PMMH
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
 
 load("./Output/Output v1.0/Test v1.0/TEST_PTN_SimData.rda")
 
