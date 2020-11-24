@@ -610,7 +610,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
 // Run the adaptive particle marginal Metropolis-Hastings
 //[[Rcpp::export]]
-arma::dmat runAdaptivePMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
+arma::dmat runAdaptPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -638,6 +638,7 @@ arma::dmat runAdaptivePMMH_arma(const arma::dcolvec& sel_cof, const double& rec_
   log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
   double apt_cnt = 0;
+  double alpha = 0;
   for (arma::uword i = 1; i < itn_num; i++) {
     cout << "iteration: " << i + 1 << endl;
 
@@ -645,7 +646,7 @@ arma::dmat runAdaptivePMMH_arma(const arma::dcolvec& sel_cof, const double& rec_
     U = arma::randn<arma::dcolvec>(3);
     sel_cof_chn.col(i) = sel_cof_chn.col(i - 1) + S * U;
 
-    double alpha = 0;
+    alpha = 0;
     if (arma::any(sel_cof_chn.col(i) < -1)) {
       sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
       log_lik(1) = log_lik(0);
@@ -662,7 +663,7 @@ arma::dmat runAdaptivePMMH_arma(const arma::dcolvec& sel_cof, const double& rec_
       // double apt_rto = exp(log_lik(1) - log_lik(0));
       // double apt_rto = exp((log_pri(1) + log_lik(1) + log_psl(1)) - (log_pri(0) + log_lik(0) + log_psl(0)));
 
-      alpha = exp(log_lik(1) - log_lik(0));
+      alpha = arma::find_finite(log_lik).is_empty() ? 0 : exp(log_lik(1) - log_lik(0));
       alpha = (alpha > 1) ? 1 : alpha;
       if (arma::randu() > alpha) {
         sel_cof_chn.col(i) = sel_cof_chn.col(i - 1);
