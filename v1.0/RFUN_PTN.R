@@ -253,7 +253,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 ########################################
 
-#' Run the adaptive particle marginal Metropolis-Hastings (AdaptivePMMH)
+#' Run the adaptive particle marginal Metropolis-Hastings (AdaptPMMH)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
@@ -264,19 +264,19 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the PMMH
-#' @param stp_siz the step size sequence in the adaptive PMMH (decaying to zero)
-#' @param apt_rto the target mean acceptance probability of the adaptive PMMH
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
 
 #' Standard version
-runAdaptivePMMH <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto) {
+runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto) {
   # run the PMMH
-  sel_cof_chn <- runAdaptivePMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
+  sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
   sel_cof_chn <- as.matrix(sel_cof_chn)
 
   return(sel_cof_chn)
 }
 #' Compiled version
-cmprunAdaptivePMMH <- cmpfun(runAdaptivePMMH)
+cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
 
 ########################################
 
@@ -294,14 +294,14 @@ cmprunAdaptivePMMH <- cmpfun(runAdaptivePMMH)
 #' @param brn_num the number of the iterations for burn-in
 #' @param thn_num the number of the iterations for thinning
 #' @param adp_set = TRUE/FALSE (return the result with the adaptive setting or not)
-#' @param stp_siz the step size sequence in the adaptive PMMH (decaying to zero)
-#' @param apt_rto the target mean acceptance probability of the adaptive PMMH
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
 
 #' Standard version
 runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, ...) {
   if (adp_set == TRUE) {
     # run the adaptive PMMH
-    sel_cof_chn <- runAdaptivePMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
+    sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
   } else {
     # run the PMMH
     sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
