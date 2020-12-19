@@ -201,10 +201,10 @@ arma::imat calculateGenoCnt_arma(const arma::icolvec& smp_cnt) {
       gen_cnt(1, j) = smp_cnt(1);
       gen_cnt(2, j) = smp_cnt(2);
       gen_cnt(3, j) = smp_cnt(3);
-      gen_cnt(4, j) = smp_cnt(4);
-      gen_cnt(5, j) = j;
-      gen_cnt(6, j) = smp_cnt(6);
-      gen_cnt(7, j) = smp_cnt(5) - j;
+      gen_cnt(4, j) = j;
+      gen_cnt(5, j) = smp_cnt(5);
+      gen_cnt(6, j) = smp_cnt(4) - j;
+      gen_cnt(7, j) = smp_cnt(6);
       gen_cnt(8, j) = smp_cnt(7);
       gen_cnt(9, j) = smp_cnt(8);
     }
