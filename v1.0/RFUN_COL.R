@@ -43,7 +43,7 @@ sourceCpp("./Code/Code v1.0/Code v1.0/CFUN_COL.cpp")
 #' Standard version
 simulateWFM <- function(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen) {
   fts_mat <- calculateFitnessMat_arma(sel_cof)
-  
+
   WFM <- simulateWFM_arma(fts_mat, rec_rat, pop_siz, int_frq, int_gen, lst_gen)
   hap_frq_pth <- as.matrix(WFM$hap_frq_pth)
   gen_frq_pth <- as.matrix(WFM$gen_frq_pth)
