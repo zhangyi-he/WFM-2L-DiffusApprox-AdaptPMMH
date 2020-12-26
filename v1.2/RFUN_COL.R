@@ -124,7 +124,7 @@ cmpsimulateWFD <- cmpfun(simulateWFD)
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (non-constant)
-#' @param int_frq the initial haplotype frequencies of the population
+#' @param int_con the initial haplotype frequencies of the population / the initial mutant allele frequencies and the linkage disequilibrium of the population
 #' @param evt_gen the generation that the event of interest occurred
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
@@ -133,9 +133,20 @@ cmpsimulateWFD <- cmpfun(simulateWFD)
 #' @param ptn_num the number of the subintervals divided per generation in the Euler-Maruyama method for the WFD
 
 #' Standard version
-simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_frq, evt_gen, smp_gen, smp_siz, obs_hap = FALSE, ...) {
+simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_con, evt_gen, smp_gen, smp_siz, obs_hap = FALSE, ...) {
   int_gen <- min(smp_gen)
   lst_gen <- max(smp_gen)
+
+  # calculate the initial population haplotype frequencies
+  int_frq <- rep(0, length.out = 4)
+  if (length(int_con) == 3) {
+    int_frq[1] <- (1 - int_con[1]) * (1 - int_con[2]) + int_con[3]
+    int_frq[2] <- (1 - int_con[1]) * int_con[2] - int_con[3]
+    int_frq[3] <- int_con[1] * (1 - int_con[2]) - int_con[3]
+    int_frq[4] <- int_con[1] * int_con[2] + int_con[3]
+  } else {
+    int_frq <- int_con
+  }
 
   # generate the population haplotype and genotype frequency trajectories
   if (model == "WFM") {
@@ -373,7 +384,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 ########################################
 
-#' Run the Bayesian procedure for the inference of natural selection
+#' Run the adaptive particle marginal Metropolis-Hastings (AdaptPMMH)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
@@ -381,16 +392,16 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
-#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
-#' @param brn_num the number of the iterations for burn-in
-#' @param thn_num the number of the iterations for thinning
+#' @param itn_num the number of the iterations carried out in the PMMH
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
 
 #' Standard version
-runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num) {
+runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto) {
   # combine the sampling time points and the event time point
   if (evt_gen %in% smp_gen) {
     smp_gen <- append(smp_gen, evt_gen)
@@ -418,8 +429,72 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
     smp_cnt <- smp_cnt[, odr_ind]
   }
 
-  # run the PMMH
-  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+  # run the adaptive PMMH
+  sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
+  sel_cof_chn <- as.array(sel_cof_chn)
+
+  return(sel_cof_chn)
+}
+#' Compiled version
+cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
+
+########################################
+
+#' Run the Bayesian procedure for the inference of natural selection
+#' Parameter settings
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
+#' @param evt_gen the generation that the event of interest occurred
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
+#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param pcl_num the number of particles generated in the bootstrap particle filter
+#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
+#' @param brn_num the number of the iterations for burn-in
+#' @param thn_num the number of the iterations for thinning
+#' @param adp_set = TRUE/FALSE (return the result with the adaptive setting or not)
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
+
+#' Standard version
+runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, ...) {
+  # combine the sampling time points and the event time point
+  if (evt_gen %in% smp_gen) {
+    smp_gen <- append(smp_gen, evt_gen)
+    smp_siz <- append(smp_siz, 0)
+    smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+
+    odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
+    smp_gen <- smp_gen[odr_ind]
+    smp_siz <- smp_siz[odr_ind]
+    smp_cnt <- smp_cnt[, odr_ind]
+
+    if (which(smp_gen == evt_gen)[1] == which(smp_siz == 0)) {
+      smp_gen[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_gen[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
+      smp_siz[c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_siz[c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
+      smp_cnt[, c(which(smp_gen == evt_gen)[1], which(smp_gen == evt_gen)[2])] <- smp_cnt[, c(which(smp_gen == evt_gen)[2], which(smp_gen == evt_gen)[1])]
+    }
+  } else {
+    smp_gen <- append(smp_gen, evt_gen)
+    smp_siz <- append(smp_siz, 0)
+    smp_cnt <- cbind(smp_cnt, matrix(0, nrow = nrow(smp_cnt), ncol = 1))
+
+    odr_ind <- sort(smp_gen, decreasing = FALSE, index.return = TRUE)$ix
+    smp_gen <- smp_gen[odr_ind]
+    smp_siz <- smp_siz[odr_ind]
+    smp_cnt <- smp_cnt[, odr_ind]
+  }
+
+  if (adp_set == TRUE) {
+    # run the adaptive PMMH
+    sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
+  } else {
+    # run the PMMH
+    sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+  }
   sel_cof_chn <- as.array(sel_cof_chn)
 
   # burn-in and thinning
