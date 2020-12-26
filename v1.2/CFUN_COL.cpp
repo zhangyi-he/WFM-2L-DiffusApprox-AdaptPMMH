@@ -712,7 +712,7 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
 
 // Run the adaptive particle marginal Metropolis-Hastings
 //[[Rcpp::export]]
-arma::dmat runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
+arma::dcube runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
