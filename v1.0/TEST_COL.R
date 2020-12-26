@@ -163,8 +163,6 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
 # smp_gen_frq <- sim_HMM_WFM$smp_gen_frq
 # pop_gen_frq <- sim_HMM_WFM$pop_gen_frq
-# pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
-# pop_gen_frq <- pop_gen_frq[-7, ]
 #
 # k <- min(smp_gen):max(smp_gen)
 # plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
@@ -232,8 +230,6 @@ source("./Code/Code v1.0/Code v1.0/RFUN_COL.R")
 # smp_gen_cnt <- sim_HMM_WFD$smp_gen_cnt
 # smp_gen_frq <- sim_HMM_WFD$smp_gen_frq
 # pop_gen_frq <- sim_HMM_WFD$pop_gen_frq
-# pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
-# pop_gen_frq <- pop_gen_frq[-7, ]
 #
 # k <- min(smp_gen):max(smp_gen)
 # plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
@@ -626,43 +622,11 @@ sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
 sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 6)
-par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the black")
-lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
-abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the chestnut")
-lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
-abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-dev.off()
-
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 8)
-# par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
-# grd_num <- 1e+03
-# sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
-# image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-#       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-#       main = "Joint posterior for the sel coeff")
-# abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-# abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-#
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 6)
+# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the black")
+#      main = "Posterior for the sel coeff of the black")
 # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -671,13 +635,45 @@ dev.off()
 #
 # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the chestnut")
+#      main = "Posterior for the sel coeff of the chestnut")
 # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_PMMH_Posterior.pdf", width = 16, height = 8)
+par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+      main = "Joint posterior for the sel coeff")
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the black")
+lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the chestnut")
+lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
 
 ########################################
 
@@ -758,43 +754,11 @@ sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
 sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptPMMH_Posterior.pdf", width = 16, height = 6)
-par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the black")
-lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
-abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the chestnut")
-lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
-abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-dev.off()
-
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptPMMH_Posterior.pdf", width = 16, height = 8)
-# par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
-# grd_num <- 1e+03
-# sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
-# image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-#       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-#       main = "Joint posterior for the sel coeff")
-# abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-# abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-#
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptPMMH_Posterior.pdf", width = 16, height = 6)
+# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the black")
+#      main = "Posterior for the sel coeff of the black")
 # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -803,13 +767,45 @@ dev.off()
 #
 # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the chestnut")
+#      main = "Posterior for the sel coeff of the chestnut")
 # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_AdaptPMMH_Posterior.pdf", width = 16, height = 8)
+par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+      main = "Joint posterior for the sel coeff")
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the black")
+lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the chestnut")
+lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
 
 ########################################
 
@@ -864,43 +860,11 @@ sel_cof_est <- BayesianProcedure$sel_cof_est
 
 sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 6)
-par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the black")
-lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
-abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the chestnut")
-lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
-abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-dev.off()
-
-# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 8)
-# par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-# layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
-# grd_num <- 1e+03
-# sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
-# image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-#       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-#       main = "Joint posterior for the sel coeff")
-# abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
-# abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
-# abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
-# abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
-#
+# pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 6)
+# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the black")
+#      main = "Posterior for the sel coeff of the black")
 # lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -909,12 +873,44 @@ dev.off()
 #
 # hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Marginal posterior for the sel coeff of the chestnut")
+#      main = "Posterior for the sel coeff of the chestnut")
 # lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_COL_BayesProc_Posterior.pdf", width = 16, height = 8)
+par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 1, 2, 3), nrow = 2, ncol = 2))
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, ], sel_cof_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+      main = "Joint posterior for the sel coeff")
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the black")
+lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the chestnut")
+lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
 
 ################################################################################
