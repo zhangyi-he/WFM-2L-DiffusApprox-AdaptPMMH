@@ -655,6 +655,7 @@ abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -787,6 +788,7 @@ abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -893,6 +895,7 @@ abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
