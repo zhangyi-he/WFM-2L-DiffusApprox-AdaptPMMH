@@ -892,7 +892,7 @@ system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, e
 
 load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
+save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
      file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH.rda")
 
 load("./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH.rda")
