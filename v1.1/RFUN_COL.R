@@ -275,7 +275,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 #' Standard version
 runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto) {
-  # run the PMMH
+  # run the adaptive PMMH
   sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
   sel_cof_chn <- as.matrix(sel_cof_chn)
 
