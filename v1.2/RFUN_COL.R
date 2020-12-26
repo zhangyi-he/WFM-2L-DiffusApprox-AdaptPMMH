@@ -249,6 +249,7 @@ runBPF <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
   }
+  smp_gen <- smp_gen - min(smp_gen)
 
   # run the BPF
   BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num)
@@ -318,6 +319,7 @@ calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
   }
+  smp_gen <- smp_gen - min(smp_gen)
 
   # calculate the optimal particle number
   OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
@@ -372,6 +374,7 @@ runPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_si
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
   }
+  smp_gen <- smp_gen - min(smp_gen)
 
   # run the PMMH
   sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
@@ -428,6 +431,7 @@ runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, s
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
   }
+  smp_gen <- smp_gen - min(smp_gen)
 
   # run the adaptive PMMH
   sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
@@ -487,6 +491,7 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
     smp_siz <- smp_siz[odr_ind]
     smp_cnt <- smp_cnt[, odr_ind]
   }
+  smp_gen <- smp_gen - min(smp_gen)
 
   if (adp_set == TRUE) {
     # run the adaptive PMMH
