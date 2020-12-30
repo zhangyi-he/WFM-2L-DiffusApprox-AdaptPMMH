@@ -40,7 +40,7 @@ source("./Code/Code v1.0/Code v1.2/RFUN_COL.R")
 # sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 # rec_rat <- 5e-01
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # evt_gen <- 240
 # int_gen <- 0
 # lst_gen <- 500
@@ -80,7 +80,7 @@ source("./Code/Code v1.0/Code v1.2/RFUN_COL.R")
 # rec_rat <- 5e-01
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # evt_gen <- 240
 # int_gen <- 0
 # lst_gen <- 500
@@ -109,7 +109,7 @@ source("./Code/Code v1.0/Code v1.2/RFUN_COL.R")
 # rec_rat <- 5e-01
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # evt_gen <- 240
 # int_gen <- 0
 # lst_gen <- 500
@@ -229,7 +229,7 @@ source("./Code/Code v1.0/Code v1.2/RFUN_COL.R")
 # sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 # rec_rat <- 5e-01
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-# int_con <- c(6e-01, 2e-01, 1e-01, 1e-01)
+# int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # evt_gen <- 240
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
@@ -294,14 +294,14 @@ source("./Code/Code v1.0/Code v1.2/RFUN_COL.R")
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 1
+test_seed <- 12
 set.seed(test_seed)
 
 model <- "WFM"
 sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-int_con <- c(6e-01, 2e-01, 1e-01, 1e-01)
+int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
 evt_gen <- 240
 smp_gen <- (0:10) * 50
 smp_siz <- rep(100, 11)
@@ -600,8 +600,6 @@ smp_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
 itn_num <- 5e+04
-stp_siz <- (1:itn_num)^(-2 / 3)
-apt_rto <- 4e-01
 
 system.time(sel_cof_chn <- cmprunPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num))
 
