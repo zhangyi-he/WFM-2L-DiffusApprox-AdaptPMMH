@@ -1,8 +1,8 @@
 #' @title Inferring natural selection acting on horse coat colours and patterns during the process of domestication from ancient DNA data
 #' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.3
-#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is allowed)
+#' version 1.2
+#' Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 # set the directory
 setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2021-WFM-2L-DiffusApprox-PMMH-Horse-MolEcol")
@@ -19,8 +19,11 @@ library("ggplot2")
 #install.packages("plot3D")
 library("plot3D")
 
+#install.packages("emdbook")
+library("emdbook")
+
 # call R functions
-source("./Code/Code v1.0/Code v1.3/RFUN_COL.R")
+source("./Code/Code v1.0/Code v1.2/RFUN_COL.R")
 
 ################################################################################
 
@@ -37,8 +40,8 @@ source("./Code/Code v1.0/Code v1.3/RFUN_COL.R")
 # sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 # rec_rat <- 5e-01
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-# evt_gen <- 210
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# evt_gen <- 240
 # int_gen <- 0
 # lst_gen <- 500
 #
@@ -77,8 +80,8 @@ source("./Code/Code v1.0/Code v1.3/RFUN_COL.R")
 # rec_rat <- 5e-01
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-# evt_gen <- 210
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# evt_gen <- 240
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -106,8 +109,8 @@ source("./Code/Code v1.0/Code v1.3/RFUN_COL.R")
 # rec_rat <- 5e-01
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
-# int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-# evt_gen <- 210
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# evt_gen <- 240
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -146,182 +149,179 @@ source("./Code/Code v1.0/Code v1.3/RFUN_COL.R")
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (non-constant)
-#' @param int_frq the initial haplotype frequencies of the population
+#' @param int_con the initial haplotype frequencies of the population / the initial mutant allele frequencies and the linkage disequilibrium of the population
 #' @param evt_gen the generation that the event of interest occurred
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param obs_hap = TRUE/FALSE (return the simulated sample genotypes with haplotype information or not)
 #' @param ref_siz the reference size of the horse population
 #' @param ptn_num the number of the subintervals divided per generation in the Euler-Maruyama method for the WFD
 
 #' Simulate the dataset under the Wright-Fisher model
-model <- "WFM"
-sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
-rec_rat <- 5e-01
-pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-evt_gen <- 210
-smp_gen <- (0:10) * 50
-smp_siz <- rep(100, 11)
-
-sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, evt_gen, smp_gen, smp_siz)
-smp_gen <- sim_HMM_WFM$smp_gen
-smp_siz <- sim_HMM_WFM$smp_siz
-smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
-smp_mis_cnt <- sim_HMM_WFM$smp_mis_cnt
-smp_gen_frq <- sim_HMM_WFM$smp_gen_frq
-pop_gen_frq <- sim_HMM_WFM$pop_gen_frq
-pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
-pop_gen_frq <- pop_gen_frq[-7, ]
-
-k <- min(smp_gen):max(smp_gen)
-plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[1, ], pop_gen_frq[1, ]), max(smp_gen_frq[1, ], pop_gen_frq[1, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the AA/EE genotype")
-points(smp_gen, smp_gen_frq[1, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[2, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[2, ], pop_gen_frq[2, ]), max(smp_gen_frq[2, ], pop_gen_frq[2, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the AA/Ee genotype")
-points(smp_gen, smp_gen_frq[2, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[3, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[3, ], pop_gen_frq[3, ]), max(smp_gen_frq[3, ], pop_gen_frq[3, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the AA/ee genotype")
-points(smp_gen, smp_gen_frq[3, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[4, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[4, ], pop_gen_frq[4, ]), max(smp_gen_frq[4, ], pop_gen_frq[4, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the Aa/EE genotype")
-points(smp_gen, smp_gen_frq[4, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[5, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[5, ], pop_gen_frq[5, ]), max(smp_gen_frq[5, ], pop_gen_frq[5, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the Aa/Ee genotype")
-points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the aa/EE genotype")
-points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the Aa/ee genotype")
-points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the aa/Ee genotype")
-points(smp_gen, smp_gen_frq[8, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFM-HMM: the aa/ee genotype")
-points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
+# model <- "WFM"
+# sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
+# rec_rat <- 5e-01
+# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
+# int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# evt_gen <- 240
+# smp_gen <- (0:10) * 50
+# smp_siz <- rep(100, 11)
+# obs_hap <- FALSE
+#
+# sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_con, evt_gen, smp_gen, smp_siz, obs_hap)
+# smp_gen <- sim_HMM_WFM$smp_gen
+# smp_siz <- sim_HMM_WFM$smp_siz
+# smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
+# smp_gen_frq <- sim_HMM_WFM$smp_gen_frq
+# pop_gen_frq <- sim_HMM_WFM$pop_gen_frq
+#
+# k <- min(smp_gen):max(smp_gen)
+# plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[1, ], pop_gen_frq[1, ]), max(smp_gen_frq[1, ], pop_gen_frq[1, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the AA/EE genotype")
+# points(smp_gen, smp_gen_frq[1, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[2, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[2, ], pop_gen_frq[2, ]), max(smp_gen_frq[2, ], pop_gen_frq[2, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the AA/Ee genotype")
+# points(smp_gen, smp_gen_frq[2, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[3, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[3, ], pop_gen_frq[3, ]), max(smp_gen_frq[3, ], pop_gen_frq[3, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the AA/ee genotype")
+# points(smp_gen, smp_gen_frq[3, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[4, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[4, ], pop_gen_frq[4, ]), max(smp_gen_frq[4, ], pop_gen_frq[4, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the Aa/EE genotype")
+# points(smp_gen, smp_gen_frq[4, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[5, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[5, ], pop_gen_frq[5, ]), max(smp_gen_frq[5, ], pop_gen_frq[5, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the Aa/Ee genotype")
+# points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the aa/EE genotype")
+# points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the Aa/ee genotype")
+# points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the aa/Ee genotype")
+# points(smp_gen, smp_gen_frq[8, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFM-HMM: the aa/ee genotype")
+# points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 
 ####################
 
 #' Simulate the dataset under the Wright-Fisher diffusion
-model <- "WFD"
-sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
-rec_rat <- 5e-01
-pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-evt_gen <- 210
-smp_gen <- (0:10) * 50
-smp_siz <- rep(100, 11)
-ref_siz <- 1e+04
-ptn_num <- 5e+00
-
-sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, evt_gen, smp_gen, smp_siz, ref_siz, ptn_num)
-smp_gen <- sim_HMM_WFD$smp_gen
-smp_siz <- sim_HMM_WFD$smp_siz
-smp_gen_cnt <- sim_HMM_WFD$smp_gen_cnt
-smp_mis_cnt <- sim_HMM_WFM$smp_mis_cnt
-smp_gen_frq <- sim_HMM_WFD$smp_gen_frq
-pop_gen_frq <- sim_HMM_WFD$pop_gen_frq
-pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
-pop_gen_frq <- pop_gen_frq[-7, ]
-
-k <- min(smp_gen):max(smp_gen)
-plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[1, ], pop_gen_frq[1, ]), max(smp_gen_frq[1, ], pop_gen_frq[1, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the AA/EE genotype")
-points(smp_gen, smp_gen_frq[1, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[2, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[2, ], pop_gen_frq[2, ]), max(smp_gen_frq[2, ], pop_gen_frq[2, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the AA/Ee genotype")
-points(smp_gen, smp_gen_frq[2, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[3, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[3, ], pop_gen_frq[3, ]), max(smp_gen_frq[3, ], pop_gen_frq[3, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the AA/ee genotype")
-points(smp_gen, smp_gen_frq[3, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[4, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[4, ], pop_gen_frq[4, ]), max(smp_gen_frq[4, ], pop_gen_frq[4, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the Aa/EE genotype")
-points(smp_gen, smp_gen_frq[4, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[5, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[5, ], pop_gen_frq[5, ]), max(smp_gen_frq[5, ], pop_gen_frq[5, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the Aa/Ee genotype")
-points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the aa/EE genotype")
-points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the Aa/ee genotype")
-points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the aa/Ee genotype")
-points(smp_gen, smp_gen_frq[8, ], col = 'red', pch = 17, cex = 1)
-plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
-     xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
-     xlab = "Generation", ylab = "Genotype frequency",
-     main = "WFD-HMM: the aa/ee genotype")
-points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
+# model <- "WFD"
+# sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
+# rec_rat <- 5e-01
+# pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
+# int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# evt_gen <- 240
+# smp_gen <- (0:10) * 50
+# smp_siz <- rep(100, 11)
+# ref_siz <- 1e+04
+# obs_hap <- FALSE
+# ptn_num <- 5e+00
+#
+# sim_HMM_WFD <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_con, evt_gen, smp_gen, smp_siz, ref_siz, obs_hap, ptn_num)
+# smp_gen <- sim_HMM_WFD$smp_gen
+# smp_siz <- sim_HMM_WFD$smp_siz
+# smp_gen_cnt <- sim_HMM_WFD$smp_gen_cnt
+# smp_gen_frq <- sim_HMM_WFD$smp_gen_frq
+# pop_gen_frq <- sim_HMM_WFD$pop_gen_frq
+#
+# k <- min(smp_gen):max(smp_gen)
+# plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[1, ], pop_gen_frq[1, ]), max(smp_gen_frq[1, ], pop_gen_frq[1, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the AA/EE genotype")
+# points(smp_gen, smp_gen_frq[1, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[2, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[2, ], pop_gen_frq[2, ]), max(smp_gen_frq[2, ], pop_gen_frq[2, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the AA/Ee genotype")
+# points(smp_gen, smp_gen_frq[2, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[3, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[3, ], pop_gen_frq[3, ]), max(smp_gen_frq[3, ], pop_gen_frq[3, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the AA/ee genotype")
+# points(smp_gen, smp_gen_frq[3, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[4, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[4, ], pop_gen_frq[4, ]), max(smp_gen_frq[4, ], pop_gen_frq[4, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the Aa/EE genotype")
+# points(smp_gen, smp_gen_frq[4, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[5, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[5, ], pop_gen_frq[5, ]), max(smp_gen_frq[5, ], pop_gen_frq[5, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the Aa/Ee genotype")
+# points(smp_gen, smp_gen_frq[5, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[6, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[6, ], pop_gen_frq[6, ]), max(smp_gen_frq[6, ], pop_gen_frq[6, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the aa/EE genotype")
+# points(smp_gen, smp_gen_frq[6, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[7, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[7, ], pop_gen_frq[7, ]), max(smp_gen_frq[7, ], pop_gen_frq[7, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the Aa/ee genotype")
+# points(smp_gen, smp_gen_frq[7, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[8, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[8, ], pop_gen_frq[8, ]), max(smp_gen_frq[8, ], pop_gen_frq[8, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the aa/Ee genotype")
+# points(smp_gen, smp_gen_frq[8, ], col = 'red', pch = 17, cex = 1)
+# plot(k, pop_gen_frq[9, ], type = 'l', lwd = 1.5,
+#      xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(smp_gen_frq[9, ], pop_gen_frq[9, ]), max(smp_gen_frq[9, ], pop_gen_frq[9, ])),
+#      xlab = "Generation", ylab = "Genotype frequency",
+#      main = "WFD-HMM: the aa/ee genotype")
+# points(smp_gen, smp_gen_frq[9, ], col = 'red', pch = 17, cex = 1)
 
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 21
+test_seed <- 12
 set.seed(test_seed)
 
 model <- "WFM"
 sel_cof <- matrix(c(0e+00, 5e-03, 1e-02, 5e-03), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-int_frq <- c(6e-01, 2e-01, 1e-01, 1e-01)
-evt_gen <- 210
+int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
+evt_gen <- 240
 smp_gen <- (0:10) * 50
 smp_siz <- rep(100, 11)
+obs_hap <- FALSE
 
-sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_frq, evt_gen, smp_gen, smp_siz)
+sim_HMM_WFM <- cmpsimulateHMM(model, sel_cof, rec_rat, pop_siz, int_con, evt_gen, smp_gen, smp_siz, obs_hap)
 smp_gen <- sim_HMM_WFM$smp_gen
 smp_siz <- sim_HMM_WFM$smp_siz
 smp_cnt <- sim_HMM_WFM$smp_gen_cnt
-mis_cnt <- sim_HMM_WFM$smp_mis_cnt
 smp_frq <- sim_HMM_WFM$smp_gen_frq
 pop_frq <- sim_HMM_WFM$pop_gen_frq
-pop_frq[5, ] <- pop_frq[5, ] + pop_frq[7, ]
-pop_frq <- pop_frq[-7, ]
+# pop_frq[5, ] <- pop_frq[5, ] + pop_frq[7, ]
+# pop_frq <- pop_frq[-7, ]
 
-save(sel_cof, rec_rat, pop_siz, int_frq, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, smp_frq, pop_frq,
-     file = "./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+save(model, sel_cof, rec_rat, pop_siz, int_con, evt_gen, smp_gen, smp_siz, obs_hap, smp_cnt, smp_frq, pop_frq,
+     file = "./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_SimData.pdf", width = 24, height = 18)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_SimData.pdf", width = 24, height = 18)
 par(mfrow = c(3, 3), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 k <- min(smp_gen):max(smp_gen)
 plot(k, pop_frq[1, ], type = 'l', lwd = 1.5,
@@ -391,11 +391,10 @@ dev.off()
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
-#' @param mis_cnt the count of the genotypes with unknown alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
 set.seed(test_seed)
 
@@ -407,16 +406,15 @@ evt_gen
 smp_gen
 smp_siz
 smp_cnt
-mis_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+05
 
-system.time(BPF <- cmprunBPF(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num))
+system.time(BPF <- cmprunBPF(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num))
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, BPF,
-     file = "./Output/Output v1.0/Test v1.3/TEST_COL_BPF.rda")
+save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF,
+     file = "./Output/Output v1.0/Test v1.2/TEST_COL_BPF.rda")
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_BPF.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_BPF.rda")
 
 lik <- rep(1, pcl_num)
 wght <- BPF$wght
@@ -424,7 +422,7 @@ for (k in 1:length(smp_gen)) {
   lik <- lik * (cumsum(wght[, k]) / (1:pcl_num))
 }
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_BPF_Likelihood.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BPF_Likelihood.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:pcl_num, log(lik), type = 'l',
      xlab = "Number of particles", ylab = "Log likelihood",
@@ -434,7 +432,7 @@ dev.off()
 pop_frq_pre_resmp <- BPF$gen_frq_pre_resmp
 pop_frq_pst_resmp <- BPF$gen_frq_pst_resmp
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_BPF_Particle.pdf", width = 72, height = 66)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BPF_Particle.pdf", width = 72, height = 66)
 par(mfrow = c(11, 9), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 for (k in 1:length(smp_gen)) {
   hist_pst_resmp <- hist(pop_frq_pst_resmp[1, , k], breaks = seq(min(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), max(pop_frq_pst_resmp[1, , k], pop_frq_pre_resmp[1, , k]), length.out = 50), plot = FALSE)
@@ -532,12 +530,11 @@ dev.off()
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
-#' @param mis_cnt the count of the genotypes with unknown alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
 set.seed(test_seed)
 
@@ -549,22 +546,21 @@ evt_gen
 smp_gen
 smp_siz
 smp_cnt
-mis_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
 gap_num <- 1e+02
 
-system.time(OptNum <- calculateOptimalParticleNum(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, gap_num))
+system.time(OptNum <- calculateOptimalParticleNum(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num))
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, gap_num, OptNum,
-     file = "./Output/Output v1.0/Test v1.3/TEST_COL_OptNum.rda")
+save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num, OptNum,
+     file = "./Output/Output v1.0/Test v1.2/TEST_COL_OptNum.rda")
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_OptNum.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_OptNum.rda")
 
 opt_pcl_num <- OptNum$opt_pcl_num
 log_lik_sdv <- OptNum$log_lik_sdv
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_OptNum.rda.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_OptNum.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(opt_pcl_num, log_lik_sdv, type = 'b', lwd = 2,
      xlab = "Particle number", ylab = "Log-likelihood standard deviation",
@@ -585,12 +581,11 @@ dev.off()
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
-#' @param mis_cnt the count of the genotypes with unknown alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
 set.seed(test_seed)
 
@@ -602,21 +597,20 @@ evt_gen
 smp_gen
 smp_siz
 smp_cnt
-mis_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
 itn_num <- 5e+04
 
-system.time(sel_cof_chn <- cmprunPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num))
+system.time(sel_cof_chn <- cmprunPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num))
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
-     file = "./Output/Output v1.0/Test v1.3/TEST_COL_PMMH.rda")
+save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
+     file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH.rda")
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_PMMH.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_PMMH.rda")
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_PMMH_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Traceplot_SelCoeff.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -639,11 +633,27 @@ plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Autocorrplot.pdf", width = 16, height = 24)
+par(mfrow = c(2, 4), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+
 brn_num <- 1e+04
 sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event before thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event before thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event before thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event before thinning")
 
 thn_num <- 8e+00
 sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
+
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event after thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event after thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event after thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event after thinning")
+dev.off()
 
 sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
 sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
@@ -655,7 +665,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-# pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_PMMH_Posterior_SelCoeff.pdf", width = 16, height = 12)
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Posterior_SelCoeff.pdf", width = 16, height = 12)
 # par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
@@ -665,7 +675,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 # abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the sel coeff of the chestnut before the event")
@@ -674,7 +684,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 # abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the sel coeff of the black after the event")
@@ -683,7 +693,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 # abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the sel coeff of the chestnut after the event")
@@ -694,7 +704,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 # abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_PMMH_Posterior_SelCoeff.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Posterior_SelCoeff.pdf", width = 16, height = 16)
 par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 4, 4, 2, 3, 5, 6), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -706,6 +716,7 @@ abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -734,6 +745,7 @@ abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -762,7 +774,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-# pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_PMMH_Posterior_SelChange.pdf", width = 16, height = 6)
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Posterior_SelChange.pdf", width = 16, height = 6)
 # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
@@ -772,7 +784,7 @@ dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 # abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
 # abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the change in the sel coeff of the chestnut")
@@ -783,9 +795,9 @@ dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 # abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_PMMH_Posterior_SelChange.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Posterior_SelChange.pdf", width = 16, height = 16)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-layout(matrix(c(1, 3, 2, 4), nrow = 2, ncol = 2))
+layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
@@ -795,15 +807,7 @@ abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
-
-hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
-     xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the black")
-lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
-abline(v = 0, col = 'red', lty = 2, lwd = 2)
-abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
@@ -814,6 +818,27 @@ abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Change in the selection coefficient of the black", ylab = "Change in the selection coefficient of the chestnut",
+      main = "Joint posterior for the change in the sel coeff before and after the event")
+abline(v = 0, col = 'red', lty = 2, lwd = 2)
+abline(h = 0, col = 'red', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(t(dif_sel_chn)), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Change in the selection coefficient",
+     main = "Posterior for the change in the sel coeff of the black")
+lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
+abline(v = 0, col = 'red', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
@@ -827,7 +852,7 @@ dev.off()
 
 ########################################
 
-#' Run the Bayesian procedure for the inference of natural selection
+#' Run the adaptive particle marginal Metropolis-Hastings (AdaptPMMH)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
@@ -835,15 +860,15 @@ dev.off()
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
-#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
-#' @param brn_num the number of the iterations for burn-in
-#' @param thn_num the number of the iterations for thinning
+#' @param itn_num the number of the iterations carried out in the PMMH
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
 set.seed(test_seed)
 
@@ -855,29 +880,77 @@ evt_gen
 smp_gen
 smp_siz
 smp_cnt
-mis_cnt
 ptn_num <- 5e+00
 pcl_num <- 1e+03
-itn_num <- 2e+04
-brn_num <- 5e+03
-thn_num <- 3e+00
+itn_num <- 5e+04
+stp_siz <- (1:itn_num)^(-2 / 3)
+apt_rto <- 4e-01
 
-system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
+system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_SimData.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, mis_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
-     file = "./Output/Output v1.0/Test v1.3/TEST_COL_BayesProc.rda")
+save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+     file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH.rda")
 
-load("./Output/Output v1.0/Test v1.3/TEST_COL_BayesProc.rda")
+load("./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH.rda")
 
-sel_cof_chn <- BayesianProcedure$sel_cof_chn
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
+     xlab = "Iteration", ylab = "Selection coefficient",
+     main = "Trace plot for the sel coeff of the black before the event")
+abline(h = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 
-sel_cof_est <- BayesianProcedure$sel_cof_est
+plot(1:itn_num, sel_cof_chn[2, 1, 1:itn_num], type = 'l',
+     xlab = "Iteration", ylab = "Selection coefficient",
+     main = "Trace plot for the sel coeff of the chestnut before the event")
+abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 
-sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
+plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
+     xlab = "Iteration", ylab = "Selection coefficient",
+     main = "Trace plot for the sel coeff of the black after the event")
+abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 
-# pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_BayesProc_Posterior_SelCoeff.pdf", width = 16, height = 12)
+plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
+     xlab = "Iteration", ylab = "Selection coefficient",
+     main = "Trace plot for the sel coeff of the chestnut after the event")
+abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
+dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Autocorrplot.pdf", width = 16, height = 24)
+par(mfrow = c(2, 4), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+
+brn_num <- 1e+04
+sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
+
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event before thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event before thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event before thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event before thinning")
+
+thn_num <- 8e+00
+sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
+
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event after thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event after thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event after thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event after thinning")
+dev.off()
+
+sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
+sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
+sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
+
+sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
+sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
+sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
+sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
+sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
+
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Posterior_SelCoeff.pdf", width = 16, height = 12)
 # par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
@@ -887,7 +960,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 # abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the sel coeff of the chestnut before the event")
@@ -896,7 +969,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 # abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the sel coeff of the black after the event")
@@ -905,7 +978,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 # abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
 # abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the sel coeff of the chestnut after the event")
@@ -916,7 +989,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 # abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_BayesProc_Posterior_SelCoeff.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Posterior_SelCoeff.pdf", width = 16, height = 16)
 par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 4, 4, 2, 3, 5, 6), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -928,6 +1001,7 @@ abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -956,6 +1030,249 @@ abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the black after the event")
+lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the chestnut after the event")
+lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+dif_sel_chn <- sel_cof_chn[, 2, ] - sel_cof_chn[, 1, ]
+
+dif_sel_est <- rowMeans(dif_sel_chn)
+
+dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
+dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
+dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
+
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Posterior_SelChange.pdf", width = 16, height = 6)
+# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Posterior for the change in the sel coeff of the black")
+# lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
+# abline(v = 0, col = 'red', lty = 2, lwd = 2)
+# abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+# abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+# abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+#
+# hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Posterior for the change in the sel coeff of the chestnut")
+# lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
+# abline(v = 0, col = 'red', lty = 2, lwd = 2)
+# abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
+# abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+# abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+# dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Posterior_SelChange.pdf", width = 16, height = 16)
+par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
+      main = "Joint posterior for the sel coeff of the black")
+abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
+      main = "Joint posterior for the sel coeff of the chestnut")
+abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Change in the selection coefficient of the black", ylab = "Change in the selection coefficient of the chestnut",
+      main = "Joint posterior for the change in the sel coeff before and after the event")
+abline(v = 0, col = 'red', lty = 2, lwd = 2)
+abline(h = 0, col = 'red', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(t(dif_sel_chn)), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Change in the selection coefficient",
+     main = "Posterior for the change in the sel coeff of the black")
+lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
+abline(v = 0, col = 'red', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+
+hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
+     xlab = "Change in the selection coefficient",
+     main = "Posterior for the change in the sel coeff of the chestnut")
+lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
+abline(v = 0, col = 'red', lty = 2, lwd = 2)
+abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+########################################
+
+#' Run the Bayesian procedure for the inference of natural selection
+#' Parameter settings
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
+#' @param evt_gen the generation that the event of interest occurred
+#' @param smp_gen the sampling time points measured in one generation
+#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
+#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
+#' @param pcl_num the number of particles generated in the bootstrap particle filter
+#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
+#' @param brn_num the number of the iterations for burn-in
+#' @param thn_num the number of the iterations for thinning
+#' @param adp_set = TRUE/FALSE (return the result with the adaptive setting or not)
+#' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
+#' @param apt_rto the target mean acceptance probability of the adaptive setting
+
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
+
+set.seed(test_seed)
+
+sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
+rec_rat
+pop_siz
+ref_siz <- 1e+04
+evt_gen
+smp_gen
+smp_siz
+smp_cnt
+ptn_num <- 5e+00
+pcl_num <- 1e+03
+itn_num <- 2e+04
+brn_num <- 5e+03
+thn_num <- 3e+00
+adp_set <- TRUE
+stp_siz <- (1:itn_num)^(-2 / 3)
+apt_rto <- 4e-01
+
+system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, stp_siz, apt_rto))
+
+load("./Output/Output v1.0/Test v1.2/TEST_COL_SimData.rda")
+
+save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, stp_siz, apt_rto, BayesianProcedure,
+     file = "./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc.rda")
+
+load("./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc.rda")
+
+sel_cof_chn <- BayesianProcedure$sel_cof_chn
+
+sel_cof_est <- BayesianProcedure$sel_cof_est
+
+sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
+
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc_Posterior_SelCoeff.pdf", width = 16, height = 12)
+# par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Posterior for the sel coeff of the black before the event")
+# lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
+# abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
+# abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
+#
+# hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Posterior for the sel coeff of the chestnut before the event")
+# lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
+# abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
+# abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
+#
+# hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Posterior for the sel coeff of the black after the event")
+# lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
+# abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
+# abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
+#
+# hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
+#      xlab = "Selection coefficient",
+#      main = "Posterior for the sel coeff of the chestnut after the event")
+# lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
+# abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
+# abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
+# abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
+# dev.off()
+
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc_Posterior_SelCoeff.pdf", width = 16, height = 16)
+par(cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 1, 4, 4, 2, 3, 5, 6), nrow = 4, ncol = 2))
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[2, 1, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+      main = "Joint posterior for the sel coeff before the event")
+abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the black before the event")
+lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
+
+hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
+     xlab = "Selection coefficient",
+     main = "Marginal posterior for the sel coeff of the chestnut before the event")
+lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
+
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(sel_cof_chn[1, 2, ], sel_cof_chn[2, 2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
+      main = "Joint posterior for the sel coeff after the event")
+abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
+abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -982,7 +1299,7 @@ dif_sel_est <- BayesianProcedure$dif_sel_est
 
 dif_sel_hpd <- BayesianProcedure$dif_sel_hpd
 
-# pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_BayesProc_Posterior_SelChange.pdf", width = 16, height = 6)
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc_Posterior_SelChange.pdf", width = 16, height = 6)
 # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
@@ -992,7 +1309,7 @@ dif_sel_hpd <- BayesianProcedure$dif_sel_hpd
 # abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
 # abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
 # abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
-
+#
 # hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
 #      main = "Posterior for the change in the sel coeff of the chestnut")
@@ -1003,9 +1320,9 @@ dif_sel_hpd <- BayesianProcedure$dif_sel_hpd
 # abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 # dev.off()
 
-pdf(file = "./Output/Output v1.0/Test v1.3/TEST_COL_BayesProc_Posterior_SelChange.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc_Posterior_SelChange.pdf", width = 16, height = 16)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-layout(matrix(c(1, 3, 2, 4), nrow = 2, ncol = 2))
+layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
@@ -1015,15 +1332,7 @@ abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
-
-hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
-     xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the black")
-lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
-abline(v = 0, col = 'red', lty = 2, lwd = 2)
-abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
@@ -1034,6 +1343,27 @@ abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+grd_num <- 1e+03
+sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
+image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
+      xlab = "Change in the selection coefficient of the black", ylab = "Change in the selection coefficient of the chestnut",
+      main = "Joint posterior for the change in the sel coeff before and after the event")
+abline(v = 0, col = 'red', lty = 2, lwd = 2)
+abline(h = 0, col = 'red', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
+# HPDregionplot(as.mcmc(t(dif_sel_chn)), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
+
+hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
+     xlab = "Change in the selection coefficient",
+     main = "Posterior for the change in the sel coeff of the black")
+lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
+abline(v = 0, col = 'red', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
+abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
