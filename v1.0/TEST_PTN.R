@@ -39,7 +39,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- 5e+03
-# int_frq <- c(7e-01, 1e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 #
@@ -75,7 +75,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- 5e+03
-# int_frq <- c(7e-01, 1e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -102,7 +102,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- 5e+03
-# int_frq <- c(7e-01, 1e-01, 1e-01, 1e-01)
+# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -152,7 +152,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- 5e+03
-# int_con <- c(7e-01, 1e-01, 1e-01, 1e-01)
+# int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
@@ -163,8 +163,6 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # smp_gen_cnt <- sim_HMM_WFM$smp_gen_cnt
 # smp_gen_frq <- sim_HMM_WFM$smp_gen_frq
 # pop_gen_frq <- sim_HMM_WFM$pop_gen_frq
-# pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
-# pop_gen_frq <- pop_gen_frq[-7, ]
 #
 # k <- min(smp_gen):max(smp_gen)
 # plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
@@ -220,7 +218,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- 5e+03
-# int_con <- c(7e-01, 1e-01, 1e-01, 1e-01)
+# int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
@@ -232,8 +230,6 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 # smp_gen_cnt <- sim_HMM_WFD$smp_gen_cnt
 # smp_gen_frq <- sim_HMM_WFD$smp_gen_frq
 # pop_gen_frq <- sim_HMM_WFD$pop_gen_frq
-# pop_gen_frq[5, ] <- pop_gen_frq[5, ] + pop_gen_frq[7, ]
-# pop_gen_frq <- pop_gen_frq[-7, ]
 #
 # k <- min(smp_gen):max(smp_gen)
 # plot(k, pop_gen_frq[1, ], type = 'l', lwd = 1.5,
@@ -285,14 +281,14 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 2
+test_seed <- 3
 set.seed(test_seed)
 
 model <- "WFM"
 sel_cof <- c(1e-02, 5e-03, 0e-00)
 rec_rat <- 5e-05
 pop_siz <- 5e+03
-int_con <- c(7e-01, 1e-01, 1e-01, 1e-01)
+int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
 smp_gen <- (0:10) * 50
 smp_siz <- rep(100, 11)
 obs_hap <- FALSE
