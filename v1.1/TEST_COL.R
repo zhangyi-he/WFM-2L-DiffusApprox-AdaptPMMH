@@ -82,9 +82,9 @@ source("./Code/Code v1.0/Code v1.1/RFUN_COL.R")
 # lst_gen <- 500
 # ptn_num <- 5e+00
 #
-# frq_pth <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE)
+# frq_pth <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE)
 #
-# t <- (int_gen:(int_gen + (lst_gen - int_gen) * ptn_num)) / 2 / pop_siz
+# t <- (int_gen:(int_gen + (lst_gen - int_gen) * ptn_num)) / 2 / ref_siz
 # plot(t, frq_pth[1, ], type = "l", lwd = 1.5,
 #      xlab = "Time", ylab = "Haplotype frequency",
 #      main = "WFD: the AE haplotype frequency trajectory")
