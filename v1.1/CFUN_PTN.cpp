@@ -2,7 +2,7 @@
 // Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.1
-// Horse coat patterns (KIT13 & KIT116) under constant natural selection and constant demographic histories (N/A is not allowed)
+// Horse coat patterns (KIT13 & KIT116) under constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 // C functions
 
@@ -51,7 +51,7 @@ arma::dmat calculateFitnessMat_arma(const arma::dcolvec& sel_cof) {
 
 // Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher model with selection
 // [[Rcpp::export]]
-List simulateWFM_arma(const arma::dmat& fts_mat, const double& rec_rat, const int& pop_siz, const arma::dcolvec& int_frq, const int& int_gen, const int& lst_gen) {
+List simulateWFM_arma(const arma::dmat& fts_mat, const double& rec_rat, const arma::icolvec& pop_siz, const arma::dcolvec& int_frq, const int& int_gen, const int& lst_gen) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -78,8 +78,8 @@ List simulateWFM_arma(const arma::dmat& fts_mat, const double& rec_rat, const in
 
     // proceed the Wright-Fisher sampling
     IntegerVector hap_cnt(4);
-    R::rmultinom(2 * pop_siz, prob.begin(), 4, hap_cnt.begin());
-    hap_frq = as<arma::dcolvec>(hap_cnt) / 2 / pop_siz;
+    R::rmultinom(2 * pop_siz(k), prob.begin(), 4, hap_cnt.begin());
+    hap_frq = as<arma::dcolvec>(hap_cnt) / 2 / pop_siz(k);
     hap_frq_pth.col(k) = hap_frq;
 
     gen_frq = fts_mat % (hap_frq * hap_frq.t()) / arma::as_scalar(hap_frq.t() * fts_mat * hap_frq);
@@ -97,16 +97,24 @@ List simulateWFM_arma(const arma::dmat& fts_mat, const double& rec_rat, const in
 /********** WFD **********/
 // Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
 // [[Rcpp::export]]
-arma::dmat simulateWFD_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::dcolvec& int_frq, const int& int_gen, const int& lst_gen, const arma::uword& ptn_num) {
+arma::dmat simulateWFD_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::dcolvec& int_frq, const int& int_gen, const int& lst_gen, const arma::uword& ptn_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
   // rescale the selection coefficients and the recombination rate
-  arma::dcolvec scl_sel_cof = 2 * pop_siz * sel_cof;
-  double scl_rec_rat = 4 * pop_siz * rec_rat;
+  arma::dcolvec scl_sel_cof = 2 * ref_siz * sel_cof;
+  double scl_rec_rat = 4 * ref_siz * rec_rat;
+
+  // calculate the ratio of the population size to the reference population size
+  arma::dcolvec siz_rto = arma::zeros<arma::dcolvec>(arma::uword(lst_gen - int_gen) * ptn_num);
+  for (arma::uword k = 0; k < arma::uword(lst_gen - int_gen); k++) {
+    arma::dcolvec siz_rto_tmp = arma::zeros<arma::dcolvec>(ptn_num);
+    siz_rto_tmp.fill(pop_siz(k) / double(ref_siz));
+    siz_rto.subvec(k * ptn_num, (k + 1) * ptn_num - 1) = siz_rto_tmp;
+  }
 
   // calculate delta t
-  double dt = 1.0 / (2 * pop_siz) / ptn_num;
+  double dt = 1.0 / (2 * ref_siz) / ptn_num;
   // generate delta W
   arma::dmat dW = pow(dt, 0.5) * arma::randn<arma::dmat>(6, arma::uword(lst_gen - int_gen) * ptn_num);
 
@@ -164,6 +172,7 @@ arma::dmat simulateWFD_arma(const arma::dcolvec& sel_cof, const double& rec_rat,
     // sigma(3, 3) = 0;
     sigma(3, 4) = -pow(frq_pth(3, t - 1) * frq_pth(1, t - 1), 0.5);
     sigma(3, 5) = -pow(frq_pth(3, t - 1) * frq_pth(2, t - 1), 0.5);
+    sigma = pow(siz_rto(t - 1), -0.5) * sigma;
 
     // proceed the Euler-Maruyama scheme
     frq_pth.col(t) = frq_pth.col(t - 1) + mu * dt + sigma * dW.col(t - 1);
@@ -299,7 +308,7 @@ arma::dmat initialiseParticle_arma(const arma::uword& pcl_num){
 
 // Run the bootstrap particle filter
 // [[Rcpp::export]]
-List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
+List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -362,7 +371,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
     hap_frq_tmp = hap_frq_pst.slice(k - 1);
     arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
-      arma::dmat path = simulateWFD_arma(sel_cof, rec_rat, pop_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
+      arma::dmat path = simulateWFD_arma(sel_cof, rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
@@ -406,7 +415,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int&
 /********** PMMH **********/
 // Calculate the log-likelihood using the bootstrap particle filter
 // [[Rcpp::export]]
-double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::field<arma::imat>& ptl_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
+double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::field<arma::imat>& ptl_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -444,7 +453,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
     wght = arma::zeros<arma::dcolvec>(pcl_num);
     arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
-      arma::dmat path = simulateWFD_arma(sel_cof, rec_rat, pop_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
+      arma::dmat path = simulateWFD_arma(sel_cof, rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
         wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
@@ -460,7 +469,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
     } else {
       log_lik = -(arma::datum::inf);
 
-      break;
+      return log_lik;
     }
   }
 
@@ -469,7 +478,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& r
 
 // Calculate the optimal particle number in the particle marginal Metropolis-Hastings
 // [[Rcpp::export]]
-List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& gap_num) {
+List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& gap_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -480,7 +489,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
 
   arma::drowvec log_lik(300);
   for (arma::uword i = 0; i < 300; i++) {
-    log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+    log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
   }
 
   arma::drowvec log_lik_sdv(1);
@@ -494,7 +503,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) + gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -507,7 +516,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) - gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -518,7 +527,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) + gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -531,7 +540,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
       opt_pcl_num.insert_cols(0, 1);
       opt_pcl_num(0) = opt_pcl_num(1) - gap_num;
       for (arma::uword i = 0; i < 300; i++) {
-        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
+        log_lik(i) = calculateLogLikelihood_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, opt_pcl_num(0));
       }
       log_lik_sdv.insert_cols(0, 1);
       log_lik_sdv(0) = arma::stddev(log_lik);
@@ -545,7 +554,7 @@ List calculateOptimalParticleNum_arma(const arma::dcolvec& sel_cof, const double
 
 // Run the particle marginal Metropolis-Hastings
 //[[Rcpp::export]]
-arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num) {
+arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -567,7 +576,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
   // or take the beta prior with alpha = 1 and beta = 3
   sel_cof_chn.col(0) = sel_cof;
 
-  log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+  log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
   double apt_cnt = 0;
   for (arma::uword i = 1; i < itn_num; i++) {
@@ -586,7 +595,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
       // arma::drowvec log_psl = arma::zeros<arma::drowvec>(2);
 
       // calculate the likelihood
-      log_lik(1) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+      log_lik(1) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
       // calculate the acceptance ratio
       // double apt_rto = exp(log_lik(1) - log_lik(0));
@@ -610,7 +619,7 @@ arma::dmat runPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, con
 
 // Run the adaptive particle marginal Metropolis-Hastings
 //[[Rcpp::export]]
-arma::dmat runAdaptPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const int& pop_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
+arma::dmat runAdaptPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat, const arma::icolvec& pop_siz, const int& ref_siz, const arma::irowvec& smp_gen, const arma::irowvec& smp_siz, const arma::imat& smp_cnt, const arma::uword& ptn_num, const arma::uword& pcl_num, const arma::uword& itn_num, const arma::drowvec& stp_siz, double& apt_rto) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -635,7 +644,7 @@ arma::dmat runAdaptPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat
   // or take the beta prior with alpha = 1 and beta = 3
   sel_cof_chn.col(0) = sel_cof;
 
-  log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+  log_lik(0) = calculateLogLikelihood_arma(sel_cof_chn.col(0), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
   double apt_cnt = 0;
   double alpha = 0;
@@ -657,7 +666,7 @@ arma::dmat runAdaptPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat
       // arma::drowvec log_psl = arma::zeros<arma::drowvec>(2);
 
       // calculate the likelihood
-      log_lik(1) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
+      log_lik(1) = calculateLogLikelihood_arma(sel_cof_chn.col(i), rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, ptl_cnt, ptn_num, pcl_num);
 
       // calculate the acceptance ratio
       // double apt_rto = exp(log_lik(1) - log_lik(0));
@@ -680,7 +689,7 @@ arma::dmat runAdaptPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat
     U = arma::normalise(U);
     M = S * (I + stp_siz(i) * (alpha - apt_rto) * (U * U.t())) * S.t();
     S = arma::chol(M, "lower");
-    cout << S << endl;
+    cout << M << endl;
   }
 
   return sel_cof_chn;
