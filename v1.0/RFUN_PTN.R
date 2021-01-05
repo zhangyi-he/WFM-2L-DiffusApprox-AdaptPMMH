@@ -1,7 +1,7 @@
 #' @title Inferring natural selection acting on horse coat colours and patterns during the process of domestication from ancient DNA data
 #' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.1
+#' version 1.0
 #' Horse coat patterns (KIT13 & KIT116) under constant natural selection and constant demographic histories (N/A is not allowed)
 
 #' R functions
