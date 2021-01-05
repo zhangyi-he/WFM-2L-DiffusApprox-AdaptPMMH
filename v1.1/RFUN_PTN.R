@@ -2,7 +2,7 @@
 #' @author Xiaoyang Dai, Sile Hu, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.1
-#' Horse coat patterns (KIT13 & KIT116) under constant natural selection and constant demographic histories (N/A is not allowed)
+#' Horse coat patterns (KIT13 & KIT116) under constant natural selection and non-constant demographic histories (N/A is not allowed)
 
 #' R functions
 
@@ -27,7 +27,7 @@ library("compiler")
 #enableJIT(1)
 
 # call C++ functions
-sourceCpp("./Code/Code v1.0/Code v1.0/CFUN_PTN.cpp")
+sourceCpp("./Code/Code v1.0/Code v1.1/CFUN_PTN.cpp")
 
 ################################################################################
 
@@ -35,7 +35,7 @@ sourceCpp("./Code/Code v1.0/Code v1.0/CFUN_PTN.cpp")
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the generation that the simulated haplotype frequency trajectories started
 #' @param lst_gen the generation that the simulated haplotype frequency trajectories ended
@@ -60,7 +60,8 @@ cmpsimulateWFM <- cmpfun(simulateWFM)
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param int_gen the generation that the simulated haplotype frequency trajectories started
 #' @param lst_gen the generation that the simulated haplotype frequency trajectories ended
@@ -68,8 +69,8 @@ cmpsimulateWFM <- cmpfun(simulateWFM)
 #' @param dat_aug = TRUE/FALSE (return the simulated sample trajectory with data augmentation or not)
 
 #' Standard version
-simulateWFD <- function(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE) {
-  frq_pth <- simulateWFD_arma(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num)
+simulateWFD <- function(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE) {
+  frq_pth <- simulateWFD_arma(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num)
   frq_pth <- as.matrix(frq_pth)
 
   if (dat_aug == FALSE) {
@@ -88,11 +89,12 @@ cmpsimulateWFD <- cmpfun(simulateWFD)
 #' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
 #' @param sel_cof the selection coefficients of the black and chestnut phenotypes
 #' @param rec_rat the recombination rate between the ASIP and MC1R loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
 #' @param int_con the initial haplotype frequencies of the population / the initial mutant allele frequencies and the linkage disequilibrium of the population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param obs_hap = TRUE/FALSE (return the simulated sample genotypes with haplotype information or not)
+#' @param ref_siz the reference size of the horse population
 #' @param ptn_num the number of the subintervals divided per generation in the Euler-Maruyama method for the WFD
 
 #' Standard version
@@ -118,7 +120,7 @@ simulateHMM <- function(model, sel_cof, rec_rat, pop_siz, int_con, smp_gen, smp_
     pop_gen_frq <- as.matrix(WFM$gen_frq_pth)
   }
   if (model == "WFD") {
-    pop_hap_frq <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
+    pop_hap_frq <- cmpsimulateWFD(sel_cof, rec_rat, pop_siz, ref_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
     pop_hap_frq <- as.matrix(pop_hap_frq)
     pop_gen_frq <- matrix(NA, nrow = 10, ncol = ncol(pop_hap_frq))
     fts_mat <- calculateFitnessMat_arma(sel_cof)
@@ -168,7 +170,8 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 #' Parameter setting
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -176,9 +179,11 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
 #' Standard version
-runBPF <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num) {
+runBPF <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   # run the BPF
-  BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num)
+  BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num)
 
   lik <- BPF$lik
   wght <- BPF$wght
@@ -207,7 +212,8 @@ cmprunBPF <- cmpfun(runBPF)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -216,9 +222,11 @@ cmprunBPF <- cmpfun(runBPF)
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
 
 #' Standard version
-calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num) {
+calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   # calculate the optimal particle number
-  OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
+  OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
 
   return(list(opt_pcl_num = as.vector(OptNum$opt_pcl_num),
               log_lik_sdv = as.vector(OptNum$log_lik_sdv)))
@@ -232,18 +240,21 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
-#' @param itn_num the number of the iterations carried out in the PMMH
+#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
 
 #' Standard version
-runPMMH <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num) {
+runPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   # run the PMMH
-  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+  sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   sel_cof_chn <- as.matrix(sel_cof_chn)
 
   return(sel_cof_chn)
@@ -253,11 +264,12 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 ########################################
 
-#' Run the adaptive particle marginal Metropolis-Hastings (PMMH)
+#' Run the adaptive particle marginal Metropolis-Hastings (AdaptPMMH)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
@@ -268,9 +280,11 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param apt_rto the target mean acceptance probability of the adaptive setting
 
 #' Standard version
-runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto) {
-  # run the PMMH
-  sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
+runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto) {
+  smp_gen <- smp_gen - min(smp_gen)
+
+  # run the adaptive PMMH
+  sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
   sel_cof_chn <- as.matrix(sel_cof_chn)
 
   return(sel_cof_chn)
@@ -284,13 +298,14 @@ cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
 #' Parameter settings
 #' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
-#' @param pop_siz the size of the horse population (constant)
+#' @param pop_siz the size of the horse population (non-constant)
+#' @param ref_siz the reference size of the horse population
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the horses drawn from the population at all sampling time points
-#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
+#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
+#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
-#' @param itn_num the number of the iterations carried out in the PMMH
+#' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
 #' @param brn_num the number of the iterations for burn-in
 #' @param thn_num the number of the iterations for thinning
 #' @param adp_set = TRUE/FALSE (return the result with the adaptive setting or not)
@@ -298,13 +313,15 @@ cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
 #' @param apt_rto the target mean acceptance probability of the adaptive setting
 
 #' Standard version
-runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, ...) {
+runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, ...) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   if (adp_set == TRUE) {
     # run the adaptive PMMH
-    sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
+    sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
   } else {
     # run the PMMH
-    sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+    sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   }
   sel_cof_chn <- as.matrix(sel_cof_chn)
 
