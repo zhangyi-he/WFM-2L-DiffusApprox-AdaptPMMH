@@ -595,8 +595,8 @@ save(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl
 
 load("./Output/Output v1.0/Test v1.1/TEST_PTN_PMMH.rda")
 
-pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_PMMH_Traceplot.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_PMMH_Traceplot.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for the sel coeff of the tobiano")
@@ -641,8 +641,8 @@ sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_PMMH_Posterior.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_PMMH_Posterior.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for the sel coeff of the tobiano")
@@ -714,8 +714,8 @@ save(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl
 
 load("./Output/Output v1.0/Test v1.1/TEST_PTN_AdaptPMMH.rda")
 
-pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_AdaptPMMH_Traceplot.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_AdaptPMMH_Traceplot.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for the sel coeff of the tobiano")
@@ -760,8 +760,8 @@ sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_AdaptPMMH_Posterior.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_AdaptPMMH_Posterior.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for the sel coeff of the tobiano")
@@ -845,8 +845,8 @@ sel_cof_est <- BayesianProcedure$sel_cof_est
 
 sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 
-pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_BayesProc_Posterior.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.1/TEST_PTN_BayesProc_Posterior.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for the sel coeff of the tobiano")
