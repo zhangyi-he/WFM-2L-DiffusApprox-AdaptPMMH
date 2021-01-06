@@ -286,7 +286,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_PTN.R")
 ################################################################################
 
 #' Generate a simulated dataset under the Wright-Fisher model
-test_seed <- 6
+test_seed <- 10
 set.seed(test_seed)
 
 model <- "WFM"
