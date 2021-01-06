@@ -614,45 +614,45 @@ pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Traceplot_SelCoeff.pdf"
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the black before the event")
+     main = "Trace plot for sel coeff of black pre-event")
 abline(h = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[2, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the chestnut before the event")
+     main = "Trace plot for sel coeff of chestnut pre-event")
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the black after the event")
+     main = "Trace plot for sel coeff of black post-event")
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the chestnut after the event")
+     main = "Trace plot for sel coeff of chestnut post-event")
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
 pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Autocorrplot.pdf", width = 16, height = 24)
-par(mfrow = c(2, 4), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+par(mfrow = c(4, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # effectiveSize(as.mcmc(t(sel_cof_chn)))
 
 brn_num <- 1e+04
 sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
 # effectiveSize(as.mcmc(t(sel_cof_chn)))
 
-autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event before thinning")
-autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event before thinning")
-autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event before thinning")
-autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event before thinning")
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black pre-event before thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut pre-event before thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black post-event before thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut post-event before thinning")
 
 thn_num <- 8e+00
 sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
 
-autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event after thinning")
-autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event after thinning")
-autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event after thinning")
-autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event after thinning")
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black pre-event after thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut pre-event after thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black post-event after thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut post-event after thinning")
 dev.off()
 
 sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
@@ -669,7 +669,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 # par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the black before the event")
+#      main = "Posterior for sel coeff of black pre-event")
 # lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -678,7 +678,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 #
 # hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the chestnut before the event")
+#      main = "Posterior for sel coeff of chestnut pre-event")
 # lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -687,7 +687,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 #
 # hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the black after the event")
+#      main = "Posterior for sel coeff of black post-event")
 # lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -696,7 +696,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 #
 # hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the chestnut after the event")
+#      main = "Posterior for sel coeff of chestnut post-event")
 # lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
@@ -711,7 +711,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[2, 1, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-      main = "Joint posterior for the sel coeff before the event")
+      main = "Joint posterior for sel coeff pre-event")
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -720,7 +720,7 @@ abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the black before the event")
+     main = "Marginal posterior for sel coeff of black pre-event")
 lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -729,7 +729,7 @@ abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the chestnut before the event")
+     main = "Marginal posterior for sel coeff of chestnut pre-event")
 lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -740,7 +740,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 2, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-      main = "Joint posterior for the sel coeff after the event")
+      main = "Joint posterior for sel coeff post-event")
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -749,7 +749,7 @@ abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the black after the event")
+     main = "Marginal posterior for sel coeff of black post-event")
 lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -758,7 +758,7 @@ abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the chestnut after the event")
+     main = "Marginal posterior for sel coeff of chestnut post-event")
 lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
@@ -774,11 +774,11 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Posterior_SelChange.pdf", width = 16, height = 6)
-# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_PMMH_Posterior_SelChange.pdf", width = 8, height = 12)
+# par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the change in the sel coeff of the black")
+#      main = "Posterior for change in sel coeff of black")
 # lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = 0, col = 'red', lty = 2, lwd = 2)
 # abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -787,7 +787,7 @@ dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 #
 # hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the change in the sel coeff of the chestnut")
+#      main = "Posterior for change in sel coeff of chestnut")
 # lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = 0, col = 'red', lty = 2, lwd = 2)
 # abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
@@ -801,8 +801,8 @@ layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
-      main = "Joint posterior for the sel coeff of the black")
+      xlab = "Selection coefficient pre-event", ylab = "Selection coefficient post-event",
+      main = "Joint posterior for sel coeff of black")
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -812,8 +812,8 @@ abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
-      main = "Joint posterior for the sel coeff of the chestnut")
+      xlab = "Selection coefficient pre-event", ylab = "Selection coefficient post-event",
+      main = "Joint posterior for sel coeff of chestnut")
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -824,7 +824,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Change in the selection coefficient of the black", ylab = "Change in the selection coefficient of the chestnut",
-      main = "Joint posterior for the change in the sel coeff before and after the event")
+      main = "Joint posterior for change in sel coeff pre- and post-event")
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(h = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -833,7 +833,7 @@ abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the black")
+     main = "Marginal posterior for change in sel coeff of black")
 lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -842,7 +842,7 @@ abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the chestnut")
+     main = "Marginal posterior for change in sel coeff of chestnut")
 lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
@@ -899,45 +899,45 @@ pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Traceplot_SelCoeff
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the black before the event")
+     main = "Trace plot for sel coeff of black pre-event")
 abline(h = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[2, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the chestnut before the event")
+     main = "Trace plot for sel coeff of chestnut pre-event")
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the black after the event")
+     main = "Trace plot for sel coeff of black post-event")
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the chestnut after the event")
+     main = "Trace plot for sel coeff of chestnut post-event")
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
 pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Autocorrplot.pdf", width = 16, height = 24)
-par(mfrow = c(2, 4), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+par(mfrow = c(4, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # effectiveSize(as.mcmc(t(sel_cof_chn)))
 
 brn_num <- 1e+04
 sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
 # effectiveSize(as.mcmc(t(sel_cof_chn)))
 
-autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event before thinning")
-autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event before thinning")
-autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event before thinning")
-autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event before thinning")
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black pre-event before thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut pre-event before thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black post-event before thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut post-event before thinning")
 
 thn_num <- 8e+00
 sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
 
-autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black before the event after thinning")
-autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut before the event after thinning")
-autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the black after the event after thinning")
-autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the chestnut after the event after thinning")
+autocorr.plot(sel_cof_chn[1, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black pre-event after thinning")
+autocorr.plot(sel_cof_chn[2, 1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut pre-event after thinning")
+autocorr.plot(sel_cof_chn[1, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of black post-event after thinning")
+autocorr.plot(sel_cof_chn[2, 2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of chestnut post-event after thinning")
 dev.off()
 
 sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
@@ -954,7 +954,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 # par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the black before the event")
+#      main = "Posterior for sel coeff of black pre-event")
 # lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -963,7 +963,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 #
 # hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the chestnut before the event")
+#      main = "Posterior for sel coeff of chestnut pre-event")
 # lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -972,7 +972,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 #
 # hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the black after the event")
+#      main = "Posterior for sel coeff of black post-event")
 # lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -981,7 +981,7 @@ sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 #
 # hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the chestnut after the event")
+#      main = "Posterior for sel coeff of chestnut post-event")
 # lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
@@ -996,7 +996,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[2, 1, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-      main = "Joint posterior for the sel coeff before the event")
+      main = "Joint posterior for sel coeff pre-event")
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -1005,7 +1005,7 @@ abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the black before the event")
+     main = "Marginal posterior for sel coeff of black pre-event")
 lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -1014,7 +1014,7 @@ abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the chestnut before the event")
+     main = "Marginal posterior for sel coeff of chestnut pre-event")
 lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -1025,7 +1025,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 2, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-      main = "Joint posterior for the sel coeff after the event")
+      main = "Joint posterior for sel coeff post-event")
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -1034,7 +1034,7 @@ abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the black after the event")
+     main = "Marginal posterior for sel coeff of black post-event")
 lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -1043,7 +1043,7 @@ abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the chestnut after the event")
+     main = "Marginal posterior for sel coeff of chestnut post-event")
 lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
@@ -1059,11 +1059,11 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Posterior_SelChange.pdf", width = 16, height = 6)
-# par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_AdaptPMMH_Posterior_SelChange.pdf", width = 8, height = 12)
+# par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the change in the sel coeff of the black")
+#      main = "Posterior for change in sel coeff of black")
 # lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = 0, col = 'red', lty = 2, lwd = 2)
 # abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -1072,7 +1072,7 @@ dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 #
 # hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the change in the sel coeff of the chestnut")
+#      main = "Posterior for change in sel coeff of chestnut")
 # lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = 0, col = 'red', lty = 2, lwd = 2)
 # abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
@@ -1086,8 +1086,8 @@ layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
-      main = "Joint posterior for the sel coeff of the black")
+      xlab = "Selection coefficient pre-event", ylab = "Selection coefficient post-event",
+      main = "Joint posterior for sel coeff of black")
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -1097,8 +1097,8 @@ abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
-      main = "Joint posterior for the sel coeff of the chestnut")
+      xlab = "Selection coefficient pre-event", ylab = "Selection coefficient post-event",
+      main = "Joint posterior for sel coeff of chestnut")
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -1109,7 +1109,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Change in the selection coefficient of the black", ylab = "Change in the selection coefficient of the chestnut",
-      main = "Joint posterior for the change in the sel coeff before and after the event")
+      main = "Joint posterior for change in sel coeff pre- and post-event")
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(h = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -1118,7 +1118,7 @@ abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the black")
+     main = "Marginal posterior for change in sel coeff of black")
 lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -1127,7 +1127,7 @@ abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the chestnut")
+     main = "Marginal posterior for change in sel coeff of chestnut")
 lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
@@ -1196,7 +1196,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 # par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the black before the event")
+#      main = "Posterior for sel coeff of black pre-event")
 # lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -1205,7 +1205,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 #
 # hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the chestnut before the event")
+#      main = "Posterior for sel coeff of chestnut pre-event")
 # lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -1214,7 +1214,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 #
 # hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the black after the event")
+#      main = "Posterior for sel coeff of black post-event")
 # lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -1223,7 +1223,7 @@ sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 #
 # hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the sel coeff of the chestnut after the event")
+#      main = "Posterior for sel coeff of chestnut post-event")
 # lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 # abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 # abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
@@ -1238,7 +1238,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[2, 1, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-      main = "Joint posterior for the sel coeff before the event")
+      main = "Joint posterior for sel coeff pre-event")
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -1247,7 +1247,7 @@ abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the black before the event")
+     main = "Marginal posterior for sel coeff of black pre-event")
 lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -1256,7 +1256,7 @@ abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the chestnut before the event")
+     main = "Marginal posterior for sel coeff of chestnut pre-event")
 lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -1267,7 +1267,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 2, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of the black", ylab = "Selection coefficient of the chestnut",
-      main = "Joint posterior for the sel coeff after the event")
+      main = "Joint posterior for sel coeff post-event")
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -1276,7 +1276,7 @@ abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the black after the event")
+     main = "Marginal posterior for sel coeff of black post-event")
 lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
@@ -1285,7 +1285,7 @@ abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Marginal posterior for the sel coeff of the chestnut after the event")
+     main = "Marginal posterior for sel coeff of chestnut post-event")
 lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
@@ -1299,11 +1299,11 @@ dif_sel_est <- BayesianProcedure$dif_sel_est
 
 dif_sel_hpd <- BayesianProcedure$dif_sel_hpd
 
-# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc_Posterior_SelChange.pdf", width = 16, height = 6)
+# pdf(file = "./Output/Output v1.0/Test v1.2/TEST_COL_BayesProc_Posterior_SelChange.pdf", width = 8, height = 12)
 # par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 # hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the change in the sel coeff of the black")
+#      main = "Posterior for change in sel coeff of black")
 # lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
 # abline(v = 0, col = 'red', lty = 2, lwd = 2)
 # abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -1312,7 +1312,7 @@ dif_sel_hpd <- BayesianProcedure$dif_sel_hpd
 #
 # hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
 #      xlab = "Selection coefficient",
-#      main = "Posterior for the change in the sel coeff of the chestnut")
+#      main = "Posterior for change in sel coeff of chestnut")
 # lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 # abline(v = 0, col = 'red', lty = 2, lwd = 2)
 # abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
@@ -1326,8 +1326,8 @@ layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
-      main = "Joint posterior for the sel coeff of the black")
+      xlab = "Selection coefficient pre-event", ylab = "Selection coefficient post-event",
+      main = "Joint posterior for sel coeff of black")
 abline(v = sel_cof[1, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[1, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
@@ -1337,8 +1337,8 @@ abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 grd_num <- 1e+03
 sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
-      xlab = "Selection coefficient before the event", ylab = "Selection coefficient after the event",
-      main = "Joint posterior for the sel coeff of the chestnut")
+      xlab = "Selection coefficient pre-event", ylab = "Selection coefficient post-event",
+      main = "Joint posterior for sel coeff of chestnut")
 abline(v = sel_cof[2, 1], col = 'red', lty = 2, lwd = 2)
 abline(h = sel_cof[2, 2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
@@ -1349,7 +1349,7 @@ grd_num <- 1e+03
 sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Change in the selection coefficient of the black", ylab = "Change in the selection coefficient of the chestnut",
-      main = "Joint posterior for the change in the sel coeff before and after the event")
+      main = "Joint posterior for change in the sel coeff pre- and post-event")
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(h = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -1358,7 +1358,7 @@ abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the black")
+     main = "Marginal posterior for change in sel coeff of black")
 lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
@@ -1367,7 +1367,7 @@ abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in the selection coefficient",
-     main = "Posterior for the change in the sel coeff of the chestnut")
+     main = "Marginal posterior for change in sel coeff of chestnut")
 lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = 0, col = 'red', lty = 2, lwd = 2)
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
