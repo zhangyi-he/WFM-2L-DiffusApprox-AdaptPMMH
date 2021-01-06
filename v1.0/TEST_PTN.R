@@ -584,21 +584,21 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 
 load("./Output/Output v1.0/Test v1.0/TEST_PTN_PMMH.rda")
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_PMMH_Traceplot.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_PMMH_Traceplot.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the tobiano")
+     main = "Trace plot for sel coeff of tobiano")
 abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the sabino")
+     main = "Trace plot for sel coeff of sabino")
 abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[3, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the mixed")
+     main = "Trace plot for sel coeff of mixed")
 abline(h = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
@@ -610,17 +610,17 @@ brn_num <- 1e+04
 sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
 effectiveSize(as.mcmc(t(sel_cof_chn)))
 
-autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the tobiano before thinning")
-autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the sabino before thinning")
-autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the mixed before thinning")
+autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of tobiano before thinning")
+autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of sabino before thinning")
+autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of mixed before thinning")
 
 thn_num <- 8e+00
 sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
 effectiveSize(as.mcmc(t(sel_cof_chn)))
 
-autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the tobiano after thinning")
-autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the sabino after thinning")
-autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the mixed after thinning")
+autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of tobiano after thinning")
+autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of sabino after thinning")
+autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of mixed after thinning")
 dev.off()
 
 sel_cof_est <- rowMeans(sel_cof_chn)
@@ -630,11 +630,11 @@ sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_PMMH_Posterior.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_PMMH_Posterior.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the tobiano")
+     main = "Posterior for sel coeff of tobiano")
 lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -643,7 +643,7 @@ abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the sabino")
+     main = "Posterior for sel coeff of sabino")
 lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
@@ -652,7 +652,7 @@ abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[3, ], breaks = seq(min(sel_cof_chn[3, ]), max(sel_cof_chn[3, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the mixed")
+     main = "Posterior for sel coeff of mixed")
 lines(density(sel_cof_chn[3, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[3], col = 'black', lty = 2, lwd = 2)
@@ -701,21 +701,21 @@ save(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn
 
 load("./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH.rda")
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH_Traceplot.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH_Traceplot.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the tobiano")
+     main = "Trace plot for sel coeff of tobiano")
 abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the sabino")
+     main = "Trace plot for sel coeff of sabino")
 abline(h = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 
 plot(1:itn_num, sel_cof_chn[3, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for the sel coeff of the mixed")
+     main = "Trace plot for sel coeff of mixed")
 abline(h = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
@@ -727,17 +727,17 @@ brn_num <- 1e+04
 sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
 effectiveSize(as.mcmc(t(sel_cof_chn)))
 
-autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the tobiano before thinning")
-autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the sabino before thinning")
-autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the mixed before thinning")
+autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of tobiano before thinning")
+autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of sabino before thinning")
+autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of mixed before thinning")
 
 thn_num <- 8e+00
 sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
 effectiveSize(as.mcmc(t(sel_cof_chn)))
 
-autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the tobiano after thinning")
-autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the sabino after thinning")
-autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for the sel coeff of the mixed after thinning")
+autocorr.plot(sel_cof_chn[1, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of tobiano after thinning")
+autocorr.plot(sel_cof_chn[2, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of sabino after thinning")
+autocorr.plot(sel_cof_chn[3, ], lag.max = 50, auto.layout = FALSE, main = "Autocorrelation plot for sel coeff of mixed after thinning")
 dev.off()
 
 sel_cof_est <- rowMeans(sel_cof_chn)
@@ -747,11 +747,11 @@ sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
 sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
 sel_cof_hpd[3, ] <- HPDinterval(as.mcmc(sel_cof_chn[3, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH_Posterior.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_AdaptPMMH_Posterior.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the tobiano")
+     main = "Posterior for sel coeff of tobiano")
 lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -760,7 +760,7 @@ abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the sabino")
+     main = "Posterior for sel coeff of sabino")
 lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
@@ -769,7 +769,7 @@ abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[3, ], breaks = seq(min(sel_cof_chn[3, ]), max(sel_cof_chn[3, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the mixed")
+     main = "Posterior for sel coeff of mixed")
 lines(density(sel_cof_chn[3, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[3], col = 'black', lty = 2, lwd = 2)
@@ -830,11 +830,11 @@ sel_cof_est <- BayesianProcedure$sel_cof_est
 
 sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 
-pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_BayesProc_Posterior.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./Output/Output v1.0/Test v1.0/TEST_PTN_BayesProc_Posterior.pdf", width = 8, height = 18)
+par(mfrow = c(3, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, ], breaks = seq(min(sel_cof_chn[1, ]), max(sel_cof_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the tobiano")
+     main = "Posterior for sel coeff of tobiano")
 lines(density(sel_cof_chn[1, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[1], col = 'black', lty = 2, lwd = 2)
@@ -843,7 +843,7 @@ abline(v = sel_cof_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, ], breaks = seq(min(sel_cof_chn[2, ]), max(sel_cof_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the sabino")
+     main = "Posterior for sel coeff of sabino")
 lines(density(sel_cof_chn[2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[2], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[2], col = 'black', lty = 2, lwd = 2)
@@ -852,7 +852,7 @@ abline(v = sel_cof_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[3, ], breaks = seq(min(sel_cof_chn[3, ]), max(sel_cof_chn[3, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the sel coeff of the mixed")
+     main = "Posterior for sel coeff of mixed")
 lines(density(sel_cof_chn[3, ]), lwd = 2, col = 'black')
 abline(v = sel_cof[3], col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est[3], col = 'black', lty = 2, lwd = 2)
