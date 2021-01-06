@@ -270,7 +270,7 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
 
 // Initialise the particles in the particle filter (uniform generation from the flat Dirichlet distribution)
 // [[Rcpp::export]]
-arma::dmat initialiseParticle(const arma::uword& pcl_num) {
+arma::dmat initialiseParticle_arma(const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
@@ -310,7 +310,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
 
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
-  hap_frq_tmp = initialiseParticle(pcl_num);
+  hap_frq_tmp = initialiseParticle_arma(pcl_num);
   arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(0));
   for (arma::uword i = 0; i < pcl_num; i++) {
     gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
@@ -485,7 +485,7 @@ double calculateLogLikelihood_arma(const arma::dmat& sel_cof, const double& rec_
   arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof.col(0));
 
   // initialise the particles
-  hap_frq_pre = initialiseParticle(pcl_num);
+  hap_frq_pre = initialiseParticle_arma(pcl_num);
   arma::imat gen_cnt = ptl_cnt(0);
   for (arma::uword i = 0; i < pcl_num; i++) {
     for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
@@ -728,7 +728,10 @@ arma::dcube runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, 
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
   arma::dcolvec U = arma::zeros<arma::dcolvec>(4);
-  arma::dmat S = {{5e-03, 0e-00, 0e-00, 0e-00}, {0e-00, 5e-03, 0e-00, 0e-00}, {0e-00, 0e-00, 5e-03, 0e-00}, {0e-00, 0e-00, 0e-00, 5e-03}};
+  arma::dmat S = {{5e-03, 0e-00, 0e-00, 0e-00}, 
+                  {0e-00, 5e-03, 0e-00, 0e-00}, 
+                  {0e-00, 0e-00, 5e-03, 0e-00}, 
+                  {0e-00, 0e-00, 0e-00, 5e-03}};
   arma::dmat M = arma::zeros<arma::dmat>(4, 4);
   arma::dmat I = arma::eye<arma::dmat>(4, 4);
 
