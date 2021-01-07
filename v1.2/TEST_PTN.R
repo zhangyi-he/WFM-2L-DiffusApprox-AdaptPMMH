@@ -857,7 +857,7 @@ dev.off()
 
 pdf(file = "./Output/Output v1.0/Test v1.2/TEST_PTN_AdaptPMMH_Autocorrplot.pdf", width = 24, height = 18)
 par(mfrow = c(4, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-effectiveSize(as.mcmc(t(sel_cof_chn)))
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
 
 brn_num <- 1e+04
 sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
