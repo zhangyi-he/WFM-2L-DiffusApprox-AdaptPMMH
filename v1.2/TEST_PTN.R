@@ -645,7 +645,7 @@ dev.off()
 
 pdf(file = "./Output/Output v1.0/Test v1.2/TEST_PTN_PMMH_Autocorrplot.pdf", width = 24, height = 18)
 par(mfrow = c(4, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
-effectiveSize(as.mcmc(t(sel_cof_chn)))
+# effectiveSize(as.mcmc(t(sel_cof_chn)))
 
 brn_num <- 1e+04
 sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
@@ -673,7 +673,7 @@ sel_cof_est <- matrix(NA, nrow = 3, ncol = 2)
 sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
 sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
 
-sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
+sel_cof_hpd <- array(NA, dim = c(3, 2, 2))
 sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
 sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[3, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[3, 1, ]), prob = 0.95)
@@ -885,7 +885,7 @@ sel_cof_est <- matrix(NA, nrow = 3, ncol = 2)
 sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
 sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
 
-sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
+sel_cof_hpd <- array(NA, dim = c(3, 2, 2))
 sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
 sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[3, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[3, 1, ]), prob = 0.95)
