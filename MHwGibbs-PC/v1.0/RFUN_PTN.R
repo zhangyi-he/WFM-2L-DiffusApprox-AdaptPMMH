@@ -1,8 +1,9 @@
-#' @title A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+#' @title Estimating selection coefficients and testing their changes from ancient DNA data
+#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-#' Horse coat patterns (KIT13 & KIT116) under constant natural selection and constant demographic histories (N/A is not allowed)
+#' Two-gene phenotypes under constant natural selection and constant demographic histories
+#' Horse white coat patterns (KIT13 & KIT116)
 
 #' R functions
 
@@ -27,7 +28,7 @@ library("compiler")
 #enableJIT(1)
 
 # call C++ functions
-sourceCpp("./Code/Code v1.0/Code v1.0/CFUN_PTN.cpp")
+sourceCpp("./Code/Code v1.0/Code 2L/Code v1.0/CFUN_PTN.cpp")
 
 ################################################################################
 
@@ -177,6 +178,8 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 
 #' Standard version
 runBPF <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   # run the BPF
   BPF <- runBPF_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num)
 
@@ -217,6 +220,8 @@ cmprunBPF <- cmpfun(runBPF)
 
 #' Standard version
 calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   # calculate the optimal particle number
   OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
 
@@ -242,6 +247,8 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 
 #' Standard version
 runPMMH <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   # run the PMMH
   sel_cof_chn <- runPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   sel_cof_chn <- as.matrix(sel_cof_chn)
@@ -269,6 +276,8 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 #' Standard version
 runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   # run the PMMH
   sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
   sel_cof_chn <- as.matrix(sel_cof_chn)
@@ -299,6 +308,8 @@ cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
 
 #' Standard version
 runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, adp_set, ...) {
+  smp_gen <- smp_gen - min(smp_gen)
+
   if (adp_set == TRUE) {
     # run the adaptive PMMH
     sel_cof_chn <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
