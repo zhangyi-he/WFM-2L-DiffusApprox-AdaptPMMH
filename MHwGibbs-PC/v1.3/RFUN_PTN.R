@@ -1,8 +1,9 @@
-#' @title A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+#' @title Estimating selection coefficients and testing their changes from ancient DNA data
+#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.2
-#' Horse coat patterns (KIT13 & KIT116) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
+#' version 1.3
+#' Two-gene phenotypes under non-constant natural selection and non-constant demographic histories conditional on genetic polymorphism
+#' Horse white coat patterns (KIT13 & KIT116)
 
 #' R functions
 
@@ -27,7 +28,7 @@ library("compiler")
 #enableJIT(1)
 
 # call C++ functions
-sourceCpp("./Code/Code v1.0/Code v1.2/CFUN_PTN.cpp")
+sourceCpp("./Code/Code v1.0/Code 2L/Code v1.3/CFUN_PTN.cpp")
 
 ################################################################################
 
@@ -320,6 +321,7 @@ calculateOptimalParticleNum <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_
     smp_cnt <- smp_cnt[, odr_ind]
   }
   smp_gen <- smp_gen - min(smp_gen)
+
 
   # calculate the optimal particle number
   OptNum <- calculateOptimalParticleNum_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num)
