@@ -1,8 +1,9 @@
-#' @title A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+#' @title Estimating selection coefficients and testing their changes from ancient DNA data
+#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-#' Horse coat colours (ASIP & MC1R) under constant natural selection and constant demographic histories (N/A is not allowed)
+#' Two-gene phenotypes under constant natural selection and constant demographic histories
+#' Horse base coat colours (ASIP & MC1R)
 
 #' R functions
 
@@ -27,7 +28,7 @@ library("compiler")
 #enableJIT(1)
 
 # call C++ functions
-sourceCpp("./Code/Code v1.0/Code v1.0/CFUN_COL.cpp")
+sourceCpp("./Code/Code v1.0/Code 2L/Code v1.0/CFUN_COL.cpp")
 
 ################################################################################
 
