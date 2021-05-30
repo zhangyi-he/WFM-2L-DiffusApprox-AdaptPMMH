@@ -1,8 +1,9 @@
-// A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-// Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+// Estimating selection coefficients and testing their changes from ancient DNA data
+// Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.0
-// Horse coat patterns (KIT13 & KIT116) under constant natural selection and constant demographic histories (N/A is not allowed)
+// Two-gene phenotypes under constant natural selection and constant demographic histories
+// Horse white coat patterns (KIT13 & KIT116)
 
 // C functions
 
@@ -625,7 +626,9 @@ arma::dmat runAdaptPMMH_arma(const arma::dcolvec& sel_cof, const double& rec_rat
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
   arma::dcolvec U = arma::zeros<arma::dcolvec>(3);
-  arma::dmat S = {{5e-03, 0e-00, 0e-00}, {0e-00, 5e-03, 0e-00}, {0e-00, 0e-00, 5e-03}};
+  arma::dmat S = {{5e-03, 0e-00, 0e-00}, 
+                  {0e-00, 5e-03, 0e-00}, 
+                  {0e-00, 0e-00, 5e-03}};
   arma::dmat M = arma::zeros<arma::dmat>(3, 3);
   arma::dmat I = arma::eye<arma::dmat>(3, 3);
 
