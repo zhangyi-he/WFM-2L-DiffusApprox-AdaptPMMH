@@ -1,8 +1,9 @@
-// A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-// Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+// Estimating selection coefficients and testing their changes from ancient DNA data
+// Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.2
-// Horse coat patterns (KIT13 & KIT116) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
+// Two-gene phenotypes under non-constant natural selection and non-constant demographic histories
+// Horse white coat patterns (KIT13 & KIT116)
 
 // C functions
 
@@ -272,7 +273,7 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
   return prob;
 }
 
-// Initialise the particles in the particle filter (uniform generation from the flat Dirichlet distribution)
+// Initialise the particles in the particle filter
 // [[Rcpp::export]]
 arma::dmat initialiseParticle_arma(const arma::uword& pcl_num){
   // ensure RNG gets set/reset
@@ -682,8 +683,8 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
   arma::dmat sel_cof_sd = {{5e-03, 5e-03},
-                           {5e-03, 5e-03},
-                           {5e-03, 5e-03}};
+                           {5e-03, 1e-02},
+                           {1e-02, 1e-02}};
 
   // initialise the population genetic parameters
   cout << "iteration: " << 1 << endl;
@@ -752,10 +753,10 @@ arma::dcube runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, 
   arma::dcolvec U = arma::zeros<arma::dcolvec>(6);
   arma::dmat S = {{5e-03, 0e-00, 0e-00, 0e-00, 0e-00, 0e-00}, 
                   {0e-00, 5e-03, 0e-00, 0e-00, 0e-00, 0e-00}, 
-                  {0e-00, 0e-00, 5e-03, 0e-00, 0e-00, 0e-00}, 
+                  {0e-00, 0e-00, 1e-02, 0e-00, 0e-00, 0e-00}, 
                   {0e-00, 0e-00, 0e-00, 5e-03, 0e-00, 0e-00},
-                  {0e-00, 0e-00, 0e-00, 0e-00, 5e-03, 0e-00},
-                  {0e-00, 0e-00, 0e-00, 0e-00, 0e-00, 5e-03}};
+                  {0e-00, 0e-00, 0e-00, 0e-00, 1e-02, 0e-00},
+                  {0e-00, 0e-00, 0e-00, 0e-00, 0e-00, 1e-02}};
   arma::dmat M = arma::zeros<arma::dmat>(6, 6);
   arma::dmat I = arma::eye<arma::dmat>(6, 6);
 
