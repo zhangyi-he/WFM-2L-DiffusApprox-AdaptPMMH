@@ -1,8 +1,9 @@
-#' @title A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+#' @title Estimating selection coefficients and testing their changes from ancient DNA data
+#' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.1
-#' Horse coat patterns (KIT13 & KIT116) under constant natural selection and non-constant demographic histories (N/A is not allowed)
+#' Two-gene phenotypes under constant natural selection and non-constant demographic histories
+#' Horse white coat patterns (KIT13 & KIT116)
 
 # set the directory
 setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2021-WFM-2L-DiffusApprox-PMMH-MolEcol")
@@ -23,7 +24,7 @@ library("plot3D")
 library("emdbook")
 
 # call R functions
-source("./Code/Code v1.0/Code v1.1/RFUN_PTN.R")
+source("./Code/Code v1.0/Code 2L/Code v1.1/RFUN_PTN.R")
 
 ################################################################################
 
@@ -39,7 +40,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(8.9e-01, 0.3e-01, 0.7e-01, 0.1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 #
@@ -77,7 +78,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_PTN.R")
 # rec_rat <- 5e-05
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(8.9e-01, 0.3e-01, 0.7e-01, 0.1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -105,7 +106,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_PTN.R")
 # rec_rat <- 5e-05
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
 # ref_siz <- 1e+04
-# int_frq <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_frq <- c(8.9e-01, 0.3e-01, 0.7e-01, 0.1e-01)
 # int_gen <- 0
 # lst_gen <- 500
 # ptn_num <- 5e+00
@@ -156,7 +157,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-# int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_con <- c(8.9e-01, 0.3e-01, 0.7e-01, 0.1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # obs_hap <- FALSE
@@ -222,7 +223,7 @@ source("./Code/Code v1.0/Code v1.1/RFUN_PTN.R")
 # sel_cof <- c(1e-02, 5e-03, 1e-03)
 # rec_rat <- 5e-05
 # pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-# int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
+# int_con <- c(8.9e-01, 0.3e-01, 0.7e-01, 0.1e-01)
 # smp_gen <- (0:10) * 50
 # smp_siz <- rep(100, 11)
 # ref_siz <- 1e+04
@@ -293,7 +294,7 @@ model <- "WFM"
 sel_cof <- c(1e-02, 5e-03, 0e-00)
 rec_rat <- 5e-05
 pop_siz <- c(rep(1e+04, length.out = 201), rep(5e+03, length.out = 200), rep(1e+04, length.out = 100))
-int_con <- c(5e-01, 2e-01, 2e-01, 1e-01)
+int_con <- c(8.9e-01, 0.3e-01, 0.7e-01, 0.1e-01)
 smp_gen <- (0:10) * 50
 smp_siz <- rep(100, 11)
 obs_hap <- FALSE
