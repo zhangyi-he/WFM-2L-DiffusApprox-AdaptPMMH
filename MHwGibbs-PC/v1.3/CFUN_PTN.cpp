@@ -1,8 +1,9 @@
-// A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-// Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+// Estimating selection coefficients and testing their changes from ancient DNA data
+// Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-// version 1.2
-// Horse coat patterns (KIT13 & KIT116) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
+// version 1.3
+// Two-gene phenotypes under non-constant natural selection and non-constant demographic histories conditional on genetic polymorphism
+// Horse white coat patterns (KIT13 & KIT116)
 
 // C functions
 
@@ -207,11 +208,11 @@ arma::imat calculateGenoCnt_arma(const arma::icolvec& smp_cnt) {
 
     for (int j = 0; j <= smp_cnt(5); j++) {
       gen_cnt(0, j) = smp_cnt(0);
-      gen_cnt(1, j) = smp_cnt(1);
-      gen_cnt(2, j) = smp_cnt(2);
-      gen_cnt(3, j) = smp_cnt(3);
+      gen_cnt(1, j) = smp_cnt(1); // sabino
+      gen_cnt(2, j) = smp_cnt(2); // sabino
+      gen_cnt(3, j) = smp_cnt(3); // tobinao
       gen_cnt(4, j) = j;
-      gen_cnt(5, j) = smp_cnt(5);
+      gen_cnt(5, j) = smp_cnt(5); // tobiano
       gen_cnt(6, j) = smp_cnt(4) - j;
       gen_cnt(7, j) = smp_cnt(6);
       gen_cnt(8, j) = smp_cnt(7);
@@ -267,12 +268,23 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
   RNGScope scope;
 
   arma::dcolvec pop_frq = calculateGenoFrq_arma(fts_mat, hap_frq);
-  double prob = calculateMultinomProb_arma(smp_cnt, smp_siz, pop_frq);
+  // double prob = calculateMultinomProb_arma(smp_cnt, smp_siz, pop_frq);
+
+  // calculate the mutant frequencies of the underlying population
+  double pop_frq_sbo = pop_frq(1) + pop_frq(2) + pop_frq(4) + pop_frq(6) + pop_frq(7) + pop_frq(8);
+  double pop_frq_tbo = pop_frq(3) + pop_frq(5) + pop_frq(4) + pop_frq(6) + pop_frq(7) + pop_frq(8);
+
+  double prob = 0;
+  if (pop_frq_sbo > 0 && pop_frq_tbo > 0) {
+    prob = calculateMultinomProb_arma(smp_cnt, smp_siz, pop_frq);
+  } else {
+    prob = 0; // sabino or tobiano are observed in modern samples although they may not be found in ancient samples
+  }
 
   return prob;
 }
 
-// Initialise the particles in the particle filter (uniform generation from the flat Dirichlet distribution)
+// Initialise the particles in the particle filter
 // [[Rcpp::export]]
 arma::dmat initialiseParticle_arma(const arma::uword& pcl_num){
   // ensure RNG gets set/reset
@@ -682,8 +694,8 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
   arma::dmat sel_cof_sd = {{5e-03, 5e-03},
-                           {5e-03, 5e-03},
-                           {5e-03, 5e-03}};
+                           {5e-03, 1e-02},
+                           {1e-02, 1e-02}};
 
   // initialise the population genetic parameters
   cout << "iteration: " << 1 << endl;
@@ -752,10 +764,10 @@ arma::dcube runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, 
   arma::dcolvec U = arma::zeros<arma::dcolvec>(6);
   arma::dmat S = {{5e-03, 0e-00, 0e-00, 0e-00, 0e-00, 0e-00}, 
                   {0e-00, 5e-03, 0e-00, 0e-00, 0e-00, 0e-00}, 
-                  {0e-00, 0e-00, 5e-03, 0e-00, 0e-00, 0e-00}, 
+                  {0e-00, 0e-00, 1e-02, 0e-00, 0e-00, 0e-00}, 
                   {0e-00, 0e-00, 0e-00, 5e-03, 0e-00, 0e-00},
-                  {0e-00, 0e-00, 0e-00, 0e-00, 5e-03, 0e-00},
-                  {0e-00, 0e-00, 0e-00, 0e-00, 0e-00, 5e-03}};
+                  {0e-00, 0e-00, 0e-00, 0e-00, 1e-02, 0e-00},
+                  {0e-00, 0e-00, 0e-00, 0e-00, 0e-00, 1e-02}};
   arma::dmat M = arma::zeros<arma::dmat>(6, 6);
   arma::dmat I = arma::eye<arma::dmat>(6, 6);
 
