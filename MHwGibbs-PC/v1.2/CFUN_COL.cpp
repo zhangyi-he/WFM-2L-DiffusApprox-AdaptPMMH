@@ -1,8 +1,9 @@
-// A Bayesian approach for estimating selection coefficients and testing their changes from ancient DNA data
-// Xiaoyang Dai, Mark Beaumont, Feng Yu, Ludovic Orlando, Zhangyi He
+// Estimating selection coefficients and testing their changes from ancient DNA data
+// Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.2
-// Horse coat colours (ASIP & MC1R) under non-constant natural selection and non-constant demographic histories (N/A is not allowed)
+// Two-gene phenotypes under non-constant natural selection and non-constant demographic histories
+// Horse base coat colours (ASIP & MC1R)
 
 // C functions
 
@@ -268,21 +269,39 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
   return prob;
 }
 
-// Initialise the particles in the particle filter (uniform generation from the flat Dirichlet distribution)
+// Initialise the particles in the particle filter
 // [[Rcpp::export]]
 arma::dmat initialiseParticle_arma(const arma::uword& pcl_num) {
   // ensure RNG gets set/reset
   RNGScope scope;
 
-  NumericMatrix part(4, pcl_num);
-  for (int i = 0; i < 4; i++) {
-    part(i, _) = rgamma(pcl_num, 1.0, 1.0);
-  }
-  for (int j = 0; j < pcl_num; j++) {
-    part(_, j) = part(_, j) / sum(part(_, j));
-  }
+  arma::dmat part = arma::zeros<arma::dmat>(4, pcl_num);
+  arma::dmat mut_frq = arma::randu<arma::dmat>(2, pcl_num);
+  arma::drowvec ld = arma::zeros<arma::drowvec>(pcl_num);
+  // arma::drowvec ld = arma::randu<arma::drowvec>(pcl_num);
+  // for (arma::uword i = 0; i < pcl_num; i++) {
+  //   double a = -mut_frq(0, i) * mut_frq(1, i);
+  //   a = (a >= -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i)))? a : -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i));
+  //   double b = mut_frq(0, i) * (1 - mut_frq(1, i));
+  //   b = (b <= (1 - mut_frq(0, i)) * mut_frq(1, i))? b : (1 - mut_frq(0, i)) * mut_frq(1, i);
+  //   ld(i) = a + (b - a) * ld(i);
+  // }
+  part.row(0) = (1 - mut_frq.row(0)) % (1 - mut_frq.row(1)) + ld;
+  part.row(1) = (1 - mut_frq.row(0)) % mut_frq.row(1) - ld;
+  part.row(2) = mut_frq.row(0) % (1 - mut_frq.row(1)) - ld;
+  part.row(3) = mut_frq.row(0) % mut_frq.row(1) + ld;
 
-  return as<arma::dmat>(part);
+  return part;
+
+  // NumericMatrix part(4, pcl_num);
+  // for (int i = 0; i < 4; i++) {
+  //   part(i, _) = rgamma(pcl_num, 1.0, 1.0);
+  // }
+  // for (int j = 0; j < pcl_num; j++) {
+  //   part(_, j) = part(_, j) / sum(part(_, j));
+  // }
+  //
+  // return as<arma::dmat>(part);
 }
 
 // Run the bootstrap particle filter
@@ -660,7 +679,8 @@ arma::dcube runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const
   //arma::drowvec log_pri = arma::zeros<arma::drowvec>(2);
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
-  arma::dmat sel_cof_sd = 5e-03 * arma::ones<arma::dmat>(2, 2);
+  arma::dmat sel_cof_sd = {{5e-03, 5e-03},
+                           {5e-03, 5e-03}};
 
   // initialise the population genetic parameters
   cout << "iteration: " << 1 << endl;
@@ -727,7 +747,10 @@ arma::dcube runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, 
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
 
   arma::dcolvec U = arma::zeros<arma::dcolvec>(4);
-  arma::dmat S = 5e-03 * arma::eye<arma::dmat>(4, 4);
+  arma::dmat S = {{5e-03, 0e-00, 0e-00, 0e-00}, 
+                  {0e-00, 5e-03, 0e-00, 0e-00}, 
+                  {0e-00, 0e-00, 5e-03, 0e-00}, 
+                  {0e-00, 0e-00, 0e-00, 5e-03}};
   arma::dmat M = arma::zeros<arma::dmat>(4, 4);
   arma::dmat I = arma::eye<arma::dmat>(4, 4);
 
