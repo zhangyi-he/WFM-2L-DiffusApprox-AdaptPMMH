@@ -454,8 +454,8 @@ cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the particle marginal Metropolis-Hastings
