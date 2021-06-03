@@ -2,7 +2,9 @@
 // Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.1
-// Two-gene phenotypes under constant natural selection and non-constant demographic histories
+// Phenotypes controlled by two genes (genetic linkage and epistatic interaction)
+// Constant natural selection and non-constant demographic histories
+
 // Horse base coat colours (ASIP & MC1R)
 
 // C functions
@@ -120,74 +122,74 @@ arma::dmat simulateWFD_arma(const arma::dcolvec& sel_cof, const double& rec_rat,
   arma::dmat dW = pow(dt, 0.5) * arma::randn<arma::dmat>(6, arma::uword(lst_gen - int_gen) * ptn_num);
 
   // declare the haplotype frequency trajectories
-  arma::dmat frq_pth = arma::zeros<arma::dmat>(4, arma::uword(lst_gen - int_gen) * ptn_num + 1);
+  arma::dmat hap_frq_pth = arma::zeros<arma::dmat>(4, arma::uword(lst_gen - int_gen) * ptn_num + 1);
 
   // initialise the haplotype frequencies in generation 0
-  frq_pth.col(0) = int_frq;
+  hap_frq_pth.col(0) = int_frq;
 
   // simulate the haplotype frequency trajectories
   for (arma::uword t = 1; t < arma::uword(lst_gen - int_gen) * ptn_num + 1; t++) {
     // calculate the drift coefficient vector
     arma::dcolvec mu = arma::zeros<arma::dcolvec>(4);
-    double LD = frq_pth(0, t - 1) * frq_pth(3, t - 1) - frq_pth(1, t - 1) * frq_pth(2, t - 1);
-    mu(0) = -scl_sel_cof(0) * frq_pth(2, t - 1) * (frq_pth(0, t - 1) * frq_pth(3, t - 1) + frq_pth(0, t - 1) * (frq_pth(2, t - 1) + frq_pth(3, t - 1))) -
-      scl_sel_cof(1) * frq_pth(0, t - 1) * (frq_pth(1, t - 1) + frq_pth(3, t - 1)) * (frq_pth(1, t - 1) + frq_pth(3, t - 1)) -
+    double LD = hap_frq_pth(0, t - 1) * hap_frq_pth(3, t - 1) - hap_frq_pth(1, t - 1) * hap_frq_pth(2, t - 1);
+    mu(0) = -scl_sel_cof(0) * hap_frq_pth(2, t - 1) * (hap_frq_pth(0, t - 1) * hap_frq_pth(3, t - 1) + hap_frq_pth(0, t - 1) * (hap_frq_pth(2, t - 1) + hap_frq_pth(3, t - 1))) -
+      scl_sel_cof(1) * hap_frq_pth(0, t - 1) * (hap_frq_pth(1, t - 1) + hap_frq_pth(3, t - 1)) * (hap_frq_pth(1, t - 1) + hap_frq_pth(3, t - 1)) -
       0.5 * scl_rec_rat * LD;
-    mu(1) = -scl_sel_cof(0) * frq_pth(2, t - 1) * (frq_pth(1, t - 1) * frq_pth(3, t - 1) + frq_pth(1, t - 1) * (frq_pth(2, t - 1) + frq_pth(3, t - 1))) +
-      scl_sel_cof(1) * frq_pth(1, t - 1) * (frq_pth(0, t - 1) + frq_pth(2, t - 1)) * (frq_pth(1, t - 1) + frq_pth(3, t - 1)) +
+    mu(1) = -scl_sel_cof(0) * hap_frq_pth(2, t - 1) * (hap_frq_pth(1, t - 1) * hap_frq_pth(3, t - 1) + hap_frq_pth(1, t - 1) * (hap_frq_pth(2, t - 1) + hap_frq_pth(3, t - 1))) +
+      scl_sel_cof(1) * hap_frq_pth(1, t - 1) * (hap_frq_pth(0, t - 1) + hap_frq_pth(2, t - 1)) * (hap_frq_pth(1, t - 1) + hap_frq_pth(3, t - 1)) +
       0.5 * scl_rec_rat * LD;
-    mu(2) = -scl_sel_cof(0) * frq_pth(2, t - 1) * (frq_pth(2, t - 1) * frq_pth(3, t - 1) + frq_pth(2, t - 1) * (frq_pth(2, t - 1) + frq_pth(3, t - 1)) - (frq_pth(2, t - 1) + frq_pth(3, t - 1))) -
-      scl_sel_cof(1) * frq_pth(2, t - 1) * (frq_pth(1, t - 1) + frq_pth(3, t - 1)) * (frq_pth(1, t - 1) + frq_pth(3, t - 1)) +
+    mu(2) = -scl_sel_cof(0) * hap_frq_pth(2, t - 1) * (hap_frq_pth(2, t - 1) * hap_frq_pth(3, t - 1) + hap_frq_pth(2, t - 1) * (hap_frq_pth(2, t - 1) + hap_frq_pth(3, t - 1)) - (hap_frq_pth(2, t - 1) + hap_frq_pth(3, t - 1))) -
+      scl_sel_cof(1) * hap_frq_pth(2, t - 1) * (hap_frq_pth(1, t - 1) + hap_frq_pth(3, t - 1)) * (hap_frq_pth(1, t - 1) + hap_frq_pth(3, t - 1)) +
       0.5 * scl_rec_rat * LD;
-    mu(3) = -scl_sel_cof(0) * frq_pth(2, t - 1) * (frq_pth(3, t - 1) * frq_pth(3, t - 1) + frq_pth(3, t - 1) * (frq_pth(2, t - 1) + frq_pth(3, t - 1)) - frq_pth(3, t - 1)) +
-      scl_sel_cof(1) * frq_pth(3, t - 1) * (frq_pth(0, t - 1) + frq_pth(2, t - 1)) * (frq_pth(1, t - 1) + frq_pth(3, t - 1)) -
+    mu(3) = -scl_sel_cof(0) * hap_frq_pth(2, t - 1) * (hap_frq_pth(3, t - 1) * hap_frq_pth(3, t - 1) + hap_frq_pth(3, t - 1) * (hap_frq_pth(2, t - 1) + hap_frq_pth(3, t - 1)) - hap_frq_pth(3, t - 1)) +
+      scl_sel_cof(1) * hap_frq_pth(3, t - 1) * (hap_frq_pth(0, t - 1) + hap_frq_pth(2, t - 1)) * (hap_frq_pth(1, t - 1) + hap_frq_pth(3, t - 1)) -
       0.5 * scl_rec_rat * LD;
 
     // calculate the diffusion coefficient matrix
     arma::dmat sigma = arma::zeros<arma::dmat>(4, 6);
-    sigma(0, 0) = pow(frq_pth(0, t - 1) * frq_pth(1, t - 1), 0.5);
-    sigma(0, 1) = pow(frq_pth(0, t - 1) * frq_pth(2, t - 1), 0.5);
-    sigma(0, 2) = pow(frq_pth(0, t - 1) * frq_pth(3, t - 1), 0.5);
+    sigma(0, 0) = pow(hap_frq_pth(0, t - 1) * hap_frq_pth(1, t - 1), 0.5);
+    sigma(0, 1) = pow(hap_frq_pth(0, t - 1) * hap_frq_pth(2, t - 1), 0.5);
+    sigma(0, 2) = pow(hap_frq_pth(0, t - 1) * hap_frq_pth(3, t - 1), 0.5);
     // sigma(0, 3) = 0;
     // sigma(0, 4) = 0;
     // sigma(0, 5) = 0;
-    sigma(1, 0) = -pow(frq_pth(1, t - 1) * frq_pth(0, t - 1), 0.5);
+    sigma(1, 0) = -pow(hap_frq_pth(1, t - 1) * hap_frq_pth(0, t - 1), 0.5);
     // sigma(1, 1) = 0;
     // sigma(1, 2) = 0;
-    sigma(1, 3) = pow(frq_pth(1, t - 1) * frq_pth(2, t - 1), 0.5);
-    sigma(1, 4) = pow(frq_pth(1, t - 1) * frq_pth(3, t - 1), 0.5);
+    sigma(1, 3) = pow(hap_frq_pth(1, t - 1) * hap_frq_pth(2, t - 1), 0.5);
+    sigma(1, 4) = pow(hap_frq_pth(1, t - 1) * hap_frq_pth(3, t - 1), 0.5);
     // sigma(1, 5) = 0;
     // sigma(2, 0) = 0;
-    sigma(2, 1) = -pow(frq_pth(2, t - 1) * frq_pth(0, t - 1), 0.5);
+    sigma(2, 1) = -pow(hap_frq_pth(2, t - 1) * hap_frq_pth(0, t - 1), 0.5);
     // sigma(2, 2) = 0;
-    sigma(2, 3) = -pow(frq_pth(2, t - 1) * frq_pth(1, t - 1), 0.5);
+    sigma(2, 3) = -pow(hap_frq_pth(2, t - 1) * hap_frq_pth(1, t - 1), 0.5);
     sigma(2, 4) = 0;
-    sigma(2, 5) = pow(frq_pth(2, t - 1) * frq_pth(3, t - 1), 0.5);
+    sigma(2, 5) = pow(hap_frq_pth(2, t - 1) * hap_frq_pth(3, t - 1), 0.5);
     // sigma(3, 0) = 0;
     // sigma(3, 1) = 0;
-    sigma(3, 2) = -pow(frq_pth(3, t - 1) * frq_pth(0, t - 1), 0.5);
+    sigma(3, 2) = -pow(hap_frq_pth(3, t - 1) * hap_frq_pth(0, t - 1), 0.5);
     // sigma(3, 3) = 0;
-    sigma(3, 4) = -pow(frq_pth(3, t - 1) * frq_pth(1, t - 1), 0.5);
-    sigma(3, 5) = -pow(frq_pth(3, t - 1) * frq_pth(2, t - 1), 0.5);
+    sigma(3, 4) = -pow(hap_frq_pth(3, t - 1) * hap_frq_pth(1, t - 1), 0.5);
+    sigma(3, 5) = -pow(hap_frq_pth(3, t - 1) * hap_frq_pth(2, t - 1), 0.5);
     sigma = pow(siz_rto(t - 1), -0.5) * sigma;
 
     // proceed the Euler-Maruyama scheme
-    frq_pth.col(t) = frq_pth.col(t - 1) + mu * dt + sigma * dW.col(t - 1);
+    hap_frq_pth.col(t) = hap_frq_pth.col(t - 1) + mu * dt + sigma * dW.col(t - 1);
 
     // remove the noise from the numerical techniques
     for (arma::uword i = 0; i < 4; i++) {
-      if (frq_pth(i, t) < 0) {
-        frq_pth(i, t) = 0;
+      if (hap_frq_pth(i, t) < 0) {
+        hap_frq_pth(i, t) = 0;
       }
-      if (frq_pth(i, t) > 1) {
-        frq_pth(i, t) = 1;
+      if (hap_frq_pth(i, t) > 1) {
+        hap_frq_pth(i, t) = 1;
       }
     }
-    frq_pth.col(t) = frq_pth.col(t) / sum(frq_pth.col(t));
+    hap_frq_pth.col(t) = hap_frq_pth.col(t) / sum(hap_frq_pth.col(t));
   }
 
   // return the haplotype frequency trajectories under the Wright-Fisher diffusion
-  return frq_pth;
+  return hap_frq_pth;
 }
 /*************************/
 
@@ -277,7 +279,7 @@ arma::dmat initialiseParticle_arma(const arma::uword& pcl_num) {
 
   arma::dmat part = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat mut_frq = arma::randu<arma::dmat>(2, pcl_num);
-  arma::drowvec ld = arma::zeros<arma::drowvec>(pcl_num);
+  arma::drowvec ld = arma::zeros<arma::drowvec>(pcl_num); // linkage disequilibrium = 0
   // arma::drowvec ld = arma::randu<arma::drowvec>(pcl_num);
   // for (arma::uword i = 0; i < pcl_num; i++) {
   //   double a = -mut_frq(0, i) * mut_frq(1, i);
