@@ -2,11 +2,13 @@
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.2
-#' Two-gene phenotypes under non-constant natural selection and non-constant demographic histories
+#' Phenotypes controlled by two genes (genetic linkage and epistatic interaction)
+#' Non-constant natural selection and non-constant demographic histories
+
 #' Horse base coat colours (ASIP & MC1R)
 
 # set the directory
-setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2021-WFM-2L-DiffusApprox-PMMH-MolEcol")
+setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-PMMH1-MolEcol")
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -30,8 +32,8 @@ source("./Code/Code v1.0/Code 2L/Code v1.2/RFUN_COL.R")
 
 #' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher model with selection
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param int_frq the initial haplotype frequencies of the population
 #' @param evt_gen the generation that the event of interest occurred
@@ -66,8 +68,8 @@ source("./Code/Code v1.0/Code 2L/Code v1.2/RFUN_COL.R")
 
 #' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param int_frq the initial haplotype frequencies of the population
@@ -147,8 +149,8 @@ source("./Code/Code v1.0/Code 2L/Code v1.2/RFUN_COL.R")
 #' Simulate the hidden Markov model
 #' Parameter setting
 #' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param int_con the initial haplotype frequencies of the population / the initial mutant allele frequencies and the linkage disequilibrium of the population
 #' @param evt_gen the generation that the event of interest occurred
@@ -384,8 +386,8 @@ dev.off()
 
 #' Run the bootstrap particle filter (BPF) with the two-locus Wright-Fisher diffusion with selection
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
@@ -523,8 +525,8 @@ dev.off()
 
 #' Calculate the optimal particle number in the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
@@ -574,8 +576,8 @@ dev.off()
 
 #' Run the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
@@ -855,8 +857,8 @@ dev.off()
 
 #' Run the adaptive particle marginal Metropolis-Hastings (AdaptPMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
@@ -1140,8 +1142,8 @@ dev.off()
 
 #' Run the Bayesian procedure for the inference of natural selection
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
-#' @param rec_rat the recombination rate between the ASIP and MC1R loci
+#' @param sel_cof the selection coefficients of the black and chestnut against bay
+#' @param rec_rat the (artificial) recombination rate between the ASIP and MC1R loci (r = 0.5)
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param evt_gen the generation that the event of interest occurred
