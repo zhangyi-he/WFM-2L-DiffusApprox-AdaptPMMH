@@ -2,8 +2,10 @@
 // Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.0
-// Single-gene phenotypes under constant natural selection and constant demographic histories
-// Time series data of genotype frequencies
+// Phenotypes controlled by a single gene
+// Constant natural selection and constant demographic histories
+
+// Genotype frequency data
 
 // C functions
 
@@ -71,7 +73,7 @@ List simulateWFM_arma(const arma::dmat& fts_mat, const int& pop_siz, const doubl
     gen_frq_pth.col(k) = gen_frq(arma::trimatu_ind(arma::size(gen_frq)));
   }
 
-  // return the haplotype and genotype frequency trajectories under the Wright-Fisher model
+  // return the mutant allele and genotype frequency trajectories under the Wright-Fisher model
   return List::create(Named("mut_frq_pth", mut_frq_pth),
                       Named("gen_frq_pth", gen_frq_pth));
 }
@@ -94,38 +96,39 @@ arma::drowvec simulateWFD_arma(const double& sel_cof, const double& dom_par, con
   arma::drowvec dW = pow(dt, 0.5) * arma::randn<arma::drowvec>(arma::uword(lst_gen - int_gen) * ptn_num);
 
   // declare the mutant allele frequency trajectory
-  arma::drowvec frq_pth = arma::zeros<arma::drowvec>(arma::uword(lst_gen - int_gen) * ptn_num + 1);
+  arma::drowvec mut_frq_pth = arma::zeros<arma::drowvec>(arma::uword(lst_gen - int_gen) * ptn_num + 1);
 
   // initialise the mutant allele frequency in generation 0
-  frq_pth(0) = int_frq;
+  mut_frq_pth(0) = int_frq;
 
   // simulate the mutant allele frequency trajectory
   for (arma::uword t = 1; t < arma::uword(lst_gen - int_gen) * ptn_num + 1; t++) {
     // calculate the drift coefficient
-    double mu = scl_sel_cof * frq_pth(t - 1) * (1 - frq_pth(t - 1)) * (dom_par + (1 - 2 * dom_par) * frq_pth(t - 1));
+    double mu = scl_sel_cof * mut_frq_pth(t - 1) * (1 - mut_frq_pth(t - 1)) * (dom_par + (1 - 2 * dom_par) * mut_frq_pth(t - 1));
 
     // calculate the diffusion coefficient
-    double sigma = pow(frq_pth(t - 1) * (1 - frq_pth(t - 1)), 0.5);
+    double sigma = pow(mut_frq_pth(t - 1) * (1 - mut_frq_pth(t - 1)), 0.5);
 
     // proceed the Euler-Maruyama scheme
-    frq_pth(t) = frq_pth(t - 1) + mu * dt + sigma * dW(t - 1);
+    mut_frq_pth(t) = mut_frq_pth(t - 1) + mu * dt + sigma * dW(t - 1);
 
     // remove the noise from the numerical techniques
-    if (frq_pth(t) < 0) {
-      frq_pth(t) = 0;
+    if (mut_frq_pth(t) < 0) {
+      mut_frq_pth(t) = 0;
     }
-    if (frq_pth(t) > 1) {
-      frq_pth(t) = 1;
+    if (mut_frq_pth(t) > 1) {
+      mut_frq_pth(t) = 1;
     }
   }
 
-  return frq_pth;
+  // return the mutant allele frequency trajectory under the Wright-Fisher diffusion
+  return mut_frq_pth;
 }
 /*************************/
 
 
 /********** BPF **********/
-// Calculate the genotype frequencies in the adult with the haplotype frequencies
+// Calculate the genotype frequencies in the adult with the mutant allele frequency
 // [[Rcpp::export]]
 arma::dcolvec calculateGenoFrq_arma(const arma::dmat& fts_mat, const double& mut_frq) {
   // ensure RNG gets set/reset
