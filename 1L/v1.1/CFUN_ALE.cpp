@@ -2,8 +2,10 @@
 // Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 // version 1.1
-// Single-gene phenotypes under constant natural selection and non-constant demographic histories
-// Time series data of allele frequencies
+// Phenotypes controlled by a single gene
+// Constant natural selection and non-constant demographic histories
+
+// Allele frequency data
 
 // C functions
 
@@ -45,11 +47,11 @@ arma::drowvec simulateWFM_arma(const arma::dmat& fts_mat, const arma::icolvec& p
   RNGScope scope;
 
   // declare the mutant allele frequency trajectory
-  arma::drowvec ale_frq_pth = arma::zeros<arma::drowvec>(arma::uword(lst_gen - int_gen) + 1);
+  arma::drowvec mut_frq_pth = arma::zeros<arma::drowvec>(arma::uword(lst_gen - int_gen) + 1);
 
   // initialise the mutant allele frequency in generation 0
   arma::dcolvec ale_frq = {1 - int_frq, int_frq};
-  ale_frq_pth(0) = ale_frq(1);
+  mut_frq_pth(0) = ale_frq(1);
   arma::dmat gen_frq = fts_mat % (ale_frq * ale_frq.t()) / arma::as_scalar(ale_frq.t() * fts_mat * ale_frq);
   gen_frq = arma::diagmat(gen_frq) + 2 * arma::trimatu(gen_frq, 1);
 
@@ -62,14 +64,14 @@ arma::drowvec simulateWFM_arma(const arma::dmat& fts_mat, const arma::icolvec& p
     // proceed the Wright-Fisher sampling
     ale_frq(0) = R::rbinom(2 * pop_siz(k), prob(0)) / 2 / pop_siz(k);
     ale_frq(1) = 1 - ale_frq(0);
-    ale_frq_pth(k) = ale_frq(1);
+    mut_frq_pth(k) = ale_frq(1);
 
     gen_frq = fts_mat % (ale_frq * ale_frq.t()) / arma::as_scalar(ale_frq.t() * fts_mat * ale_frq);
     gen_frq = arma::diagmat(gen_frq) + 2 * arma::trimatu(gen_frq, 1);
   }
 
   // return the mutant allele frequency trajectory under the Wright-Fisher model
-  return ale_frq_pth;
+  return mut_frq_pth;
 }
 /*************************/
 
@@ -98,33 +100,33 @@ arma::drowvec simulateWFD_arma(const double& sel_cof, const double& dom_par, con
   arma::drowvec dW = pow(dt, 0.5) * arma::randn<arma::drowvec>(arma::uword(lst_gen - int_gen) * ptn_num);
 
   // declare the mutant allele frequency trajectory
-  arma::drowvec frq_pth = arma::zeros<arma::drowvec>(arma::uword(lst_gen - int_gen) * ptn_num + 1);
+  arma::drowvec mut_frq_pth = arma::zeros<arma::drowvec>(arma::uword(lst_gen - int_gen) * ptn_num + 1);
 
   // initialise the mutant allele frequency in generation 0
-  frq_pth(0) = int_frq;
+  mut_frq_pth(0) = int_frq;
 
   // simulate the mutant allele frequency trajectory
   for (arma::uword t = 1; t < arma::uword(lst_gen - int_gen) * ptn_num + 1; t++) {
     // calculate the drift coefficient
-    double mu = scl_sel_cof * frq_pth(t - 1) * (1 - frq_pth(t - 1)) * (dom_par + (1 - 2 * dom_par) * frq_pth(t - 1));
+    double mu = scl_sel_cof * mut_frq_pth(t - 1) * (1 - mut_frq_pth(t - 1)) * (dom_par + (1 - 2 * dom_par) * mut_frq_pth(t - 1));
 
     // calculate the diffusion coefficient
-    double sigma = pow(frq_pth(t - 1) * (1 - frq_pth(t - 1)) / siz_rto(t - 1), 0.5);
+    double sigma = pow(mut_frq_pth(t - 1) * (1 - mut_frq_pth(t - 1)) / siz_rto(t - 1), 0.5);
 
     // proceed the Euler-Maruyama scheme
-    frq_pth(t) = frq_pth(t - 1) + mu * dt + sigma * dW(t - 1);
+    mut_frq_pth(t) = mut_frq_pth(t - 1) + mu * dt + sigma * dW(t - 1);
 
     // remove the noise from the numerical techniques
-    if (frq_pth(t) < 0) {
-      frq_pth(t) = 0;
+    if (mut_frq_pth(t) < 0) {
+      mut_frq_pth(t) = 0;
     }
-    if (frq_pth(t) > 1) {
-      frq_pth(t) = 1;
+    if (mut_frq_pth(t) > 1) {
+      mut_frq_pth(t) = 1;
     }
   }
 
   // return the mutant allele frequency trajectory under the Wright-Fisher diffusion
-  return frq_pth;
+  return mut_frq_pth;
 }
 /*************************/
 
@@ -139,17 +141,17 @@ List runBPF_arma(const double& sel_cof, const double& dom_par, const arma::icolv
   double lik = 1;
 
   arma::dmat wght = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
-  arma::dmat ale_frq_pre = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
-  arma::dmat ale_frq_pst = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
+  arma::dmat mut_frq_pre = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
+  arma::dmat mut_frq_pst = arma::zeros<arma::dmat>(pcl_num, smp_gen.n_elem);
 
   arma::dcolvec wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
-  arma::dcolvec ale_frq_tmp = arma::zeros<arma::dcolvec>(pcl_num);
+  arma::dcolvec mut_frq_tmp = arma::zeros<arma::dcolvec>(pcl_num);
 
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
-  ale_frq_tmp = arma::randu<arma::dcolvec>(pcl_num);
+  mut_frq_tmp = arma::randu<arma::dcolvec>(pcl_num);
   for (arma::uword i = 0; i < pcl_num; i++) {
-    wght_tmp(i) = R::dbinom(smp_cnt(0), smp_siz(0), ale_frq_tmp(i), false);
+    wght_tmp(i) = R::dbinom(smp_cnt(0), smp_siz(0), mut_frq_tmp(i), false);
   }
 
   if (arma::sum(wght_tmp) > 0) {
@@ -159,29 +161,29 @@ List runBPF_arma(const double& sel_cof, const double& dom_par, const arma::icolv
 
     lik = lik * arma::mean(wght_tmp);
     wght.col(0) = wght_tmp;
-    ale_frq_pre.col(0) = ale_frq_tmp;
-    ale_frq_pst.col(0) = ale_frq_tmp.elem(indx);
+    mut_frq_pre.col(0) = mut_frq_tmp;
+    mut_frq_pst.col(0) = mut_frq_tmp.elem(indx);
   } else {
     lik = 0;
     wght.shed_cols(0, smp_gen.n_elem - 1);
-    ale_frq_pre.shed_cols(0, smp_gen.n_elem - 1);
-    ale_frq_pst.shed_cols(0, smp_gen.n_elem - 1);
+    mut_frq_pre.shed_cols(0, smp_gen.n_elem - 1);
+    mut_frq_pst.shed_cols(0, smp_gen.n_elem - 1);
 
     return List::create(Named("lik", lik),
                         Named("wght", wght),
-                        Named("ale_frq_pre_resmp", ale_frq_pre),
-                        Named("ale_frq_pst_resmp", ale_frq_pst));
+                        Named("mut_frq_pre_resmp", mut_frq_pre),
+                        Named("mut_frq_pst_resmp", mut_frq_pst));
   }
 
   // run the bootstrap particle filter
   for (arma::uword k = 1; k < smp_gen.n_elem; k++) {
     cout << "generation: " << smp_gen(k) << endl;
     wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
-    ale_frq_tmp = ale_frq_pst.col(k - 1);
+    mut_frq_tmp = mut_frq_pst.col(k - 1);
     for (arma::uword i = 0; i < pcl_num; i++) {
-      arma::drowvec path = simulateWFD_arma(sel_cof, dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, ale_frq_tmp(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      ale_frq_tmp(i) = arma::as_scalar(path.tail(1));
-      wght_tmp(i) = R::dbinom(smp_cnt(k), smp_siz(k), ale_frq_tmp(i), false);
+      arma::drowvec path = simulateWFD_arma(sel_cof, dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_tmp(i), smp_gen(k - 1), smp_gen(k), ptn_num);
+      mut_frq_tmp(i) = arma::as_scalar(path.tail(1));
+      wght_tmp(i) = R::dbinom(smp_cnt(k), smp_siz(k), mut_frq_tmp(i), false);
     }
 
     if (arma::sum(wght_tmp) > 0) {
@@ -191,13 +193,13 @@ List runBPF_arma(const double& sel_cof, const double& dom_par, const arma::icolv
 
       lik = lik * arma::mean(wght_tmp);
       wght.col(k) = wght_tmp;
-      ale_frq_pre.col(k) = ale_frq_tmp;
-      ale_frq_pst.col(k) = ale_frq_tmp.elem(indx);
+      mut_frq_pre.col(k) = mut_frq_tmp;
+      mut_frq_pst.col(k) = mut_frq_tmp.elem(indx);
     } else {
       lik = 0;
       wght.shed_cols(k, smp_gen.n_elem - 1);
-      ale_frq_pre.shed_cols(k, smp_gen.n_elem - 1);
-      ale_frq_pst.shed_cols(k, smp_gen.n_elem - 1);
+      mut_frq_pre.shed_cols(k, smp_gen.n_elem - 1);
+      mut_frq_pst.shed_cols(k, smp_gen.n_elem - 1);
 
       break;
     }
@@ -205,8 +207,8 @@ List runBPF_arma(const double& sel_cof, const double& dom_par, const arma::icolv
 
   return List::create(Named("lik", lik),
                       Named("wght", wght),
-                      Named("ale_frq_pre_resmp", ale_frq_pre),
-                      Named("ale_frq_pst_resmp", ale_frq_pst));
+                      Named("mut_frq_pre_resmp", mut_frq_pre),
+                      Named("mut_frq_pst_resmp", mut_frq_pst));
 }
 /*************************/
 
@@ -221,13 +223,13 @@ double calculateLogLikelihood_arma(const double& sel_cof, const double& dom_par,
   double log_lik = 0;
 
   arma::dcolvec wght = arma::zeros<arma::dcolvec>(pcl_num);
-  arma::dcolvec ale_frq_pre = arma::zeros<arma::dcolvec>(pcl_num);
-  arma::dcolvec ale_frq_pst = arma::zeros<arma::dcolvec>(pcl_num);
+  arma::dcolvec mut_frq_pre = arma::zeros<arma::dcolvec>(pcl_num);
+  arma::dcolvec mut_frq_pst = arma::zeros<arma::dcolvec>(pcl_num);
 
   // initialise the particles
-  ale_frq_pre = arma::randu<arma::dcolvec>(pcl_num);;
+  mut_frq_pre = arma::randu<arma::dcolvec>(pcl_num);;
   for (arma::uword i = 0; i < pcl_num; i++) {
-    wght(i) = R::dbinom(smp_cnt(0), smp_siz(0), ale_frq_pre(i), false);
+    wght(i) = R::dbinom(smp_cnt(0), smp_siz(0), mut_frq_pre(i), false);
   }
 
   if (arma::mean(wght) > 0) {
@@ -235,7 +237,7 @@ double calculateLogLikelihood_arma(const double& sel_cof, const double& dom_par,
     arma::dcolvec prob = arma::normalise(wght, 1);
     arma::ucolvec elem = arma::linspace<arma::ucolvec>(0, pcl_num - 1, pcl_num);
     arma::ucolvec indx = RcppArmadillo::sample(elem, pcl_num, true, prob);
-    ale_frq_pst = ale_frq_pre.elem(indx);
+    mut_frq_pst = mut_frq_pre.elem(indx);
   } else {
     log_lik = -(arma::datum::inf);
 
@@ -246,9 +248,9 @@ double calculateLogLikelihood_arma(const double& sel_cof, const double& dom_par,
   for (arma::uword k = 1; k < smp_gen.n_elem; k++) {
     wght = arma::zeros<arma::dcolvec>(pcl_num);
     for (arma::uword i = 0; i < pcl_num; i++) {
-      arma::drowvec path = simulateWFD_arma(sel_cof, dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, ale_frq_pst(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      ale_frq_pre(i) = arma::as_scalar(path.tail(1));
-      wght(i) = R::dbinom(smp_cnt(k), smp_siz(k), ale_frq_pre(i), false);
+      arma::drowvec path = simulateWFD_arma(sel_cof, dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_pst(i), smp_gen(k - 1), smp_gen(k), ptn_num);
+      mut_frq_pre(i) = arma::as_scalar(path.tail(1));
+      wght(i) = R::dbinom(smp_cnt(k), smp_siz(k), mut_frq_pre(i), false);
     }
 
     if (arma::mean(wght) > 0) {
@@ -256,7 +258,7 @@ double calculateLogLikelihood_arma(const double& sel_cof, const double& dom_par,
       arma::dcolvec prob = arma::normalise(wght, 1);
       arma::ucolvec elem = arma::linspace<arma::ucolvec>(0, pcl_num - 1, pcl_num);
       arma::ucolvec indx = RcppArmadillo::sample(elem, pcl_num, true, prob);
-      ale_frq_pst = ale_frq_pre.elem(indx);
+      mut_frq_pst = mut_frq_pre.elem(indx);
     } else {
       log_lik = -(arma::datum::inf);
 
