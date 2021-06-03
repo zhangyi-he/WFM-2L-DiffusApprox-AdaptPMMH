@@ -2,8 +2,10 @@
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-#' Single-gene phenotypes under constant natural selection and constant demographic histories
-#' Time series data of genotype frequencies
+#' Phenotypes controlled by a single gene
+#' Constant natural selection and constant demographic histories
+
+#' Genotype frequency data
 
 #' R functions
 
@@ -32,7 +34,7 @@ sourceCpp("./Code/Code v1.0/Code 1L/Code v1.0/CFUN_GEN.cpp")
 
 ################################################################################
 
-#' Simulate the haplotype frequency trajectories according to the single-locus Wright-Fisher model with selection
+#' Simulate the mutant allele frequency trajectory according to the single-locus Wright-Fisher model with selection
 #' Parameter setting
 #' @param sel_cof the selection coefficient
 #' @param dom_par the dominance parameter
@@ -45,17 +47,19 @@ sourceCpp("./Code/Code v1.0/Code 1L/Code v1.0/CFUN_GEN.cpp")
 simulateWFM <- function(sel_cof, dom_par, pop_siz, int_frq, int_gen, lst_gen) {
   fts_mat <- calculateFitnessMat_arma(sel_cof, dom_par)
 
-  frq_pth <- simulateWFM_arma(fts_mat, pop_siz, int_frq, int_gen, lst_gen)
-  frq_pth <- as.vector(frq_pth)
+  WFM <- simulateWFM_arma(fts_mat, pop_siz, int_frq, int_gen, lst_gen)
+  mut_frq_pth <- as.vector(WFM$mut_frq_pth)
+  gen_frq_pth <- as.matrix(WFM$gen_frq_pth)
 
-  return(frq_pth)
+  return(list(mut_frq_pth = mut_frq_pth,
+              gen_frq_pth = gen_frq_pth))
 }
 #' Compiled version
 cmpsimulateWFM <- cmpfun(simulateWFM)
 
 ########################################
 
-#' Simulate the haplotype frequency trajectories according to the single-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
+#' Simulate the mutant allele frequency trajectory according to the single-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
 #' Parameter setting
 #' @param sel_cof the selection coefficient
 #' @param dom_par the dominance parameter
@@ -68,13 +72,13 @@ cmpsimulateWFM <- cmpfun(simulateWFM)
 
 #' Standard version
 simulateWFD <- function(sel_cof, dom_par, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE) {
-  frq_pth <- simulateWFD_arma(sel_cof, dom_par, pop_siz, int_frq, int_gen, lst_gen, ptn_num)
-  frq_pth <- as.vector(frq_pth)
+  mut_frq_pth <- simulateWFD_arma(sel_cof, dom_par, pop_siz, int_frq, int_gen, lst_gen, ptn_num)
+  mut_frq_pth <- as.vector(mut_frq_pth)
   
   if (dat_aug == FALSE) {
-    return(frq_pth[(0:(lst_gen - int_gen)) * ptn_num + 1])
+    return(mut_frq_pth[(0:(lst_gen - int_gen)) * ptn_num + 1])
   } else {
-    return(frq_pth)
+    return(mut_frq_pth)
   }  
 }
 #' Compiled version
@@ -131,7 +135,7 @@ simulateHMM <- function(model, sel_cof, dom_par, pop_siz, int_con, smp_gen, smp_
               smp_gen_cnt = smp_gen_cnt, 
               smp_gen_frq = smp_gen_frq, 
               pop_gen_frq = pop_gen_frq,
-              pop_ale_frq = pop_ale_frq))
+              pop_mut_frq = pop_mut_frq))
 }
 #' Compiled version
 cmpsimulateHMM <- cmpfun(simulateHMM)
@@ -145,7 +149,7 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
@@ -175,7 +179,7 @@ cmprunBPF <- cmpfun(runBPF)
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
@@ -202,7 +206,7 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the PMMH
@@ -228,8 +232,8 @@ cmprunPMMH <- cmpfun(runPMMH)
 #' @param dom_par the dominance parameter
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the PMMH
