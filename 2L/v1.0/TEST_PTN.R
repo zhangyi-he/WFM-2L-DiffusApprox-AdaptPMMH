@@ -2,11 +2,13 @@
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-#' Two-gene phenotypes under constant natural selection and constant demographic histories
+#' Phenotypes controlled by two genes (genetic linkage and epistatic interaction)
+#' Constant natural selection and constant demographic histories
+
 #' Horse white coat patterns (KIT13 & KIT116)
 
 # set the directory
-setwd("~/Dropbox/Jeffery He/iResearch/Publications/2018/HE2021-WFM-2L-DiffusApprox-PMMH-MolEcol")
+setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-PMMH1-MolEcol")
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -30,7 +32,7 @@ source("./Code/Code v1.0/Code 2L/Code v1.0/RFUN_PTN.R")
 
 #' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher model with selection
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
@@ -64,7 +66,7 @@ source("./Code/Code v1.0/Code 2L/Code v1.0/RFUN_PTN.R")
 
 #' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
@@ -139,8 +141,8 @@ source("./Code/Code v1.0/Code 2L/Code v1.0/RFUN_PTN.R")
 #' Simulate the hidden Markov model
 #' Parameter setting
 #' @param model = "WFM"/"WFD" (return the observations from the underlying population evolving according to the WFM or the WFD)
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
-#' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
+#' @param sel_cof the selection coefficients of the black and chestnut phenotypes
+#' @param rec_rat the recombination rate between the ASIP and MC1R loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param int_con the initial haplotype frequencies of the population / the initial mutant allele frequencies and the linkage disequilibrium of the population
 #' @param smp_gen the sampling time points measured in one generation
@@ -370,7 +372,7 @@ dev.off()
 
 #' Run the bootstrap particle filter (BPF) with the two-locus Wright-Fisher diffusion with selection
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -505,7 +507,7 @@ dev.off()
 
 #' Calculate the optimal particle number in the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -552,7 +554,7 @@ dev.off()
 
 #' Run the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -663,9 +665,9 @@ dev.off()
 
 ########################################
 
-#' Run the adaptive particle marginal Metropolis-Hastings (PMMH)
+#' Run the adaptive particle marginal Metropolis-Hastings (AdaptPMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -782,7 +784,7 @@ dev.off()
 
 #' Run the Bayesian procedure for the inference of natural selection
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
