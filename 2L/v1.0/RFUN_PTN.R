@@ -2,7 +2,9 @@
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-#' Two-gene phenotypes under constant natural selection and constant demographic histories
+#' Phenotypes controlled by two genes (genetic linkage and epistatic interaction)
+#' Constant natural selection and constant demographic histories
+
 #' Horse white coat patterns (KIT13 & KIT116)
 
 #' R functions
@@ -34,7 +36,7 @@ sourceCpp("./Code/Code v1.0/Code 2L/Code v1.0/CFUN_PTN.cpp")
 
 #' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher model with selection
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
@@ -59,7 +61,7 @@ cmpsimulateWFM <- cmpfun(simulateWFM)
 
 #' Simulate the haplotype frequency trajectories according to the two-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param int_frq the initial haplotype frequencies of the population
@@ -70,13 +72,13 @@ cmpsimulateWFM <- cmpfun(simulateWFM)
 
 #' Standard version
 simulateWFD <- function(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num, dat_aug = TRUE) {
-  frq_pth <- simulateWFD_arma(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num)
-  frq_pth <- as.matrix(frq_pth)
+  hap_frq_pth <- simulateWFD_arma(sel_cof, rec_rat, pop_siz, int_frq, int_gen, lst_gen, ptn_num)
+  hap_frq_pth <- as.matrix(hap_frq_pth)
 
   if (dat_aug == FALSE) {
-    return(frq_pth[, (0:(lst_gen - int_gen)) * ptn_num + 1])
+    return(hap_frq_pth[, (0:(lst_gen - int_gen)) * ptn_num + 1])
   } else {
-    return(frq_pth)
+    return(hap_frq_pth)
   }
 }
 #' Compiled version
@@ -167,7 +169,7 @@ cmpsimulateHMM <- cmpfun(simulateHMM)
 
 #' Run the bootstrap particle filter (BPF) with the two-locus Wright-Fisher diffusion with selection
 #' Parameter setting
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -208,7 +210,7 @@ cmprunBPF <- cmpfun(runBPF)
 
 #' Calculate the optimal particle number in the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -235,7 +237,7 @@ cmpcalculateOptimalParticleNum <- cmpfun(calculateOptimalParticleNum)
 
 #' Run the particle marginal Metropolis-Hastings (PMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -262,7 +264,7 @@ cmprunPMMH <- cmpfun(runPMMH)
 
 #' Run the adaptive particle marginal Metropolis-Hastings (AdaptPMMH)
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
@@ -291,7 +293,7 @@ cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
 
 #' Run the Bayesian procedure for the inference of natural selection
 #' Parameter settings
-#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed phenotypes
+#' @param sel_cof the selection coefficients of the tobiano, sabino and mixed against solid
 #' @param rec_rat the recombination rate between the KIT13 and KIT16 loci
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
