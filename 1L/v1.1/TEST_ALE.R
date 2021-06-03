@@ -2,11 +2,13 @@
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.1
-#' Single-gene phenotypes under constant natural selection and non-constant demographic histories
-#' Time series data of allele frequencies
+#' Phenotypes controlled by a single gene
+#' Constant natural selection and non-constant demographic histories
+
+#' Allele frequency data
 
 # set the directory
-setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-MHwGibbs-MolEcol")
+setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-PMMH1-MolEcol")
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -28,7 +30,7 @@ source("./Code/Code v1.0/Code 1L/Code v1.1/RFUN_ALE.R")
 
 ################################################################################
 
-#' Simulate the haplotype frequency trajectories according to the single-locus Wright-Fisher model with selection
+#' Simulate the mutant allele frequency trajectory according to the single-locus Wright-Fisher model with selection
 #' Parameter setting
 #' @param sel_cof the selection coefficient
 #' @param dom_par the dominance parameter
@@ -53,7 +55,7 @@ source("./Code/Code v1.0/Code 1L/Code v1.1/RFUN_ALE.R")
 
 ########################################
 
-#' Simulate the haplotype frequency trajectories according to the single-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
+#' Simulate the mutant allele frequency trajectory according to the single-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
 #' Parameter setting
 #' @param sel_cof the selection coefficient
 #' @param dom_par the dominance parameter
@@ -410,7 +412,7 @@ dev.off()
 #' @param pop_siz the size of the horse population (non-constant)
 #' @param ref_siz the reference size of the horse population
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
 #' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
