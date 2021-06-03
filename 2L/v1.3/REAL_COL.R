@@ -2,11 +2,14 @@
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.3
-#' Two-gene phenotypes under non-constant natural selection and non-constant demographic histories conditional on genetic polymorphism
+#' Phenotypes controlled by two genes (genetic linkage and epistatic interaction)
+#' Non-constant natural selection and non-constant demographic histories
+#' Prior knowledge from modern samples (gene polymorphism)
+
 #' Horse base coat colours (ASIP & MC1R)
 
 # set the directory
-setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-MHwGibbs-MolEcol")
+setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-PMMH1-MolEcol")
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -28,8 +31,8 @@ source("./Code/Code v1.0/Code 2L/Code v1.3/RFUN_COL.R")
 
 ################################################################################
 
-#' Wutke et al. (2016) from 9320 BC (Holocene 9700 BC)
-load("./Data/REAL_COL_RAW.rda")
+#' Raw data of Wutke et al. (2016) from 9320 BC (Holocene 9700 BC)
+load("./Data/REAL_RAW_COL.rda")
 
 set.seed(3)
 
@@ -37,7 +40,7 @@ sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- pop_siz[-(1:(smp_gen[5] - smp_gen[1]))]
 ref_siz <- 1.6e+04
-evt_gen <- round((-3500 - 2000) / 8)
+evt_gen <- round((-3500 - 2000) / 8) # 3500 BC (domestication)
 smp_gen <- smp_gen[-(1:4)]
 smp_siz <- smp_siz[-(1:4)]
 smp_cnt <- smp_cnt[, -(1:4)]
@@ -47,14 +50,14 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+#
+# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+#      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1.rda")
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
-     file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH1.rda")
+load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1.rda")
 
-load("./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH1.rda")
-
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH1_Traceplot_SelCoeff.pdf", width = 16, height = 8)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1_Traceplot_SelCoeff.pdf", width = 24, height = 12)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.5, cex.sub = 1.25, cex.axis = 1.25, cex.lab = 1.25)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -90,7 +93,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH1_Posterior_SelCoeff.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1_Posterior_SelCoeff.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 4, 4, 2, 3, 5, 6), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -152,7 +155,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH1_Posterior_SelChange.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1_Posterior_SelChange.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -201,8 +204,8 @@ dev.off()
 
 ########################################
 
-#' Wutke et al. (2016) from 12496 BC (Holocene 9700 BC)
-load("./Data/REAL_COL_RAW.rda")
+#' Raw data of Wutke et al. (2016) from 12496 BC (Holocene 9700 BC)
+load("./Data/REAL_RAW_COL.rda")
 
 set.seed(2)
 
@@ -210,7 +213,7 @@ sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz <- pop_siz[-(1:(smp_gen[4] - smp_gen[1]))]
 ref_siz <- 1.6e+04
-evt_gen <- round((-3500 - 2000) / 8) # 3500 BCE
+evt_gen <- round((-3500 - 2000) / 8) # 3500 BC (domestication)
 smp_gen <- smp_gen[-(1:3)]
 smp_siz <- smp_siz[-(1:3)]
 smp_cnt <- smp_cnt[, -(1:3)]
@@ -220,14 +223,14 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+#
+# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+#      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2.rda")
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
-     file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2.rda")
+load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2.rda")
 
-load("./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2.rda")
-
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2_Traceplot_SelCoeff.pdf", width = 16, height = 8)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2_Traceplot_SelCoeff.pdf", width = 24, height = 12)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.5, cex.sub = 1.25, cex.axis = 1.25, cex.lab = 1.25)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -263,7 +266,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2_Posterior_SelCoeff.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2_Posterior_SelCoeff.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 4, 4, 2, 3, 5, 6), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -325,7 +328,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2_Posterior_SelChange.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2_Posterior_SelChange.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -374,8 +377,8 @@ dev.off()
 
 ########################################
 
-#' Wutke et al. (2016) from 12496 BC (Holocene 9700 BC)
-load("./Data/REAL_COL_RAW.rda")
+#' Raw data of Wutke et al. (2016) from 12496 BC (Holocene 9700 BC) under a constant demographic history
+load("./Data/REAL_RAW_COL.rda")
 
 set.seed(1)
 
@@ -384,7 +387,7 @@ rec_rat <- 5e-01
 pop_siz <- pop_siz[-(1:(smp_gen[4] - smp_gen[1]))]
 pop_siz <- rep(1.6e+04, length.out = length(pop_siz))
 ref_siz <- 1.6e+04
-evt_gen <- round((-3500 - 2000) / 8) # 3500 BCE
+evt_gen <- round((-3500 - 2000) / 8) # 3500 BC (domestication)
 smp_gen <- smp_gen[-(1:3)]
 smp_siz <- smp_siz[-(1:3)]
 smp_cnt <- smp_cnt[, -(1:3)]
@@ -394,14 +397,14 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+#
+# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+#      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2n.rda")
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
-     file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2n.rda")
+load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2n.rda")
 
-load("./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2n.rda")
-
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2n_Traceplot_SelCoeff.pdf", width = 16, height = 8)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2n_Traceplot_SelCoeff.pdf", width = 24, height = 12)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.5, cex.sub = 1.25, cex.axis = 1.25, cex.lab = 1.25)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -437,7 +440,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2n_Posterior_SelCoeff.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2n_Posterior_SelCoeff.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 4, 4, 2, 3, 5, 6), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -499,7 +502,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_RAW_PMMH2n_Posterior_SelChange.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH2n_Posterior_SelChange.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -548,16 +551,16 @@ dev.off()
 
 ########################################
 
-#' Wutke et al. (2016) (Holocene 9700 BC)
-load("./Data/REAL_COL_GRP.rda")
+#' Grouped data of Wutke et al. (2016)
+load("./Data/REAL_GRP_COL.rda")
 
-set.seed(1)
+set.seed(5)
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
 pop_siz
 ref_siz <- 1.6e+04
-evt_gen <- round((-3500 - 2000) / 8) # 3500 BCE
+evt_gen <- round((-3500 - 2000) / 8) # 3500 BC (domestication)
 smp_gen
 smp_siz
 smp_cnt
@@ -567,14 +570,14 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+#
+# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+#      file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH.rda")
 
-save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
-     file = "./Output/Output v1.0/REAL v1.3/REAL_COL_GRP_PMMH.rda")
+load("./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH.rda")
 
-load("./Output/Output v1.0/REAL v1.3/REAL_COL_GRP_PMMH.rda")
-
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_GRP_PMMH_Traceplot_SelCoeff.pdf", width = 16, height = 8)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH_Traceplot_SelCoeff.pdf", width = 24, height = 12)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.5, cex.sub = 1.25, cex.axis = 1.25, cex.lab = 1.25)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -610,7 +613,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_GRP_PMMH_Posterior_SelCoeff.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH_Posterior_SelCoeff.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 4, 4, 2, 3, 5, 6), nrow = 4, ncol = 2))
 grd_num <- 1e+03
@@ -672,7 +675,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_COL_GRP_PMMH_Posterior_SelChange.pdf", width = 16, height = 16)
+pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH_Posterior_SelChange.pdf", width = 24, height = 24)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 1, 3, 3, 2, 2, 4, 5), nrow = 4, ncol = 2))
 grd_num <- 1e+03
