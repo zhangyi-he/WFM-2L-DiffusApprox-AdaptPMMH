@@ -2,11 +2,13 @@
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
 #' version 1.0
-#' Single-gene phenotypes under constant natural selection and constant demographic histories
-#' Time series data of genotype frequencies
+#' Phenotypes controlled by a single gene
+#' Constant natural selection and constant demographic histories
+
+#' Genotype frequency data
 
 # set the directory
-setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-MHwGibbs-MolEcol")
+setwd("~/Dropbox/Jeffery He/iResearch/Publications/2019/HE2021-WFM-2L-DiffusApprox-PMMH1-MolEcol")
 
 #install.packages("RColorBrewer")
 library("RColorBrewer")
@@ -28,7 +30,7 @@ source("./Code/Code v1.0/Code 1L/Code v1.0/RFUN_GEN.R")
 
 ################################################################################
 
-#' Simulate the haplotype frequency trajectories according to the single-locus Wright-Fisher model with selection
+#' Simulate the mutant allele frequency trajectory according to the single-locus Wright-Fisher model with selection
 #' Parameter setting
 #' @param sel_cof the selection coefficient
 #' @param dom_par the dominance parameter
@@ -44,7 +46,7 @@ source("./Code/Code v1.0/Code 1L/Code v1.0/RFUN_GEN.R")
 # int_gen <- 0
 # lst_gen <- 500
 
-# frq_pth <- cmpsimulateWFM(sel_cof, dom_par, pop_siz, int_frq, int_gen, lst_gen)
+# frq_pth <- cmpsimulateWFM(sel_cof, dom_par, pop_siz, int_frq, int_gen, lst_gen)$ale_frq_pth
 
 # k <- int_gen:lst_gen
 # plot(k, frq_pth, type = 'l', lwd = 1.5,
@@ -53,7 +55,7 @@ source("./Code/Code v1.0/Code 1L/Code v1.0/RFUN_GEN.R")
 
 ########################################
 
-#' Simulate the haplotype frequency trajectories according to the single-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
+#' Simulate the mutant allele frequency trajectory according to the single-locus Wright-Fisher diffusion with selection using the Euler-Maruyama method
 #' Parameter setting
 #' @param sel_cof the selection coefficient
 #' @param dom_par the dominance parameter
@@ -211,7 +213,7 @@ dev.off()
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
@@ -274,7 +276,7 @@ dev.off()
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
@@ -321,7 +323,7 @@ dev.off()
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
 #' @param smp_siz the count of the horses drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the PMMH
@@ -392,14 +394,14 @@ dev.off()
 
 ########################################
 
-#' Run the Bayesian Procedure for the inference of the selection coefficients
+#' Run the Bayesian Procedure for the inference of the selection coefficient
 #' Parameter settings
 #' @param sel_cof the selection coefficient
 #' @param dom_par the dominance parameter
 #' @param pop_siz the size of the horse population (constant)
 #' @param smp_gen the sampling time points measured in one generation
-#' @param smp_siz the count of the chromosomes drawn from the population at all sampling time points
-#' @param smp_cnt the count of the mutant alleles observed in the sample at all sampling time points
+#' @param smp_siz the count of the horses drawn from the population at all sampling time points
+#' @param smp_cnt the count of the genotypes observed in the sample at all sampling time points
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the PMMH
