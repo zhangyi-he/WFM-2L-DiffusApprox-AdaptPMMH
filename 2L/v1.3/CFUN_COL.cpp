@@ -269,7 +269,7 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
   arma::dcolvec pop_frq = calculateGenoFrq_arma(fts_mat, hap_frq);
   double prob = calculateMultinomProb_arma(smp_cnt, smp_siz, pop_frq);
 
-  if (hap_frq(1) + hap_frq(3) > 0 && hap_frq(2) + hap_frq(3) > 0) {
+  if (hap_frq(1) + hap_frq(3) == 0 || hap_frq(2) + hap_frq(3) == 0) {
     prob = 0; // the mutant alleles are observed in modern samples although they may not be found in ancient samples
   }
 
