@@ -1,9 +1,10 @@
 // Estimating selection coefficients and testing their changes from ancient DNA data
 // Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-// version 1.2
+// version 1.3
 // Phenotypes controlled by a single gene
 // Non-constant natural selection and non-constant demographic histories
+// Prior knowledge from modern samples (gene polymorphism)
 
 // Allele frequency data
 
@@ -149,6 +150,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
   arma::dcolvec wght_tmp = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dcolvec mut_frq_tmp = arma::zeros<arma::dcolvec>(pcl_num);
 
+  // before the event of interest
   // initialise the particles
   cout << "generation: " << smp_gen(0) << endl;
   mut_frq_tmp = arma::randu<arma::dcolvec>(pcl_num);
@@ -289,6 +291,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& d
   arma::dcolvec mut_frq_pre = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dcolvec mut_frq_pst = arma::zeros<arma::dcolvec>(pcl_num);
 
+  // before the event of interest
   // initialise the particles
   mut_frq_pre = arma::randu<arma::dcolvec>(pcl_num);;
   for (arma::uword i = 0; i < pcl_num; i++) {
