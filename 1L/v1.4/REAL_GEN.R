@@ -1,10 +1,11 @@
 #' @title Estimating selection coefficients and testing their changes from ancient DNA data
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.3
+#' version 1.4
 #' Phenotypes controlled by a single gene
 #' Non-constant natural selection and non-constant demographic histories
 #' Prior knowledge from modern samples (gene polymorphism)
+#' Joint estimation of the underlying trajectory of mutant allele frequencies
 
 #' Genotype frequency data
 
@@ -56,12 +57,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMHg_ASIP.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMHg_ASIP.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMHg_ASIP_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -156,12 +160,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMHg_ASIP.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMHg_ASIP.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMHg_ASIP_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -258,7 +265,7 @@ apt_rto <- 4e-01
 
 system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
-save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1g_ASIP.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1g_ASIP.rda")
@@ -358,12 +365,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMHg_MC1R.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMHg_MC1R.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMHg_MC1R_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -458,12 +468,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMHg_MC1R.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMHg_MC1R.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMHg_MC1R_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -560,7 +573,7 @@ apt_rto <- 4e-01
 
 system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
-save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1g_MC1R.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1g_MC1R.rda")
@@ -660,12 +673,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_KIT13.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_KIT13.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_KIT13_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -760,12 +776,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_KIT13.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_KIT13.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chnS
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_KIT13_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -862,7 +881,7 @@ apt_rto <- 4e-01
 
 system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
-save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH1g_KIT13.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH1g_KIT13.rda")
@@ -962,12 +981,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_KIT16.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_KIT16.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_KIT16_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -1062,12 +1084,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_KIT16.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_KIT16.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_KIT16_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -1164,7 +1189,7 @@ apt_rto <- 4e-01
 
 system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
-save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH1g_KIT16.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH1g_KIT16.rda")
@@ -1264,12 +1289,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_TRPM1.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_TRPM1.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_PTN_PMMHg_TRPM1_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -1364,12 +1392,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_TRPM1.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_TRPM1.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMHg_TRPM1_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -1466,7 +1497,7 @@ apt_rto <- 4e-01
 
 system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
-save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH1g_TRPM1.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH1g_TRPM1.rda")
@@ -1566,7 +1597,7 @@ apt_rto <- 4e-01
 
 system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
-save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH2g_TRPM1.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_PTN_PMMH2g_TRPM1.rda")
