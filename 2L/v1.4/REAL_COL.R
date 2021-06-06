@@ -1,10 +1,11 @@
 #' @title Estimating selection coefficients and testing their changes from ancient DNA data
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.3
+#' version 1.4
 #' Phenotypes controlled by two genes (genetic linkage and epistatic interaction)
 #' Non-constant natural selection and non-constant demographic histories
 #' Prior knowledge from modern samples (gene polymorphism)
+#' Joint estimation of the underlying trajectory of haplotype frequencies
 
 #' Horse base coat colours (ASIP & MC1R)
 
@@ -51,12 +52,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_GRP_COL_PMMH_Traceplot_SelCoeff.pdf", width = 24, height = 12)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.5, cex.sub = 1.25, cex.axis = 1.25, cex.lab = 1.25)
@@ -226,12 +230,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH_Traceplot_SelCoeff.pdf", width = 24, height = 12)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.5, cex.sub = 1.25, cex.axis = 1.25, cex.lab = 1.25)
@@ -401,12 +408,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
-# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, sel_cof_chn,
+# save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1.rda")
 
 load("./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.3/REAL_RAW_COL_PMMH1_Traceplot_SelCoeff.pdf", width = 24, height = 12)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.5, cex.sub = 1.25, cex.axis = 1.25, cex.lab = 1.25)
