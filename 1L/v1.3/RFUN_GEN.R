@@ -339,7 +339,7 @@ runPMMH <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_si
 
   # run the PMMH
   sel_cof_chn <- runPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
-  sel_cof_chn <- as.vector(sel_cof_chn)
+  sel_cof_chn <- as.matrix(sel_cof_chn)
 
   return(sel_cof_chn)
 }
