@@ -34,7 +34,7 @@ source("./Code/Code v1.0/Code 2L/Code v1.3/RFUN_PTN.R")
 #' Grouped data of Wutke et al. (2016) from 3552 BC
 load("./Data/REAL_GRP_PTN.rda")
 
-set.seed(1)
+set.seed(9)
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
@@ -384,7 +384,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 3504 BC (Domestication 3500 BC)
 load("./Data/REAL_RAW_PTN.rda")
 
-set.seed(1)
+set.seed(9)
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
