@@ -202,6 +202,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
   arma::dcolvec mut_frq_tmp = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dmat gen_frq_tmp = arma::zeros<arma::dmat>(3, pcl_num);
 
+  // before the event of interest
   arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof(0), dom_par);
 
   // initialise the particles
@@ -360,6 +361,7 @@ double calculateLogLikelihood_arma(const arma::dcolvec& sel_cof, const double& d
   arma::dcolvec mut_frq_pre = arma::zeros<arma::dcolvec>(pcl_num);
   arma::dcolvec mut_frq_pst = arma::zeros<arma::dcolvec>(pcl_num);
 
+  // before the event of interest
   arma::dmat fts_mat = calculateFitnessMat_arma(sel_cof(0), dom_par);
 
   // initialise the particles
