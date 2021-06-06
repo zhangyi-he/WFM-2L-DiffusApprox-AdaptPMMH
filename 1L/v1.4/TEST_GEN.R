@@ -401,7 +401,7 @@ pdf(file = "./Output/Output v2.0/Test v1.0/TEST_1L_PMMH_Posterior.pdf", width = 
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn, breaks = seq(min(sel_cof_chn), max(sel_cof_chn), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the selection coefficient")
+     main = "Posterior for selection coefficient")
 lines(density(sel_cof_chn), lwd = 2, col = 'black')
 abline(v = sel_cof, col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est, col = 'black', lty = 2, lwd = 2)
@@ -484,7 +484,7 @@ pdf(file = "./Output/Output v2.0/Test v1.0/TEST_1L_PMMH_Posterior.pdf", width = 
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn, breaks = seq(min(sel_cof_chn), max(sel_cof_chn), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the selection coefficient")
+     main = "Posterior for selection coefficient")
 lines(density(sel_cof_chn), lwd = 2, col = 'black')
 abline(v = sel_cof, col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est, col = 'black', lty = 2, lwd = 2)
@@ -549,7 +549,7 @@ pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_GEN_BayesProc_Posterior.pdf", wi
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn, breaks = seq(min(sel_cof_chn), max(sel_cof_chn), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
-     main = "Posterior for the selection coefficient")
+     main = "Posterior for selection coefficient")
 lines(density(sel_cof_chn), lwd = 2, col = 'black')
 abline(v = sel_cof, col = 'red', lty = 2, lwd = 2)
 abline(v = sel_cof_est, col = 'black', lty = 2, lwd = 2)
