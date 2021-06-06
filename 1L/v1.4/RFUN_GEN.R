@@ -229,6 +229,7 @@ runBPF <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz
 
   return(list(lik = BPF$lik,
               wght = BPF$wght,
+              mut_frq_pth = BPF$mut_frq_pth,
               mut_frq_pre_resmp = BPF$mut_frq_pre_resmp,
               mut_frq_pst_resmp = BPF$mut_frq_pst_resmp,
               gen_frq_pre_resmp = BPF$gen_frq_pre_resmp,
@@ -339,10 +340,10 @@ runPMMH <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_si
   smp_gen <- smp_gen - min(smp_gen)
 
   # run the PMMH
-  sel_cof_chn <- runPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
-  sel_cof_chn <- as.vector(sel_cof_chn)
+  PMMH <- runPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
 
-  return(sel_cof_chn)
+  return(list(sel_cof_chn = as.matrix(PMMH$sel_cof_chn),
+              frq_pth_chn = as.matrix(PMMH$frq_pth_chn)))
 }
 #' Compiled version
 cmprunPMMH <- cmpfun(runPMMH)
@@ -396,10 +397,10 @@ runAdaptPMMH <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, s
   smp_gen <- smp_gen - min(smp_gen)
 
   # run the PMMH
-  sel_cof_chn <- runAdaptPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
-  sel_cof_chn <- as.matrix(sel_cof_chn)
+  PMMH <- runAdaptPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
 
-  return(sel_cof_chn)
+  return(list(sel_cof_chn = as.matrix(PMMH$sel_cof_chn),
+              frq_pth_chn = as.matrix(PMMH$frq_pth_chn)))
 }
 #' Compiled version
 cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
@@ -457,24 +458,32 @@ runBayesianProcedure <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, sm
 
   if (adp_set == TRUE) {
     # run the adaptive PMMH
-    sel_cof_chn <- runAdaptPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
+    PMMH <- runAdaptPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
   } else {
     # run the PMMH
-    sel_cof_chn <- runPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
+    PMMH <- runPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   }
-  sel_cof_chn <- as.matrix(sel_cof_chn)
+  sel_cof_chn <- as.matrix(PMMH$sel_cof_chn)
+  frq_pth_chn <- as.matrix(PMMH$frq_pth_chn)
 
   # burn-in and thinning
   sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
   sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
+  frq_pth_chn <- frq_pth_chn[, brn_num:dim(frq_pth_chn)[2]]
+  frq_pth_chn <- frq_pth_chn[, (1:round(dim(frq_pth_chn)[2] / thn_num)) * thn_num]
 
-  # MMSE estimate for the selection coefficients
+  # MMSE estimate for selection coefficients and mutant allele frequencies
   sel_cof_est <- rowMeans(sel_cof_chn)
+  frq_pth_est <- rowMeans(frq_pth_chn)
 
-  # 95% HPD interval for the selection coefficients
+  # 95% HPD interval for selection coefficients and mutant allele frequencies
   sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
   sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
   sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
+  frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+  for (i in 1:dim(frq_pth_chn)[2]) {
+    frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+  }
 
   # calculate the change in the selection coefficient before and after the event
   dif_sel_chn <- sel_cof_chn[2, ] - sel_cof_chn[1, ]
@@ -490,7 +499,10 @@ runBayesianProcedure <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, sm
               sel_cof_chn = sel_cof_chn,
               dif_sel_est = dif_sel_est,
               dif_sel_hpd = dif_sel_hpd,
-              dif_sel_chn = dif_sel_chn))
+              dif_sel_chn = dif_sel_chn,
+              frq_pth_est = frq_pth_est,
+              frq_pth_hpd = frq_pth_hpd,
+              frq_pth_chn = frq_pth_chn))
 }
 #' Compiled version
 cmprunBayesianProcedure <- cmpfun(runBayesianProcedure)
