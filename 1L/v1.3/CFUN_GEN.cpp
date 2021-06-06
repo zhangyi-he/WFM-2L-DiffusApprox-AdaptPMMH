@@ -179,6 +179,10 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
   arma::dcolvec pop_frq = calculateGenoFrq_arma(fts_mat, mut_frq);
   double prob = calculateMultinomProb_arma(smp_cnt, smp_siz, pop_frq);
 
+  if (mut_frq == 0) {
+    prob = 0;
+  }
+
   return prob;
 }
 
@@ -208,8 +212,12 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
   cout << "generation: " << smp_gen(0) << endl;
   mut_frq_tmp = arma::randu<arma::dcolvec>(pcl_num);
   for (arma::uword i = 0; i < pcl_num; i++) {
-    gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, mut_frq_tmp(i));
-    wght_tmp(i) = calculateMultinomProb_arma(smp_cnt.col(0), smp_siz(0), gen_frq_tmp.col(i));
+    if (mut_frq_tmp(i) == 0) {
+      wght_tmp(i) = 0;
+    } else {
+      gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, mut_frq_tmp(i));
+      wght_tmp(i) = calculateMultinomProb_arma(smp_cnt.col(0), smp_siz(0), gen_frq_tmp.col(i));
+    }
   }
 
   if (arma::sum(wght_tmp) > 0) {
@@ -247,8 +255,12 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::drowvec path = simulateWFD_arma(sel_cof(0), dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_tmp(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       mut_frq_tmp(i) = arma::as_scalar(path.tail(1));
-      gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, mut_frq_tmp(i));
-      wght_tmp(i) = calculateMultinomProb_arma(smp_cnt.col(k), smp_siz(k), gen_frq_tmp.col(i));
+      if (mut_frq_tmp(i) == 0) {
+        wght_tmp(i) = 0;
+      } else {
+        gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, mut_frq_tmp(i));
+        wght_tmp(i) = calculateMultinomProb_arma(smp_cnt.col(k), smp_siz(k), gen_frq_tmp.col(i));
+      }
     }
 
     if (arma::sum(wght_tmp) > 0) {
@@ -308,8 +320,12 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::drowvec path = simulateWFD_arma(sel_cof(1), dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_tmp(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       mut_frq_tmp(i) = arma::as_scalar(path.tail(1));
-      gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, mut_frq_tmp(i));
-      wght_tmp(i) = calculateMultinomProb_arma(smp_cnt.col(k), smp_siz(k), gen_frq_tmp.col(i));
+      if (mut_frq_tmp(i) == 0) {
+        wght_tmp(i) = 0;
+      } else {
+        gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, mut_frq_tmp(i));
+        wght_tmp(i) = calculateMultinomProb_arma(smp_cnt.col(k), smp_siz(k), gen_frq_tmp.col(i));
+      }
     }
 
     if (arma::sum(wght_tmp) > 0) {
