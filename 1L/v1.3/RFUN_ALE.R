@@ -1,9 +1,10 @@
 #' @title Estimating selection coefficients and testing their changes from ancient DNA data
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.2
+#' version 1.3
 #' Phenotypes controlled by a single gene
 #' Non-constant natural selection and non-constant demographic histories
+#' Prior knowledge from modern samples (gene polymorphism)
 
 #' Allele frequency data
 
@@ -30,7 +31,7 @@ library("compiler")
 #enableJIT(1)
 
 # call C++ functions
-sourceCpp("./Code/Code v1.0/Code 1L/Code v1.2/CFUN_ALE.cpp")
+sourceCpp("./Code/Code v1.0/Code 1L/Code v1.3/CFUN_ALE.cpp")
 
 ################################################################################
 
@@ -450,10 +451,10 @@ runBayesianProcedure <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, sm
   sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
   sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
 
-  # MMSE estimate for the selection coefficients
+  # MMSE estimate for selection coefficients
   sel_cof_est <- rowMeans(sel_cof_chn)
 
-  # 95% HPD interval for the selection coefficients
+  # 95% HPD interval for selection coefficients
   sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
   sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
   sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
