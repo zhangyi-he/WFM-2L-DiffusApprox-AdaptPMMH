@@ -466,10 +466,10 @@ runBayesianProcedure <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, sm
   sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
   sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
 
-  # MMSE estimate for the selection coefficients
+  # MMSE estimate for selection coefficients
   sel_cof_est <- rowMeans(sel_cof_chn)
 
-  # 95% HPD interval for the selection coefficients
+  # 95% HPD interval for selection coefficients
   sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
   sel_cof_hpd[1, ] <- HPDinterval(as.mcmc(sel_cof_chn[1, ]), prob = 0.95)
   sel_cof_hpd[2, ] <- HPDinterval(as.mcmc(sel_cof_chn[2, ]), prob = 0.95)
