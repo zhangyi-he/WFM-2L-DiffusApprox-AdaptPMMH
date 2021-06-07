@@ -26,7 +26,7 @@ library("plot3D")
 library("emdbook")
 
 # call R functions
-source("./Code/Code v1.0/Code 1L/Code v1.2/RFUN_ALE.R")
+source("./Code/Code v1.0/Code 1L/Code v1.4/RFUN_ALE.R")
 
 ################################################################################
 
@@ -198,11 +198,11 @@ smp_frq <- sim_HMM_WFM$smp_frq
 pop_frq <- sim_HMM_WFM$pop_frq
 
 save(model, sel_cof, dom_par, pop_siz, int_con, smp_gen, smp_siz, smp_cnt, smp_frq, pop_frq,
-     file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.rda")
+     file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.rda")
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.rda")
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 k <- min(smp_gen):max(smp_gen)
 plot(k, pop_frq, type = 'l', lwd = 1.5,
@@ -227,7 +227,7 @@ dev.off()
 #' @param ptn_num the number of subintervals divided per generation in the Euler-Maruyama method
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.rda")
 
 set.seed(test_seed)
 
@@ -244,9 +244,9 @@ pcl_num <- 1e+05
 system.time(BPF <- cmprunBPF(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num))
 
 save(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, BPF,
-     file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_BPF.rda")
+     file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_BPF.rda")
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_BPF.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_BPF.rda")
 
 lik <- rep(1, pcl_num)
 wght <- BPF$wght
@@ -254,7 +254,7 @@ for (k in 1:length(smp_gen)) {
   lik <- lik * (cumsum(wght[, k]) / (1:pcl_num))
 }
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_BPF_Likelihood.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_BPF_Likelihood.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:pcl_num, log(lik), type = 'l',
      xlab = "Number of particles", ylab = "Log likelihood",
@@ -264,7 +264,7 @@ dev.off()
 pop_frq_pre_resmp <- BPF$ale_frq_pre_resmp
 pop_frq_pst_resmp <- BPF$ale_frq_pst_resmp
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_BPF_Particle.pdf", width = 32, height = 18)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_BPF_Particle.pdf", width = 32, height = 18)
 par(mfrow = c(3, 4), oma = c(0, 0, 3, 0), mar = c(5.5, 5, 5.5, 2.5), cex.main = 2, cex.sub = 1.75, cex.axis = 1.75, cex.lab = 1.75)
 for (k in 1:length(smp_gen)) {
   hist_pst_resmp <- hist(pop_frq_pst_resmp[, k], breaks = seq(min(pop_frq_pst_resmp[, k], pop_frq_pre_resmp[, k]), max(pop_frq_pst_resmp[, k], pop_frq_pre_resmp[, k]), length.out = 50), plot = FALSE)
@@ -294,7 +294,7 @@ dev.off()
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param gap_num the number of particles increased or decreased in the optimal particle number search
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.rda")
 
 set.seed(test_seed)
 
@@ -312,14 +312,14 @@ gap_num <- 1e+02
 system.time(OptNum <- calculateOptimalParticleNum(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num))
 
 save(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, gap_num, OptNum,
-     file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_OptNum.rda")
+     file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_OptNum.rda")
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_OptNum.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_OptNum.rda")
 
 opt_pcl_num <- OptNum$opt_pcl_num
 log_lik_sdv <- OptNum$log_lik_sdv
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_OptNum.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_OptNum.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(opt_pcl_num, log_lik_sdv, type = 'b', lwd = 2,
      xlab = "Particle number", ylab = "Log-likelihood standard deviation",
@@ -344,7 +344,7 @@ dev.off()
 #' @param pcl_num the number of particles generated in the bootstrap particle filter
 #' @param itn_num the number of the iterations carried out in the PMMH
 
-load("./Output/Output v1.0/TEST v1.2/TEST_1L_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_1L_SimData.rda")
 
 set.seed(test_seed)
 
@@ -361,14 +361,14 @@ itn_num <- 2e+04
 
 system.time(sel_cof_chn <- cmprunPMMH(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num))
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.rda")
 
 save(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
-     file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH.rda")
+     file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH.rda")
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH.rda")
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH_Traceplot.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH_Traceplot.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -376,7 +376,7 @@ plot(1:itn_num, sel_cof_chn[1:itn_num], type = 'l',
 abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH_Autocorrplot.pdf", width = 8, height = 12)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH_Autocorrplot.pdf", width = 8, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 effectiveSize(as.mcmc(t(sel_cof_chn)))
 
@@ -427,7 +427,7 @@ dev.off()
 #' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
 #' @param apt_rto the target mean acceptance probability of the adaptive setting
 
-load("./Output/Output v1.0/TEST v1.2/TEST_1L_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_1L_SimData.rda")
 
 set.seed(test_seed)
 
@@ -444,14 +444,14 @@ itn_num <- 2e+04
 
 system.time(sel_cof_chn <- cmprunPMMH(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num))
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.rda")
 
 save(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, sel_cof_chn,
-     file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH.rda")
+     file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH.rda")
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH.rda")
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH_Traceplot.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH_Traceplot.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -459,7 +459,7 @@ plot(1:itn_num, sel_cof_chn[1:itn_num], type = 'l',
 abline(h = sel_cof[1], col = 'red', lty = 2, lwd = 2)
 dev.off()
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_PMMH_Autocorrplot.pdf", width = 8, height = 12)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_PMMH_Autocorrplot.pdf", width = 8, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 effectiveSize(as.mcmc(t(sel_cof_chn)))
 
@@ -513,7 +513,7 @@ dev.off()
 #' @param stp_siz the step size sequence in the adaptive setting (decaying to zero)
 #' @param apt_rto the target mean acceptance probability of the adaptive setting
 
-load("./Output/Output v1.0/TEST v1.2/TEST_1L_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_1L_SimData.rda")
 
 set.seed(test_seed)
 
@@ -532,12 +532,12 @@ thn_num <- 3e+00
 
 system.time(BayesianProcedure <- cmprunBayesianProcedure(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num))
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_SimData.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_SimData.rda")
 
 save(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, brn_num, thn_num, BayesianProcedure,
-     file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_BayesProc.rda")
+     file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_BayesProc.rda")
 
-load("./Output/Output v1.0/TEST v1.2/TEST_ALE_BayesProc.rda")
+load("./Output/Output v1.0/TEST v1.4/TEST_ALE_BayesProc.rda")
 
 sel_cof_chn <- BayesianProcedure$sel_cof_chn
 
@@ -545,7 +545,7 @@ sel_cof_est <- BayesianProcedure$sel_cof_est
 
 sel_cof_hpd <- BayesianProcedure$sel_cof_hpd
 
-pdf(file = "./Output/Output v1.0/TEST v1.2/TEST_ALE_BayesProc_Posterior.pdf", width = 8, height = 6)
+pdf(file = "./Output/Output v1.0/TEST v1.4/TEST_ALE_BayesProc_Posterior.pdf", width = 8, height = 6)
 par(mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn, breaks = seq(min(sel_cof_chn), max(sel_cof_chn), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
