@@ -387,7 +387,7 @@ runPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, smp_si
   PMMH <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
 
   return(list(sel_cof_chn = as.array(PMMH$sel_cof_chn),
-              frq_pth_chn = as.array(PMMH$frq_pth_chn)))
+              frq_pth_chn = as.array(PMMH$frq_pth_chn)[, (0:(max(smp_gen) - min(smp_gen))) * ptn_num + 1, ]))
 }
 #' Compiled version
 cmprunPMMH <- cmpfun(runPMMH)
@@ -444,7 +444,7 @@ runAdaptPMMH <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, s
   PMMH <- runAdaptPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
 
   return(list(sel_cof_chn = as.array(PMMH$sel_cof_chn),
-              frq_pth_chn = as.array(PMMH$frq_pth_chn)))
+              frq_pth_chn = as.array(PMMH$frq_pth_chn)[, (0:(max(smp_gen) - min(smp_gen))) * ptn_num + 1, ]))
 }
 #' Compiled version
 cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
@@ -508,7 +508,7 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
     PMMH <- runPMMH_arma(sel_cof, rec_rat, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   }
   sel_cof_chn <- as.array(PMMH$sel_cof_chn)
-  frq_pth_chn <- as.array(PMMH$frq_pth_chn)
+  frq_pth_chn <- as.array(PMMH$frq_pth_chn)[, (0:(max(smp_gen) - min(smp_gen))) * ptn_num + 1, ]
 
   # burn-in and thinning
   sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
@@ -520,11 +520,11 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
   sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
   sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
   sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
-  frq_pth_est <- matrix(NA, nrow = 4, ncol = dim(frq_pth_chn)[3])
-  frq_pth_est[1, ] <- rowMeans(sel_cof_chn[1, , ])
-  frq_pth_est[2, ] <- rowMeans(sel_cof_chn[2, , ])
-  frq_pth_est[3, ] <- rowMeans(sel_cof_chn[3, , ])
-  frq_pth_est[4, ] <- rowMeans(sel_cof_chn[4, , ])
+  frq_pth_est <- matrix(NA, nrow = 4, ncol = dim(frq_pth_chn)[2])
+  frq_pth_est[1, ] <- rowMeans(frq_pth_chn[1, , ])
+  frq_pth_est[2, ] <- rowMeans(frq_pth_chn[2, , ])
+  frq_pth_est[3, ] <- rowMeans(frq_pth_chn[3, , ])
+  frq_pth_est[4, ] <- rowMeans(frq_pth_chn[4, , ])
 
   # 95% HPD intervals for selection coefficients and haplotype frequencies
   sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
@@ -532,8 +532,8 @@ runBayesianProcedure <- function(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, sm
   sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
   sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
   sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
-  frq_pth_hpd <- array(NA, dim = c(4, 2, dim(frq_pth_chn)[3]))
-  for (i in 1:dim(frq_pth_chn)[3]) {
+  frq_pth_hpd <- array(NA, dim = c(4, 2, dim(frq_pth_chn)[2]))
+  for (i in 1:dim(frq_pth_chn)[2]) {
     frq_pth_hpd[1, , i] <- HPDinterval(as.mcmc(frq_pth_chn[1, i, ]), prob = 0.95)
     frq_pth_hpd[2, , i] <- HPDinterval(as.mcmc(frq_pth_chn[2, i, ]), prob = 0.95)
     frq_pth_hpd[3, , i] <- HPDinterval(as.mcmc(frq_pth_chn[3, i, ]), prob = 0.95)
