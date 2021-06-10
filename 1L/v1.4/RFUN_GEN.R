@@ -343,7 +343,7 @@ runPMMH <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_si
   PMMH <- runPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
 
   return(list(sel_cof_chn = as.matrix(PMMH$sel_cof_chn),
-              frq_pth_chn = as.matrix(PMMH$frq_pth_chn)))
+              frq_pth_chn = as.matrix(PMMH$frq_pth_chn)[, (0:(max(smp_gen) - min(smp_gen))) * ptn_num + 1]))
 }
 #' Compiled version
 cmprunPMMH <- cmpfun(runPMMH)
@@ -400,7 +400,7 @@ runAdaptPMMH <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, s
   PMMH <- runAdaptPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto)
 
   return(list(sel_cof_chn = as.matrix(PMMH$sel_cof_chn),
-              frq_pth_chn = as.matrix(PMMH$frq_pth_chn)))
+              frq_pth_chn = as.matrix(PMMH$frq_pth_chn)[, (0:(max(smp_gen) - min(smp_gen))) * ptn_num + 1]))
 }
 #' Compiled version
 cmprunAdaptPMMH <- cmpfun(runAdaptPMMH)
@@ -464,17 +464,17 @@ runBayesianProcedure <- function(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, sm
     PMMH <- runPMMH_arma(sel_cof, dom_par, pop_siz, ref_siz, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num)
   }
   sel_cof_chn <- as.matrix(PMMH$sel_cof_chn)
-  frq_pth_chn <- as.matrix(PMMH$frq_pth_chn)
+  frq_pth_chn <- as.matrix(PMMH$frq_pth_chn)[, (0:(max(smp_gen) - min(smp_gen))) * ptn_num + 1]
 
   # burn-in and thinning
   sel_cof_chn <- sel_cof_chn[, brn_num:dim(sel_cof_chn)[2]]
   sel_cof_chn <- sel_cof_chn[, (1:round(dim(sel_cof_chn)[2] / thn_num)) * thn_num]
-  frq_pth_chn <- frq_pth_chn[, brn_num:dim(frq_pth_chn)[2]]
-  frq_pth_chn <- frq_pth_chn[, (1:round(dim(frq_pth_chn)[2] / thn_num)) * thn_num]
+  frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+  frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
 
   # MMSE estimate for selection coefficients and mutant allele frequencies
   sel_cof_est <- rowMeans(sel_cof_chn)
-  frq_pth_est <- rowMeans(frq_pth_chn)
+  frq_pth_est <- colMeans(frq_pth_chn)
 
   # 95% HPD interval for selection coefficients and mutant allele frequencies
   sel_cof_hpd <- matrix(NA, nrow = 2, ncol = 2)
