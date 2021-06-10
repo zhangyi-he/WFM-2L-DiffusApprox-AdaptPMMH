@@ -943,7 +943,7 @@ dev.off()
 #' Grouped data of Wutke et al. (2016) from 3552 BC
 load("./Data/REAL_GRP_PTN.rda")
 
-set.seed(1)
+set.seed(3)
 
 sel_cof <- c(0e+00, 0e+00)
 dom_par <- 1
@@ -1043,7 +1043,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 3648 BC
 load("./Data/REAL_RAW_PTN.rda")
 
-set.seed(1)
+set.seed(2)
 
 sel_cof <- c(0e+00, 0e+00)
 dom_par <- 1
@@ -1143,7 +1143,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 3504 BC (Domestication 3500 BC)
 load("./Data/REAL_RAW_PTN.rda")
 
-set.seed(1)
+set.seed(3)
 
 sel_cof <- c(0e+00, 0e+00)
 dom_par <- 1
