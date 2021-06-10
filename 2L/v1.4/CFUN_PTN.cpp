@@ -386,7 +386,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(0), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
@@ -437,7 +437,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     hap_frq_tmp = hap_frq_pst.slice(evt_ind - 1);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(evt_ind - 1), smp_gen(evt_ind)), ref_siz, hap_frq_tmp.col(i), smp_gen(evt_ind - 1), smp_gen(evt_ind), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
     }
@@ -454,7 +454,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
@@ -552,7 +552,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::dmat& frq_pth, const arm
     arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(0), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
         wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
@@ -579,7 +579,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::dmat& frq_pth, const arm
   if (smp_gen(evt_ind) != smp_gen(evt_ind - 1)) {
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(evt_ind - 1), smp_gen(evt_ind)), ref_siz, hap_frq_pst.col(i), smp_gen(evt_ind - 1), smp_gen(evt_ind), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
     }
     hap_frq_pst = hap_frq_pre;
@@ -590,7 +590,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::dmat& frq_pth, const arm
     arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
         wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
@@ -704,7 +704,7 @@ List runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::
     ptl_cnt(k) = calculateGenoCnt_arma(smp_cnt.col(k));
   }
 
-  arma::dcube sel_cof_chn = arma::zeros<arma::dcube>(2, 2, itn_num);
+  arma::dcube sel_cof_chn = arma::zeros<arma::dcube>(3, 2, itn_num);
   arma::dcube frq_pth_chn = arma::zeros<arma::dcube>(4, arma::uword(max(smp_gen) - min(smp_gen)) * ptn_num + 1, itn_num);
 
   //arma::drowvec log_pri = arma::zeros<arma::drowvec>(2);
@@ -712,7 +712,8 @@ List runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::
   arma::dmat frq_pth = arma::zeros<arma::dmat>(4, arma::uword(arma::max(smp_gen) - arma::min(smp_gen)) * ptn_num + 1);
 
   arma::dmat sel_cof_sd = {{5e-03, 5e-03},
-                           {5e-03, 5e-03}};
+                           {5e-03, 1e-02},
+                           {1e-02, 1e-02}};
 
   // initialise the population genetic parameters
   cout << "iteration: " << 1 << endl;
@@ -728,7 +729,7 @@ List runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::
     cout << "iteration: " << i + 1 << endl;
 
     // draw the candidates of the selection coefficients from the random walk proposal
-    sel_cof_chn.slice(i) = sel_cof_chn.slice(i - 1) + sel_cof_sd % arma::randn<arma::dmat>(2, 2);
+    sel_cof_chn.slice(i) = sel_cof_chn.slice(i - 1) + sel_cof_sd % arma::randn<arma::dmat>(3, 2);
 
     if (arma::any(arma::any(sel_cof_chn.slice(i) < -1, 1))) {
       sel_cof_chn.slice(i) = sel_cof_chn.slice(i - 1);
@@ -775,7 +776,7 @@ List runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const a
     ptl_cnt(k) = calculateGenoCnt_arma(smp_cnt.col(k));
   }
 
-  arma::dcube sel_cof_chn = arma::zeros<arma::dcube>(2, 2, itn_num);
+  arma::dcube sel_cof_chn = arma::zeros<arma::dcube>(3, 2, itn_num);
   arma::dcolvec sel_cof_tmp = arma::vectorise(sel_cof);
   arma::dcube frq_pth_chn = arma::zeros<arma::dcube>(4, arma::uword(max(smp_gen) - min(smp_gen)) * ptn_num + 1, itn_num);
 
@@ -783,13 +784,15 @@ List runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const a
   arma::drowvec log_lik = arma::zeros<arma::drowvec>(2);
   arma::dmat frq_pth = arma::zeros<arma::dmat>(4, arma::uword(arma::max(smp_gen) - arma::min(smp_gen)) * ptn_num + 1);
 
-  arma::dcolvec U = arma::zeros<arma::dcolvec>(4);
-  arma::dmat S = {{5e-03, 0e-00, 0e-00, 0e-00},
-                  {0e-00, 5e-03, 0e-00, 0e-00},
-                  {0e-00, 0e-00, 5e-03, 0e-00},
-                  {0e-00, 0e-00, 0e-00, 5e-03}};
-  arma::dmat M = arma::zeros<arma::dmat>(4, 4);
-  arma::dmat I = arma::eye<arma::dmat>(4, 4);
+  arma::dcolvec U = arma::zeros<arma::dcolvec>(6);
+  arma::dmat S = {{5e-03, 0e-00, 0e-00, 0e-00, 0e-00, 0e-00}, 
+                  {0e-00, 5e-03, 0e-00, 0e-00, 0e-00, 0e-00}, 
+                  {0e-00, 0e-00, 1e-02, 0e-00, 0e-00, 0e-00}, 
+                  {0e-00, 0e-00, 0e-00, 5e-03, 0e-00, 0e-00},
+                  {0e-00, 0e-00, 0e-00, 0e-00, 1e-02, 0e-00},
+                  {0e-00, 0e-00, 0e-00, 0e-00, 0e-00, 1e-02}};
+  arma::dmat M = arma::zeros<arma::dmat>(6, 6);
+  arma::dmat I = arma::eye<arma::dmat>(6, 6);
 
   // initialise the population genetic parameters
   cout << "iteration: " << 1 << endl;
@@ -807,9 +810,9 @@ List runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const a
     cout << "iteration: " << i + 1 << endl;
 
     // draw the candidates of the selection coefficients from the random walk proposal
-    U = arma::randn<arma::dcolvec>(4);
+    U = arma::randn<arma::dcolvec>(6);
     sel_cof_tmp = sel_cof_tmp + S * U;
-    sel_cof_chn.slice(i) = arma::reshape(sel_cof_tmp, 2, 2);
+    sel_cof_chn.slice(i) = arma::reshape(sel_cof_tmp, 3, 2);
 
     alpha = 0;
     if (arma::any(arma::any(sel_cof_chn.slice(i) < -1, 1))) {
