@@ -1,10 +1,11 @@
 #' @title Estimating selection coefficients and testing their changes from ancient DNA data
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.3
+#' version 1.4
 #' Phenotypes controlled by two genes (genetic linkage and epistatic interaction)
 #' Non-constant natural selection and non-constant demographic histories
 #' Prior knowledge from modern samples (gene polymorphism)
+#' Joint estimation of the underlying trajectory of haplotype frequencies
 
 #' Horse base coat colours (ASIP & MC1R)
 
