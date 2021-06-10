@@ -1,9 +1,11 @@
 #' @title Estimating selection coefficients and testing their changes from ancient DNA data
 #' @author Xiaoyang Dai, Mark Beaumont, Feng Yu, Zhangyi He
 
-#' version 1.2
+#' version 1.4
 #' Phenotypes controlled by a single gene
 #' Non-constant natural selection and non-constant demographic histories
+#' Prior knowledge from modern samples (gene polymorphism)
+#' Joint estimation of the underlying trajectory of mutant allele frequencies
 
 #' Allele frequency data
 
