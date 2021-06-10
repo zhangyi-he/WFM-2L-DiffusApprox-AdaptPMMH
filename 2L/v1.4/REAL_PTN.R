@@ -35,7 +35,7 @@ source("./Code/Code v1.0/Code 2L/Code v1.4/RFUN_PTN.R")
 #' Grouped data of Wutke et al. (2016) from 3552 BC
 load("./Data/REAL_GRP_PTN.rda")
 
-set.seed(1)
+set.seed(9)
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
@@ -206,6 +206,74 @@ lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[, , brn_num:dim(frq_pth_chn)[3]]
+frq_pth_chn <- frq_pth_chn[, , (1:round(dim(frq_pth_chn)[3] / thn_num)) * thn_num]
+
+# MMSE estimate for selection coefficients and haplotype frequencies
+frq_pth_est <- matrix(NA, nrow = 4, ncol = dim(frq_pth_chn)[2])
+frq_pth_est[1, ] <- rowMeans(frq_pth_chn[1, , ])
+frq_pth_est[2, ] <- rowMeans(frq_pth_chn[2, , ])
+frq_pth_est[3, ] <- rowMeans(frq_pth_chn[3, , ])
+frq_pth_est[4, ] <- rowMeans(frq_pth_chn[4, , ])
+
+# 95% HPD interval for selection coefficients and haplotype frequencies
+frq_pth_hpd <- array(NA, dim = c(4, 2, dim(frq_pth_chn)[2]))
+for (i in 1:dim(frq_pth_chn)[2]) {
+  frq_pth_hpd[1, , i] <- HPDinterval(as.mcmc(frq_pth_chn[1, i, ]), prob = 0.95)
+  frq_pth_hpd[2, , i] <- HPDinterval(as.mcmc(frq_pth_chn[2, i, ]), prob = 0.95)
+  frq_pth_hpd[3, , i] <- HPDinterval(as.mcmc(frq_pth_chn[3, i, ]), prob = 0.95)
+  frq_pth_hpd[4, , i] <- HPDinterval(as.mcmc(frq_pth_chn[4, i, ]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_PTN_PMMH_Posterior_Traj.pdf", width = 24, height = 12)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ############################################################
@@ -386,12 +454,80 @@ abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[, , brn_num:dim(frq_pth_chn)[3]]
+frq_pth_chn <- frq_pth_chn[, , (1:round(dim(frq_pth_chn)[3] / thn_num)) * thn_num]
+
+# MMSE estimate for selection coefficients and haplotype frequencies
+frq_pth_est <- matrix(NA, nrow = 4, ncol = dim(frq_pth_chn)[2])
+frq_pth_est[1, ] <- rowMeans(frq_pth_chn[1, , ])
+frq_pth_est[2, ] <- rowMeans(frq_pth_chn[2, , ])
+frq_pth_est[3, ] <- rowMeans(frq_pth_chn[3, , ])
+frq_pth_est[4, ] <- rowMeans(frq_pth_chn[4, , ])
+
+# 95% HPD interval for selection coefficients and haplotype frequencies
+frq_pth_hpd <- array(NA, dim = c(4, 2, dim(frq_pth_chn)[2]))
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[1, , i] <- HPDinterval(as.mcmc(frq_pth_chn[1, i, ]), prob = 0.95)
+   frq_pth_hpd[2, , i] <- HPDinterval(as.mcmc(frq_pth_chn[2, i, ]), prob = 0.95)
+   frq_pth_hpd[3, , i] <- HPDinterval(as.mcmc(frq_pth_chn[3, i, ]), prob = 0.95)
+   frq_pth_hpd[4, , i] <- HPDinterval(as.mcmc(frq_pth_chn[4, i, ]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH_Posterior_Traj.pdf", width = 24, height = 12)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ############################################################
 
 #' Raw data of Wutke et al. (2016) from 3504 BC (Domestication 3500 BC)
 load("./Data/REAL_RAW_PTN.rda")
 
-set.seed(1)
+set.seed(9)
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
@@ -562,6 +698,74 @@ lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[, , brn_num:dim(frq_pth_chn)[3]]
+frq_pth_chn <- frq_pth_chn[, , (1:round(dim(frq_pth_chn)[3] / thn_num)) * thn_num]
+
+# MMSE estimate for selection coefficients and haplotype frequencies
+frq_pth_est <- matrix(NA, nrow = 4, ncol = dim(frq_pth_chn)[2])
+frq_pth_est[1, ] <- rowMeans(frq_pth_chn[1, , ])
+frq_pth_est[2, ] <- rowMeans(frq_pth_chn[2, , ])
+frq_pth_est[3, ] <- rowMeans(frq_pth_chn[3, , ])
+frq_pth_est[4, ] <- rowMeans(frq_pth_chn[4, , ])
+
+# 95% HPD interval for selection coefficients and haplotype frequencies
+frq_pth_hpd <- array(NA, dim = c(4, 2, dim(frq_pth_chn)[2]))
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[1, , i] <- HPDinterval(as.mcmc(frq_pth_chn[1, i, ]), prob = 0.95)
+   frq_pth_hpd[2, , i] <- HPDinterval(as.mcmc(frq_pth_chn[2, i, ]), prob = 0.95)
+   frq_pth_hpd[3, , i] <- HPDinterval(as.mcmc(frq_pth_chn[3, i, ]), prob = 0.95)
+   frq_pth_hpd[4, , i] <- HPDinterval(as.mcmc(frq_pth_chn[4, i, ]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1_Posterior_Traj.pdf", width = 24, height = 12)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+     xlab = "Generation", ylab = "Haplotype frequency",
+     main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
+
+for (i in 1:dim(frq_pth_chn)[2]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ################################################################################
