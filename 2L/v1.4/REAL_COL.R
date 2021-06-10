@@ -227,7 +227,7 @@ for (i in 1:dim(frq_pth_chn)[2]) {
   frq_pth_hpd[4, , i] <- HPDinterval(as.mcmc(frq_pth_chn[4, i, ]), prob = 0.95)
 }
 
-pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_COL_PMMH_Posterior_Traj.pdf", width = 12, height = 6)
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_COL_PMMH_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
 plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
@@ -473,7 +473,7 @@ for (i in 1:dim(frq_pth_chn)[2]) {
    frq_pth_hpd[4, , i] <- HPDinterval(as.mcmc(frq_pth_chn[4, i, ]), prob = 0.95)
 }
 
-pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH_Posterior_Traj.pdf", width = 12, height = 6)
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
 plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
@@ -719,7 +719,7 @@ for (i in 1:dim(frq_pth_chn)[2]) {
    frq_pth_hpd[4, , i] <- HPDinterval(as.mcmc(frq_pth_chn[4, i, ]), prob = 0.95)
 }
 
-pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1_Posterior_Traj.pdf", width = 12, height = 6)
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
 plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
