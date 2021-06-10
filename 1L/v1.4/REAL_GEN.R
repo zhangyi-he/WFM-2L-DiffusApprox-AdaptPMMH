@@ -137,6 +137,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_COL_PMMHg_ASIP_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 12496 BC
@@ -240,6 +273,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMHg_ASIP_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 9320 BC (Holocene 9700 BC)
@@ -263,12 +329,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
 # save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_ASIP.rda")
 
 load("./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_ASIP.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_ASIP_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -338,6 +407,39 @@ lines(density(dif_sel_chn), lwd = 2, col = 'black')
 abline(v = dif_sel_est, col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_ROW_COL_PMMH1g_ASIP_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ############################################################
@@ -445,6 +547,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_COL_PMMHg_MC1R_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 12496 BC
@@ -548,6 +683,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMHg_MC1R_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 9320 BC (Holocene 9700 BC)
@@ -571,12 +739,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
 # save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_MC1R.rda")
 
 load("./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_MC1R.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_MC1R_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -646,6 +817,39 @@ lines(density(dif_sel_chn), lwd = 2, col = 'black')
 abline(v = dif_sel_est, col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_MC1R_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ############################################################
@@ -753,6 +957,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_PTN_PMMHg_KIT13_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 3648 BC
@@ -856,6 +1093,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMHg_KIT13_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 3504 BC (Domestication 3500 BC)
@@ -879,12 +1149,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
 # save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT13.rda")
 
 load("./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT13.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT13_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -954,6 +1227,39 @@ lines(density(dif_sel_chn), lwd = 2, col = 'black')
 abline(v = dif_sel_est, col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT13_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ############################################################
@@ -1061,6 +1367,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_PTN_PMMHg_KIT16_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 3648 BC
@@ -1164,6 +1503,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMHg_KIT16_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 3504 BC (Domestication 3500 BC)
@@ -1187,12 +1559,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
 # save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT16.rda")
 
 load("./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT16.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT16_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -1262,6 +1637,39 @@ lines(density(dif_sel_chn), lwd = 2, col = 'black')
 abline(v = dif_sel_est, col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_KIT16_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ############################################################
@@ -1369,6 +1777,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_GRP_PTN_PMMHg_TRPM1_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ########################################
 
 #' Raw data of Wutke et al. (2016) from 14496 BC
@@ -1472,6 +1913,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMHg_TRPM1_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 #######################################
 
 #' Raw data of Wutke et al. (2016) from 9320 BC (Holocene 9700 BC)
@@ -1495,12 +1969,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
 # save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_TRPM1.rda")
 
 load("./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_TRPM1.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_TRPM1_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -1572,6 +2049,39 @@ abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH1g_TRPM1_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
 ####################
 
 #' Raw data of Wutke et al. (2016) from 3504 BC (Domestication 3500 BC)
@@ -1595,12 +2105,15 @@ itn_num <- 2e+04
 stp_siz <- (1:itn_num)^(-2 / 3)
 apt_rto <- 4e-01
 
-# system.time(sel_cof_chn <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
+# system.time(PMMH <- cmprunAdaptPMMH(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 #
 # save(sel_cof, dom_par, pop_siz, ref_siz, evt_gen, smp_gen, smp_siz, smp_cnt, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
 #      file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH2g_TRPM1.rda")
 
 load("./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH2g_TRPM1.rda")
+
+sel_cof_chn <- PMMH$sel_cof_chn
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH2g_TRPM1_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
@@ -1670,6 +2183,39 @@ lines(density(dif_sel_chn), lwd = 2, col = 'black')
 abline(v = dif_sel_est, col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2], col = 'blue', lty = 2, lwd = 2)
+dev.off()
+
+# burn-in and thinning
+frq_pth_chn <- frq_pth_chn[brn_num:dim(frq_pth_chn)[1], ]
+frq_pth_chn <- frq_pth_chn[(1:round(dim(frq_pth_chn)[1] / thn_num)) * thn_num, ]
+
+# MMSE estimate for selection coefficients and mutant allele frequencies
+frq_pth_est <- colMeans(frq_pth_chn)
+# grd_num <- 1e+03
+# frq_pth_est <- rep(NA, length.out = dim(frq_pth_chn)[2])
+# for (i in 1:dim(frq_pth_chn)[2]) {
+#    frq_pth_pdf <- density(frq_pth_chn[, i], n = grd_num)
+#    frq_pth_est[i] <- frq_pth_pdf$x[which(frq_pth_pdf$y == max(frq_pth_pdf$y))]
+# }
+
+# 95% HPD interval for selection coefficients and mutant allele frequencies
+frq_pth_hpd <- matrix(NA, nrow = 2, ncol = dim(frq_pth_chn)[2])
+for (i in 1:dim(frq_pth_chn)[2]) {
+   frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
+}
+
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMH2g_TRPM1_Posterior_Traj.pdf", width = 12, height = 6)
+par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
+     xlab = "Generation", ylab = "Allele frequency",
+     main = "Posterior for underlying trajectory of mutant allele")
+
+for (i in 1:dim(frq_pth_chn)[1]) {
+   lines(min(smp_gen):max(smp_gen), frq_pth_chn[i, ], col = 'grey', lty = 1, lwd = 2)
+}
+lines(min(smp_gen):max(smp_gen), frq_pth_est, col = 'black', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 ################################################################################
