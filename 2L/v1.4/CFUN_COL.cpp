@@ -383,7 +383,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(0), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
@@ -434,7 +434,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     hap_frq_tmp = hap_frq_pst.slice(evt_ind - 1);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(evt_ind - 1), smp_gen(evt_ind)), ref_siz, hap_frq_tmp.col(i), smp_gen(evt_ind - 1), smp_gen(evt_ind), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
     }
@@ -451,7 +451,7 @@ List runBPF_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::i
     arma::imat gen_cnt = calculateGenoCnt_arma(smp_cnt.col(k));
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_tmp.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_tmp.col(i) = arma::vectorise(path.tail_cols(1), 0);
       gen_frq_tmp.col(i) = calculateGenoFrq_arma(fts_mat, hap_frq_tmp.col(i));
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
@@ -549,7 +549,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::dmat& frq_pth, const arm
     arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(0), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
         wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
@@ -576,7 +576,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::dmat& frq_pth, const arm
   if (smp_gen(evt_ind) != smp_gen(evt_ind - 1)) {
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(evt_ind - 1), smp_gen(evt_ind)), ref_siz, hap_frq_pst.col(i), smp_gen(evt_ind - 1), smp_gen(evt_ind), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(evt_ind - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(evt_ind) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
     }
     hap_frq_pst = hap_frq_pre;
@@ -587,7 +587,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::dmat& frq_pth, const arm
     arma::imat gen_cnt = ptl_cnt(k);
     for (arma::uword i = 0; i < pcl_num; i++) {
       arma::dmat path = simulateWFD_arma(sel_cof.col(1), rec_rat, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, hap_frq_pst.col(i), smp_gen(k - 1), smp_gen(k), ptn_num);
-      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, 0, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, pcl_num - 1) = path;
+      hap_frq_pth.subcube(0, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, 3, (smp_gen(k) - smp_gen(0)) * ptn_num, i) = path;
       hap_frq_pre.col(i) = arma::vectorise(path.tail_cols(1), 0);
       for (arma::uword j = 0; j < gen_cnt.n_cols; j++) {
         wght(i) = wght(i) + calculateEmissionProb_arma(gen_cnt.col(j), smp_siz(k), fts_mat, hap_frq_pre.col(i));
