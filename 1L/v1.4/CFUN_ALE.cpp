@@ -157,7 +157,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
   cout << "generation: " << smp_gen(0) << endl;
   mut_frq_tmp = arma::randu<arma::dcolvec>(pcl_num);
   for (arma::uword i = 0; i < pcl_num; i++) {
-    if (mut_frq_tmp(i) == 0) {
+    if (mut_frq_tmp(i) == 0 || mut_frq_tmp(i) == 1) {
       wght_tmp(i) = 0;
     } else {
       wght_tmp(i) = R::dbinom(smp_cnt(0), smp_siz(0), mut_frq_tmp(i), false);
@@ -195,7 +195,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
       arma::drowvec path = simulateWFD_arma(sel_cof(0), dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_tmp(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       mut_frq_pth.submat(i, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, (smp_gen(k) - smp_gen(0)) * ptn_num) = path;
       mut_frq_tmp(i) = arma::as_scalar(path.tail(1));
-      if (mut_frq_tmp(i) == 0) {
+      if (mut_frq_tmp(i) == 0 || mut_frq_tmp(i) == 1) {
         wght_tmp(i) = 0;
       } else {
         wght_tmp(i) = R::dbinom(smp_cnt(k), smp_siz(k), mut_frq_tmp(i), false);
@@ -250,7 +250,7 @@ List runBPF_arma(const arma::dcolvec& sel_cof, const double& dom_par, const arma
       arma::drowvec path = simulateWFD_arma(sel_cof(1), dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_tmp(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       mut_frq_pth.submat(i, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, (smp_gen(k) - smp_gen(0)) * ptn_num) = path;
       mut_frq_tmp(i) = arma::as_scalar(path.tail(1));
-      if (mut_frq_tmp(i) == 0) {
+      if (mut_frq_tmp(i) == 0 || mut_frq_tmp(i) == 1) {
         wght_tmp(i) = 0;
       } else {
         wght_tmp(i) = R::dbinom(smp_cnt(k), smp_siz(k), mut_frq_tmp(i), false);
@@ -307,7 +307,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::drowvec& frq_pth, const 
   // initialise the particles
   mut_frq_pre = arma::randu<arma::dcolvec>(pcl_num);;
   for (arma::uword i = 0; i < pcl_num; i++) {
-    if (mut_frq_pre(i) == 0) {
+    if (mut_frq_pre(i) == 0 || mut_frq_pre(i) == 1) {
       wght(i) = 0;
     } else {
       wght(i) = R::dbinom(smp_cnt(0), smp_siz(0), mut_frq_pre(i), false);
@@ -333,7 +333,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::drowvec& frq_pth, const 
       arma::drowvec path = simulateWFD_arma(sel_cof(0), dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_pst(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       mut_frq_pth.submat(i, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, (smp_gen(k) - smp_gen(0)) * ptn_num) = path;
       mut_frq_pre(i) = arma::as_scalar(path.tail(1));
-      if (mut_frq_pre(i) == 0) {
+      if (mut_frq_pre(i) == 0 || mut_frq_pre(i) == 1) {
         wght(i) = 0;
       } else {
         wght(i) = R::dbinom(smp_cnt(k), smp_siz(k), mut_frq_pre(i), false);
@@ -370,7 +370,7 @@ void calculateLogLikelihood_arma(double& log_lik, arma::drowvec& frq_pth, const 
       arma::drowvec path = simulateWFD_arma(sel_cof(1), dom_par, pop_siz.subvec(smp_gen(k - 1), smp_gen(k)), ref_siz, mut_frq_pst(i), smp_gen(k - 1), smp_gen(k), ptn_num);
       mut_frq_pth.submat(i, (smp_gen(k - 1) - smp_gen(0)) * ptn_num, i, (smp_gen(k) - smp_gen(0)) * ptn_num) = path;
       mut_frq_pre(i) = arma::as_scalar(path.tail(1));
-      if (mut_frq_pre(i) == 0) {
+      if (mut_frq_pre(i) == 0 || mut_frq_pre(i) == 1) {
         wght(i) = 0;
       } else {
         wght(i) = R::dbinom(smp_cnt(k), smp_siz(k), mut_frq_pre(i), false);
