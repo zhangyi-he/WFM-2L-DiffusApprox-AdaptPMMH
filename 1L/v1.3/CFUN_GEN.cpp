@@ -180,7 +180,7 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
   arma::dcolvec pop_frq = calculateGenoFrq_arma(fts_mat, mut_frq);
   double prob = calculateMultinomProb_arma(smp_cnt, smp_siz, pop_frq);
 
-  if (mut_frq == 0) {
+  if (mut_frq == 0 || mut_frq == 1) {
     prob = 0;
   }
 
