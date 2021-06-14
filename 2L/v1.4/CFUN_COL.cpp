@@ -274,6 +274,10 @@ double calculateEmissionProb_arma(const arma::icolvec& smp_cnt, const int& smp_s
     prob = 0; // the mutant alleles are observed in modern samples although they may not be found in ancient samples
   }
 
+  if (hap_frq(0) + hap_frq(2) == 0 || hap_frq(0) + hap_frq(1) == 0) {
+    prob = 0; // the ancestral alleles are observed in modern samples although they may not be found in ancient samples
+  }
+
   return prob;
 }
 
