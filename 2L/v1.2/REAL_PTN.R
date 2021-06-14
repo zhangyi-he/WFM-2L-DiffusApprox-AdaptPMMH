@@ -383,7 +383,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 3504 BC (Domestication 3500 BC)
 load("./Data/REAL_RAW_PTN.rda")
 
-set.seed(15)
+set.seed(15) # 33
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
