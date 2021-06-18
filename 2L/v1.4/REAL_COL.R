@@ -234,7 +234,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the AE haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
@@ -245,7 +245,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the Ae haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
@@ -256,7 +256,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the aE haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
@@ -267,7 +267,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the ae haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
@@ -280,7 +280,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 12496 BC
 load("./Data/REAL_RAW_COL.rda")
 
-set.seed(10)
+set.seed(31) # 10
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
@@ -480,7 +480,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the AE haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
@@ -491,7 +491,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the Ae haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
@@ -502,7 +502,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the aE haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
@@ -513,7 +513,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the ae haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
@@ -526,7 +526,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 9320 BC (Holocene 9700 BC)
 load("./Data/REAL_RAW_COL.rda")
 
-set.seed(3)
+set.seed(3) # 31
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
@@ -726,7 +726,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the AE haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
@@ -737,7 +737,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the Ae haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
@@ -748,7 +748,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the aE haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
@@ -759,7 +759,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the ae haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
