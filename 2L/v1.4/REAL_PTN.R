@@ -235,7 +235,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
@@ -246,7 +246,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
@@ -257,7 +257,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
@@ -268,7 +268,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
@@ -481,7 +481,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
@@ -492,7 +492,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
@@ -503,7 +503,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
@@ -514,7 +514,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
@@ -727,7 +727,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
@@ -738,7 +738,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
@@ -749,7 +749,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
@@ -760,7 +760,7 @@ plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_c
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
 
-for (i in 1:dim(frq_pth_chn)[2]) {
+for (i in 1:dim(frq_pth_chn)[3]) {
    lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
 lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
