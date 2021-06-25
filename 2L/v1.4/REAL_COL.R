@@ -280,7 +280,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 12496 BC
 load("./Data/REAL_RAW_COL.rda")
 
-set.seed(31) # 10
+set.seed(36) # 10, 31
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
@@ -526,7 +526,7 @@ dev.off()
 #' Raw data of Wutke et al. (2016) from 9320 BC (Holocene 9700 BC)
 load("./Data/REAL_RAW_COL.rda")
 
-set.seed(3) # 31
+set.seed(37) # 3, 31, 36
 
 sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00), nrow = 2, ncol = 2)
 rec_rat <- 5e-01
