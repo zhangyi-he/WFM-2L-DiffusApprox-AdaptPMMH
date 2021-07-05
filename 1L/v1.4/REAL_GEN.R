@@ -428,7 +428,7 @@ for (i in 1:dim(frq_pth_chn)[2]) {
    frq_pth_hpd[, i] <- HPDinterval(as.mcmc(frq_pth_chn[, i]), prob = 0.95)
 }
 
-pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_ROW_COL_PMMH1g_ASIP_Posterior_Traj.pdf", width = 12, height = 6)
+pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_COL_PMMH1g_ASIP_Posterior_Traj.pdf", width = 12, height = 6)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn), max(frq_pth_chn)),
      xlab = "Generation", ylab = "Allele frequency",
@@ -1021,7 +1021,7 @@ apt_rto <- 4e-01
 load("./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMHg_KIT13.rda")
 
 sel_cof_chn <- PMMH$sel_cof_chn
-frq_pth_chn <- PMMH$frq_pth_chnS
+frq_pth_chn <- PMMH$frq_pth_chn
 
 pdf(file = "./Output/Output v1.0/REAL v1.4/REAL_RAW_PTN_PMMHg_KIT13_Traceplot_SelCoeff.pdf", width = 12, height = 12)
 par(mfrow = c(2, 1), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
