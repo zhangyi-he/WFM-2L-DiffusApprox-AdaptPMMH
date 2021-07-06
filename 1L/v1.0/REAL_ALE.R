@@ -541,7 +541,7 @@ load("./Data/REAL_GRP_PTN.rda")
 set.seed(1)
 
 sel_cof <- 0e+00
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- 1.6e+04
 smp_gen <- smp_gen[-(1:2)]
 smp_gen * 8 + 2000
@@ -596,7 +596,7 @@ load("./Data/REAL_RAW_PTN.rda")
 set.seed(1)
 
 sel_cof <- 0e+00
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- 1.6e+04
 smp_gen <- smp_gen[-(1:13)]
 smp_gen * 8 + 2000
@@ -651,7 +651,7 @@ load("./Data/REAL_RAW_PTN.rda")
 set.seed(1)
 
 sel_cof <- 0e+00
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- 1.6e+04
 smp_gen <- smp_gen[-(1:18)]
 smp_gen * 8 + 2000
@@ -708,7 +708,7 @@ load("./Data/REAL_GRP_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- 0e+00
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- 1.6e+04
 smp_gen
 smp_gen * 8 + 2000
@@ -763,7 +763,7 @@ load("./Data/REAL_RAW_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- 0e+00
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- 1.6e+04
 smp_gen <- smp_gen[-(1:2)]
 smp_gen * 8 + 2000
@@ -818,7 +818,7 @@ load("./Data/REAL_RAW_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- 0e+00
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- 1.6e+04
 smp_gen <- smp_gen[-(1:4)]
 smp_gen * 8 + 2000
@@ -873,7 +873,7 @@ load("./Data/REAL_RAW_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- 0e+00
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- 1.6e+04
 smp_gen <- smp_gen[-(1:17)]
 smp_gen * 8 + 2000
