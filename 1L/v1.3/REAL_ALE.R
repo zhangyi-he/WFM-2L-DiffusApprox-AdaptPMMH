@@ -1249,7 +1249,7 @@ load("./Data/REAL_GRP_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- c(0e+00, 0e+00)
-dom_par <- 0.5
+dom_par <- 1
 pop_siz
 ref_siz <- 1.6e+04
 evt_gen <- round((-1600 - 2000) / 8) # 1600 BC (the early Bronze Age)
@@ -1349,7 +1349,7 @@ load("./Data/REAL_RAW_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- c(0e+00, 0e+00)
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- pop_siz[-(1:(smp_gen[3] - smp_gen[1]))]
 ref_siz <- 1.6e+04
 evt_gen <- round((-1600 - 2000) / 8) # 1600 BC (the early Bronze Age)
@@ -1449,7 +1449,7 @@ load("./Data/REAL_RAW_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- c(0e+00, 0e+00)
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- pop_siz[-(1:(smp_gen[3] - smp_gen[1]))]
 ref_siz <- 1.6e+04
 evt_gen <- round((-3500 - 2000) / 8) # 3500 BC (domestication)
@@ -1549,7 +1549,7 @@ load("./Data/REAL_RAW_PTN_LP.rda")
 set.seed(1)
 
 sel_cof <- c(0e+00, 0e+00)
-dom_par <- 0.5
+dom_par <- 1
 pop_siz <- pop_siz[-(1:(smp_gen[3] - smp_gen[1]))]
 ref_siz <- 1.6e+04
 evt_gen <- round((-1600 - 2000) / 8) # 1600 BC (the early Bronze Age)
