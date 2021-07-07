@@ -149,7 +149,7 @@ simulateHMM <- function(model, sel_cof, dom_par, pop_siz, int_con, evt_gen, smp_
   if (model == "WFD") {
     pop_mut_frq <- cmpsimulateWFD(sel_cof, dom_par, pop_siz, ref_siz, int_con, evt_gen, int_gen, lst_gen, ptn_num, dat_aug = FALSE)
     pop_mut_frq <- as.vector(pop_mut_frq)
-    pop_gen_frq <- matrix(NA, nrow = 10, ncol = ncol(pop_hap_frq))
+    pop_gen_frq <- matrix(NA, nrow = 10, ncol = ncol(pop_mut_frq))
     fts_mat <- calculateFitnessMat_arma(sel_cof, dom_par)
     for (k in 1:ncol(pop_mut_frq)) {
       ale_frq <- c(1 - pop_mut_frq[k], pop_mut_frq[k])
