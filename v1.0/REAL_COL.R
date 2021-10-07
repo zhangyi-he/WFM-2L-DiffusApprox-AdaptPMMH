@@ -275,58 +275,64 @@ for (i in 1:dim(frq_pth_chn)[2]) {
 pdf(file = "./Output/Output v1.0/REAL v1.0/REAL_COL_1_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the AE haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the Ae haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the aE haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the ae haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 imp_smp_chn <- imp_smp_chn[, , brn_num:dim(imp_smp_chn)[3]]
 imp_smp_chn <- imp_smp_chn[, , (1:round(dim(imp_smp_chn)[3] / thn_num)) * thn_num]
 
-imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 6)
+imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 9)
 for (i in 1:nrow(imp_smp_est)) {
   imp_smp_est[i, ] <- rowSums(imp_smp_chn[, i, ]) / dim(imp_smp_chn)[3]
 }
+imp_smp_est <- as.data.frame(cbind(imp_smp_est[, 1] + imp_smp_est[, 2] + imp_smp_est[, 3],
+                                   imp_smp_est[, 4] + imp_smp_est[, 5] + imp_smp_est[, 7],
+                                   imp_smp_est[, 6] + imp_smp_est[, 8] + imp_smp_est[, 9],
+                                   imp_smp_est[, 1] + imp_smp_est[, 4] + imp_smp_est[, 6],
+                                   imp_smp_est[, 2] + imp_smp_est[, 5] + imp_smp_est[, 8],
+                                   imp_smp_est[, 3] + imp_smp_est[, 7] + imp_smp_est[, 9]))
 imp_smp_est
 
 ########################################
@@ -571,58 +577,64 @@ for (i in 1:dim(frq_pth_chn)[2]) {
 pdf(file = "./Output/Output v1.0/REAL v1.0/REAL_COL_2_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the AE haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the Ae haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the aE haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the ae haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 imp_smp_chn <- imp_smp_chn[, , brn_num:dim(imp_smp_chn)[3]]
 imp_smp_chn <- imp_smp_chn[, , (1:round(dim(imp_smp_chn)[3] / thn_num)) * thn_num]
 
-imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 6)
+imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 9)
 for (i in 1:nrow(imp_smp_est)) {
   imp_smp_est[i, ] <- rowSums(imp_smp_chn[, i, ]) / dim(imp_smp_chn)[3]
 }
+imp_smp_est <- as.data.frame(cbind(imp_smp_est[, 1] + imp_smp_est[, 2] + imp_smp_est[, 3],
+                                   imp_smp_est[, 4] + imp_smp_est[, 5] + imp_smp_est[, 7],
+                                   imp_smp_est[, 6] + imp_smp_est[, 8] + imp_smp_est[, 9],
+                                   imp_smp_est[, 1] + imp_smp_est[, 4] + imp_smp_est[, 6],
+                                   imp_smp_est[, 2] + imp_smp_est[, 5] + imp_smp_est[, 8],
+                                   imp_smp_est[, 3] + imp_smp_est[, 7] + imp_smp_est[, 9]))
 imp_smp_est
 
 ########################################
@@ -867,58 +879,64 @@ for (i in 1:dim(frq_pth_chn)[2]) {
 pdf(file = "./Output/Output v1.0/REAL v1.0/REAL_COL_3_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the AE haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the Ae haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the aE haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the ae haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+   lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 imp_smp_chn <- imp_smp_chn[, , brn_num:dim(imp_smp_chn)[3]]
 imp_smp_chn <- imp_smp_chn[, , (1:round(dim(imp_smp_chn)[3] / thn_num)) * thn_num]
 
-imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 6)
+imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 9)
 for (i in 1:nrow(imp_smp_est)) {
   imp_smp_est[i, ] <- rowSums(imp_smp_chn[, i, ]) / dim(imp_smp_chn)[3]
 }
+imp_smp_est <- as.data.frame(cbind(imp_smp_est[, 1] + imp_smp_est[, 2] + imp_smp_est[, 3],
+                                   imp_smp_est[, 4] + imp_smp_est[, 5] + imp_smp_est[, 7],
+                                   imp_smp_est[, 6] + imp_smp_est[, 8] + imp_smp_est[, 9],
+                                   imp_smp_est[, 1] + imp_smp_est[, 4] + imp_smp_est[, 6],
+                                   imp_smp_est[, 2] + imp_smp_est[, 5] + imp_smp_est[, 8],
+                                   imp_smp_est[, 3] + imp_smp_est[, 7] + imp_smp_est[, 9]))
 imp_smp_est
 
 ################################################################################
