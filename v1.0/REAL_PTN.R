@@ -106,7 +106,7 @@ save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn
 
 load("./Output/Output v1.0/REAL v1.0/REAL_PTN_1.rda")
 
-sel_cof_chn <- PMMH$sel_cof_chn
+sel_cof_chn <- PMMH$sel_cof_chn[1:2, , ]
 frq_pth_chn <- PMMH$frq_pth_chn
 imp_smp_chn <- PMMH$imp_smp_chn
 
@@ -154,23 +154,23 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[2, 1, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of tobiano", ylab = "Selection coefficient of sabino",
       main = "Posterior for selection coefficient before the Middle Ages")
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano before the Middle Ages")
-lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of sabino before the Middle Ages")
-lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
@@ -179,23 +179,23 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 2, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of tobiano", ylab = "Selection coefficient of sabino",
       main = "Posterior for selection coefficient from the Middle Ages")
-abline(v = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano from the Middle Ages")
-lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of sabino from the Middle Ages")
-lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
@@ -216,8 +216,8 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient before the Middle Ages", ylab = "Selection coefficient from the Middle Ages",
       main = "Posterior for selection coefficient of tobiano")
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
@@ -225,8 +225,8 @@ sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient before the Middle Ages", ylab = "Selection coefficient from the Middle Ages",
       main = "Posterior for selection coefficient of sabino")
-abline(v = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
@@ -234,23 +234,23 @@ sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Change in selection coefficient of tobiano", ylab = "Change in selection coefficient of sabino",
       main = "Posterior for change in selection coefficient before and from the Middle Ages")
-abline(v = dif_sel_est[1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = dif_sel_est[2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(t(dif_sel_chn)), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of tobiano")
-lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'tobiano')
-abline(v = dif_sel_est[1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of sabino")
-lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'tobiano')
-abline(v = dif_sel_est[2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
+abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
@@ -275,58 +275,64 @@ for (i in 1:dim(frq_pth_chn)[2]) {
 pdf(file = "./Output/Output v1.0/REAL v1.0/REAL_PTN_1_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 imp_smp_chn <- imp_smp_chn[, , brn_num:dim(imp_smp_chn)[3]]
 imp_smp_chn <- imp_smp_chn[, , (1:round(dim(imp_smp_chn)[3] / thn_num)) * thn_num]
 
-imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 6)
+imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 9)
 for (i in 1:nrow(imp_smp_est)) {
   imp_smp_est[i, ] <- rowSums(imp_smp_chn[, i, ]) / dim(imp_smp_chn)[3]
 }
+imp_smp_est <- as.data.frame(cbind(imp_smp_est[, 1] + imp_smp_est[, 2] + imp_smp_est[, 3],
+                                   imp_smp_est[, 4] + imp_smp_est[, 5] + imp_smp_est[, 7],
+                                   imp_smp_est[, 6] + imp_smp_est[, 8] + imp_smp_est[, 9],
+                                   imp_smp_est[, 1] + imp_smp_est[, 4] + imp_smp_est[, 6],
+                                   imp_smp_est[, 2] + imp_smp_est[, 5] + imp_smp_est[, 8],
+                                   imp_smp_est[, 3] + imp_smp_est[, 7] + imp_smp_est[, 9]))
 imp_smp_est
 
 ########################################
@@ -402,7 +408,7 @@ save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn
 
 load("./Output/Output v1.0/REAL v1.0/REAL_PTN_2.rda")
 
-sel_cof_chn <- PMMH$sel_cof_chn
+sel_cof_chn <- PMMH$sel_cof_chn[1:2, , ]
 frq_pth_chn <- PMMH$frq_pth_chn
 imp_smp_chn <- PMMH$imp_smp_chn
 
@@ -450,23 +456,23 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[2, 1, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of tobiano", ylab = "Selection coefficient of sabino",
       main = "Posterior for selection coefficient before the Middle Ages")
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano before the Middle Ages")
-lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of sabino before the Middle Ages")
-lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
@@ -475,23 +481,23 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 2, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of tobiano", ylab = "Selection coefficient of sabino",
       main = "Posterior for selection coefficient from the Middle Ages")
-abline(v = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano from the Middle Ages")
-lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of sabino from the Middle Ages")
-lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
@@ -512,8 +518,8 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient before the Middle Ages", ylab = "Selection coefficient from the Middle Ages",
       main = "Posterior for selection coefficient of tobiano")
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
@@ -521,8 +527,8 @@ sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient before the Middle Ages", ylab = "Selection coefficient from the Middle Ages",
       main = "Posterior for selection coefficient of sabino")
-abline(v = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
@@ -530,23 +536,23 @@ sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Change in selection coefficient of tobiano", ylab = "Change in selection coefficient of sabino",
       main = "Posterior for change in selection coefficient before and from the Middle Ages")
-abline(v = dif_sel_est[1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = dif_sel_est[2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(t(dif_sel_chn)), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of tobiano")
-lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'tobiano')
-abline(v = dif_sel_est[1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of sabino")
-lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'tobiano')
-abline(v = dif_sel_est[2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
+abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
@@ -571,58 +577,64 @@ for (i in 1:dim(frq_pth_chn)[2]) {
 pdf(file = "./Output/Output v1.0/REAL v1.0/REAL_PTN_2_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-  lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 imp_smp_chn <- imp_smp_chn[, , brn_num:dim(imp_smp_chn)[3]]
 imp_smp_chn <- imp_smp_chn[, , (1:round(dim(imp_smp_chn)[3] / thn_num)) * thn_num]
 
-imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 6)
+imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 9)
 for (i in 1:nrow(imp_smp_est)) {
   imp_smp_est[i, ] <- rowSums(imp_smp_chn[, i, ]) / dim(imp_smp_chn)[3]
 }
+imp_smp_est <- as.data.frame(cbind(imp_smp_est[, 1] + imp_smp_est[, 2] + imp_smp_est[, 3],
+                                   imp_smp_est[, 4] + imp_smp_est[, 5] + imp_smp_est[, 7],
+                                   imp_smp_est[, 6] + imp_smp_est[, 8] + imp_smp_est[, 9],
+                                   imp_smp_est[, 1] + imp_smp_est[, 4] + imp_smp_est[, 6],
+                                   imp_smp_est[, 2] + imp_smp_est[, 5] + imp_smp_est[, 8],
+                                   imp_smp_est[, 3] + imp_smp_est[, 7] + imp_smp_est[, 9]))
 imp_smp_est
 
 ########################################
@@ -698,7 +710,7 @@ save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn
 
 load("./Output/Output v1.0/REAL v1.0/REAL_PTN_3.rda")
 
-sel_cof_chn <- PMMH$sel_cof_chn
+sel_cof_chn <- PMMH$sel_cof_chn[1:2, , ]
 frq_pth_chn <- PMMH$frq_pth_chn
 imp_smp_chn <- PMMH$imp_smp_chn
 
@@ -746,23 +758,23 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[2, 1, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of tobiano", ylab = "Selection coefficient of sabino",
       main = "Posterior for selection coefficient before the Middle Ages")
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano before the Middle Ages")
-lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[1, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 1, ], breaks = seq(min(sel_cof_chn[2, 1, ]), max(sel_cof_chn[2, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of sabino before the Middle Ages")
-lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[2, 1, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
@@ -771,23 +783,23 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 2, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient of tobiano", ylab = "Selection coefficient of sabino",
       main = "Posterior for selection coefficient from the Middle Ages")
-abline(v = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano from the Middle Ages")
-lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[1, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[1, 2, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(sel_cof_chn[2, 2, ], breaks = seq(min(sel_cof_chn[2, 2, ]), max(sel_cof_chn[2, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of sabino from the Middle Ages")
-lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'tobiano')
-abline(v = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
+abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
@@ -808,8 +820,8 @@ sel_cof_pdf <- kde2d(sel_cof_chn[1, 1, ], sel_cof_chn[1, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient before the Middle Ages", ylab = "Selection coefficient from the Middle Ages",
       main = "Posterior for selection coefficient of tobiano")
-abline(v = sel_cof_est[1, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[1, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[1, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[1, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
@@ -817,8 +829,8 @@ sel_cof_pdf <- kde2d(sel_cof_chn[2, 1, ], sel_cof_chn[2, 2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Selection coefficient before the Middle Ages", ylab = "Selection coefficient from the Middle Ages",
       main = "Posterior for selection coefficient of sabino")
-abline(v = sel_cof_est[2, 1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = sel_cof_est[2, 2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
+abline(h = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(sel_cof_chn), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 grd_num <- 1e+03
@@ -826,23 +838,23 @@ sel_cof_pdf <- kde2d(dif_sel_chn[1, ], dif_sel_chn[2, ], n = grd_num)
 image(sel_cof_pdf, col = colorRampPalette(rev(brewer.pal(11, 'Spectral')))(32),
       xlab = "Change in selection coefficient of tobiano", ylab = "Change in selection coefficient of sabino",
       main = "Posterior for change in selection coefficient before and from the Middle Ages")
-abline(v = dif_sel_est[1], col = 'tobiano', lty = 2, lwd = 2)
-abline(h = dif_sel_est[2], col = 'tobiano', lty = 2, lwd = 2)
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
+abline(h = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 # HPDregionplot(as.mcmc(t(dif_sel_chn)), vars = 1:2, n = grd_num, prob = 0.95, col = "blue", lwd = 2, add = TRUE)
 
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of tobiano")
-lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'tobiano')
-abline(v = dif_sel_est[1], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(dif_sel_chn[1, ]), lwd = 2, col = 'black')
+abline(v = dif_sel_est[1], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[1, 2], col = 'blue', lty = 2, lwd = 2)
 
 hist(dif_sel_chn[2, ], breaks = seq(min(dif_sel_chn[2, ]), max(dif_sel_chn[2, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of sabino")
-lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'tobiano')
-abline(v = dif_sel_est[2], col = 'tobiano', lty = 2, lwd = 2)
+lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
+abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
@@ -867,58 +879,64 @@ for (i in 1:dim(frq_pth_chn)[2]) {
 pdf(file = "./Output/Output v1.0/REAL v1.0/REAL_PTN_3_Posterior_Traj.pdf", width = 24, height = 12)
 par(mar = c(5.1, 5.1, 4.1, 1.1), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 layout(matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2))
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0sb1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[1, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[1, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[1, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[1, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[2, , ]), max(frq_pth_chn[2, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM0SB1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[2, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[2, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[2, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[2, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[3, , ]), max(frq_pth_chn[3, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1sb1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[3, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[3, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[3, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[3, 2, ], col = 'blue', lty = 2, lwd = 2)
 
-plot(0, type = 'n', xlim = c(min(smp_gen), max(smp_gen)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
+plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[4, , ]), max(frq_pth_chn[4, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
      main = "Posterior for underlying trajectory of the KM1SB1 haplotype")
 
 for (i in 1:dim(frq_pth_chn)[2]) {
-   lines(min(smp_gen):max(smp_gen), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
+  lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_chn[4, , i], col = 'grey', lty = 1, lwd = 2)
 }
-lines(min(smp_gen):max(smp_gen), frq_pth_est[4, ], col = 'tobiano', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
-lines(min(smp_gen):max(smp_gen), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_est[4, ], col = 'black', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 1, ], col = 'blue', lty = 2, lwd = 2)
+lines(min(raw_smp$age_mean):max(raw_smp$age_mean), frq_pth_hpd[4, 2, ], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 imp_smp_chn <- imp_smp_chn[, , brn_num:dim(imp_smp_chn)[3]]
 imp_smp_chn <- imp_smp_chn[, , (1:round(dim(imp_smp_chn)[3] / thn_num)) * thn_num]
 
-imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 6)
+imp_smp_est <- matrix(NA, nrow = nrow(raw_smp), ncol = 9)
 for (i in 1:nrow(imp_smp_est)) {
   imp_smp_est[i, ] <- rowSums(imp_smp_chn[, i, ]) / dim(imp_smp_chn)[3]
 }
+imp_smp_est <- as.data.frame(cbind(imp_smp_est[, 1] + imp_smp_est[, 2] + imp_smp_est[, 3],
+                                   imp_smp_est[, 4] + imp_smp_est[, 5] + imp_smp_est[, 7],
+                                   imp_smp_est[, 6] + imp_smp_est[, 8] + imp_smp_est[, 9],
+                                   imp_smp_est[, 1] + imp_smp_est[, 4] + imp_smp_est[, 6],
+                                   imp_smp_est[, 2] + imp_smp_est[, 5] + imp_smp_est[, 8],
+                                   imp_smp_est[, 3] + imp_smp_est[, 7] + imp_smp_est[, 9]))
 imp_smp_est
 
 ################################################################################
