@@ -38,7 +38,7 @@ source("./Code/Code v1.0/Code v1.0/RFUN_PTN.R")
 #' Raw data of Wutke et al. (2016) from 3500 BC
 load("./Data/REAL.rda")
 
-set.seed(1)
+set.seed(2) # 16
 KIT13_smp <- KIT13
 KIT13_smp <- KIT13_smp[which(rowSums(KIT13_smp[, 4:9]) != 0), ]
 int_gen <- -round(max(KIT13_smp$age_mean, KIT13_smp$age_lower, KIT13_smp$age_upper) / 8)
@@ -340,7 +340,7 @@ imp_smp_est
 #' Raw data of Wutke et al. (2016) from 3645 BC
 load("./Data/REAL.rda")
 
-set.seed(1)
+set.seed(2)
 KIT13_smp <- KIT13
 KIT13_smp <- KIT13_smp[which(rowSums(KIT13_smp[, 4:9]) != 0), ]
 int_gen <- -round(max(KIT13_smp$age_mean, KIT13_smp$age_lower, KIT13_smp$age_upper) / 8)
@@ -642,7 +642,7 @@ imp_smp_est
 #' Raw data of Wutke et al. (2016) from 3500 BC (Domestication)
 load("./Data/REAL.rda")
 
-set.seed(1)
+set.seed(2)
 KIT13_smp <- KIT13
 KIT13_smp <- KIT13_smp[which(rowSums(KIT13_smp[, 4:9]) != 0), ]
 int_gen <- -round(max(KIT13_smp$age_mean, KIT13_smp$age_lower, KIT13_smp$age_upper) / 8)
