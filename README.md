@@ -1,1 +1,1 @@
-# Estimating selection coefficients and testing their changes from ancient DNA data: extension for modelling linkage and epistasis
+# Estimating temporally variable selection intensity from ancient DNA data with the flexibility of modelling linkage and epistasis
