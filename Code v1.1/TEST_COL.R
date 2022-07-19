@@ -5,9 +5,6 @@
 #' Phenotypes controlled by two gene with epistatic interaction
 #' Non-constant natural selection and non-constant demographic histories
 
-#' Fix the linkage disequilibrium to be 0
-#' Integrate prior knowledge from modern samples (gene polymorphism)
-
 #' Input: genotype likelihoods
 #' Output: posteriors for the selection coefficient and the genotype frequency trajectories of the population
 
