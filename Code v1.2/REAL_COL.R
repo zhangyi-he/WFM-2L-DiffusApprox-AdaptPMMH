@@ -5,6 +5,8 @@
 #' Phenotypes controlled by two gene with epistatic interaction
 #' Non-constant natural selection and non-constant demographic histories
 
+#' Use the flat Dirichlet prior for the starting haplotype frequencies of the underlying population
+
 #' Input: genotype likelihoods
 #' Output: posteriors for the selection coefficient and the genotype frequency trajectories of the population
 
@@ -33,7 +35,7 @@ source("./RFUN_COL.R")
 #' Raw data of Wutke et al. (2016) from 9322 BC (Holocene 9700 BC)
 load("./Data/REAL.rda")
 
-set.seed(5)
+set.seed(3)
 ASIP_smp <- ASIP
 ASIP_smp <- ASIP_smp[which(rowSums(ASIP_smp[, 4:9]) != 0), ]
 int_gen <- -round(max(ASIP_smp$age_mean, ASIP_smp$age_lower, ASIP_smp$age_upper) / 8)
