@@ -5,6 +5,7 @@
 #' Phenotypes controlled by two genes with genetic linkage
 #' Non-constant natural selection and non-constant demographic histories
 
+#' Fix the selection coefficient of mixed against solid to be -1
 #' Use the flat Dirichlet prior for the starting haplotype frequencies of the underlying population
 
 #' Input: genotype likelihoods
@@ -35,7 +36,7 @@ source("./RFUN_PTN.R")
 #' Raw data of Wutke et al. (2016) from 3500 BC (Domestication 3500 BC)
 load("./Data/REAL.rda")
 
-set.seed(13)
+set.seed(6)
 KIT13_smp <- KIT13
 KIT13_smp <- KIT13_smp[which(rowSums(KIT13_smp[, 4:9]) != 0), ]
 int_gen <- -round(max(KIT13_smp$age_mean, KIT13_smp$age_lower, KIT13_smp$age_upper) / 8)
@@ -84,7 +85,7 @@ raw_smp <- cbind(KIT13_smp[, 1:4], KIT16_smp[, 2:4])
 raw_smp <- raw_smp[order(raw_smp$age_mean), ]
 rownames(raw_smp) <- NULL
 
-sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
+sel_cof <- matrix(c(0e+00, 0e+00, -1e+00, 0e+00, 0e+00, -1e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
 pop_siz <- pop_siz[min(raw_smp$age_mean - int_gen + 1):max(raw_smp$age_mean - int_gen + 1)]
 ref_siz <- tail(pop_siz, n = 1)
@@ -106,8 +107,8 @@ load("./REAL_PTN_1.rda")
 sel_cof_chn <- PMMH$sel_cof_chn
 frq_pth_chn <- PMMH$frq_pth_chn
 
-pdf(file = "./REAL_PTN_1_Traceplot_SelCoeff.pdf", width = 24, height = 12)
-par(mfrow = c(2, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_1_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of tobiano before the Middle Ages")
@@ -116,10 +117,6 @@ plot(1:itn_num, sel_cof_chn[2, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of sabino before the Middle Ages")
 
-plot(1:itn_num, sel_cof_chn[3, 1, 1:itn_num], type = 'l',
-     xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for selection coefficient of mixed before the Middle Ages")
-
 plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of tobiano from the Middle Ages")
@@ -127,10 +124,6 @@ plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
 plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of sabino from the Middle Ages")
-
-plot(1:itn_num, sel_cof_chn[3, 2, 1:itn_num], type = 'l',
-     xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for selection coefficient of mixed from the Middle Ages")
 dev.off()
 
 # brn_num <- 1e+04
@@ -140,20 +133,18 @@ sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
 thn_num <- 5e+00
 sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
 
-sel_cof_est <- matrix(NA, nrow = 3, ncol = 2)
-sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
-sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
+sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
+sel_cof_est[, 1] <- rowMeans(sel_cof_chn[1:2, 1, ])
+sel_cof_est[, 2] <- rowMeans(sel_cof_chn[1:2, 2, ])
 
-sel_cof_hpd <- array(NA, dim = c(3, 2, 2))
+sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
 sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
 sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
-sel_cof_hpd[3, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[3, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
-sel_cof_hpd[3, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[3, 2, ]), prob = 0.95)
 
-pdf(file = "./REAL_PTN_1_Posterior_SelCoeff.pdf", width = 24, height = 12)
-par(mfrow = c(2, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_1_Posterior_SelCoeff.pdf", width = 16, height = 12)
+par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano before the Middle Ages")
@@ -170,14 +161,6 @@ abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
-hist(sel_cof_chn[3, 1, ], breaks = seq(min(sel_cof_chn[3, 1, ]), max(sel_cof_chn[3, 1, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for selection coefficient of mixed before the Middle Ages")
-lines(density(sel_cof_chn[3, 1, ]), lwd = 2, col = 'black')
-abline(v = sel_cof_est[3, 1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 2, 1], col = 'blue', lty = 2, lwd = 2)
-
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano from the Middle Ages")
@@ -193,27 +176,18 @@ lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(sel_cof_chn[3, 2, ], breaks = seq(min(sel_cof_chn[3, 2, ]), max(sel_cof_chn[3, 2, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for selection coefficient of mixed from the Middle Ages")
-lines(density(sel_cof_chn[3, 2, ]), lwd = 2, col = 'black')
-abline(v = sel_cof_est[3, 2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 1, 2], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
-dif_sel_chn <- sel_cof_chn[, 2, ] - sel_cof_chn[, 1, ]
+dif_sel_chn <- sel_cof_chn[1:2, 2, ] - sel_cof_chn[1:2, 1, ]
 
 dif_sel_est <- rowMeans(dif_sel_chn)
 
-dif_sel_hpd <- matrix(NA, nrow = 3, ncol = 2)
+dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
-dif_sel_hpd[3, ] <- HPDinterval(as.mcmc(dif_sel_chn[3, ]), prob = 0.95)
 
-pdf(file = "./REAL_PTN_1_Posterior_SelChange.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_1_Posterior_SelChange.pdf", width = 16, height = 6)
+par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of tobiano")
@@ -229,14 +203,6 @@ lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(dif_sel_chn[3, ], breaks = seq(min(dif_sel_chn[3, ]), max(dif_sel_chn[3, ]), length.out = 50), freq = FALSE,
-     xlab = "Change in selection coefficient",
-     main = "Posterior for change in selection coefficient of mixed")
-lines(density(dif_sel_chn[3, ]), lwd = 2, col = 'black')
-abline(v = dif_sel_est[3], col = 'black', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[3, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[3, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 frq_pth_chn <- frq_pth_chn[, , brn_num:dim(frq_pth_chn)[3]]
@@ -408,7 +374,7 @@ raw_smp <- cbind(KIT13_smp[, 1:4], KIT16_smp[, 2:4])
 raw_smp <- raw_smp[order(raw_smp$age_mean), ]
 rownames(raw_smp) <- NULL
 
-sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
+sel_cof <- matrix(c(0e+00, 0e+00, -1e+00, 0e+00, 0e+00, -1e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
 pop_siz <- pop_siz[min(raw_smp$age_mean - int_gen + 1):max(raw_smp$age_mean - int_gen + 1)]
 ref_siz <- tail(pop_siz, n = 1)
@@ -430,8 +396,8 @@ load("./REAL_PTN_2.rda")
 sel_cof_chn <- PMMH$sel_cof_chn
 frq_pth_chn <- PMMH$frq_pth_chn
 
-pdf(file = "./REAL_PTN_2_Traceplot_SelCoeff.pdf", width = 24, height = 12)
-par(mfrow = c(2, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_2_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of tobiano before the Middle Ages")
@@ -440,10 +406,6 @@ plot(1:itn_num, sel_cof_chn[2, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of sabino before the Middle Ages")
 
-plot(1:itn_num, sel_cof_chn[3, 1, 1:itn_num], type = 'l',
-     xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for selection coefficient of mixed before the Middle Ages")
-
 plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of tobiano from the Middle Ages")
@@ -451,10 +413,6 @@ plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
 plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of sabino from the Middle Ages")
-
-plot(1:itn_num, sel_cof_chn[3, 2, 1:itn_num], type = 'l',
-     xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for selection coefficient of mixed from the Middle Ages")
 dev.off()
 
 # brn_num <- 1e+04
@@ -464,20 +422,18 @@ sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
 thn_num <- 5e+00
 sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
 
-sel_cof_est <- matrix(NA, nrow = 3, ncol = 2)
-sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
-sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
+sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
+sel_cof_est[, 1] <- rowMeans(sel_cof_chn[1:2, 1, ])
+sel_cof_est[, 2] <- rowMeans(sel_cof_chn[1:2, 2, ])
 
-sel_cof_hpd <- array(NA, dim = c(3, 2, 2))
+sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
 sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
 sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
-sel_cof_hpd[3, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[3, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
-sel_cof_hpd[3, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[3, 2, ]), prob = 0.95)
 
-pdf(file = "./REAL_PTN_2_Posterior_SelCoeff.pdf", width = 24, height = 12)
-par(mfrow = c(2, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_2_Posterior_SelCoeff.pdf", width = 16, height = 12)
+par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano before the Middle Ages")
@@ -494,14 +450,6 @@ abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
-hist(sel_cof_chn[3, 1, ], breaks = seq(min(sel_cof_chn[3, 1, ]), max(sel_cof_chn[3, 1, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for selection coefficient of mixed before the Middle Ages")
-lines(density(sel_cof_chn[3, 1, ]), lwd = 2, col = 'black')
-abline(v = sel_cof_est[3, 1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 2, 1], col = 'blue', lty = 2, lwd = 2)
-
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano from the Middle Ages")
@@ -517,27 +465,18 @@ lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(sel_cof_chn[3, 2, ], breaks = seq(min(sel_cof_chn[3, 2, ]), max(sel_cof_chn[3, 2, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for selection coefficient of mixed from the Middle Ages")
-lines(density(sel_cof_chn[3, 2, ]), lwd = 2, col = 'black')
-abline(v = sel_cof_est[3, 2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 1, 2], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
-dif_sel_chn <- sel_cof_chn[, 2, ] - sel_cof_chn[, 1, ]
+dif_sel_chn <- sel_cof_chn[1:2, 2, ] - sel_cof_chn[1:2, 1, ]
 
 dif_sel_est <- rowMeans(dif_sel_chn)
 
-dif_sel_hpd <- matrix(NA, nrow = 3, ncol = 2)
+dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
-dif_sel_hpd[3, ] <- HPDinterval(as.mcmc(dif_sel_chn[3, ]), prob = 0.95)
 
-pdf(file = "./REAL_PTN_2_Posterior_SelChange.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_2_Posterior_SelChange.pdf", width = 16, height = 6)
+par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of tobiano")
@@ -553,14 +492,6 @@ lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(dif_sel_chn[3, ], breaks = seq(min(dif_sel_chn[3, ]), max(dif_sel_chn[3, ]), length.out = 50), freq = FALSE,
-     xlab = "Change in selection coefficient",
-     main = "Posterior for change in selection coefficient of mixed")
-lines(density(dif_sel_chn[3, ]), lwd = 2, col = 'black')
-abline(v = dif_sel_est[3], col = 'black', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[3, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[3, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 frq_pth_chn <- frq_pth_chn[, , brn_num:dim(frq_pth_chn)[3]]
@@ -732,7 +663,7 @@ raw_smp <- cbind(KIT13_smp[, 1:4], KIT16_smp[, 2:4])
 raw_smp <- raw_smp[order(raw_smp$age_mean), ]
 rownames(raw_smp) <- NULL
 
-sel_cof <- matrix(c(0e+00, 0e+00, 0e+00, 0e+00, 0e+00, 0e+00), nrow = 3, ncol = 2)
+sel_cof <- matrix(c(0e+00, 0e+00, -1e+00, 0e+00, 0e+00, -1e+00), nrow = 3, ncol = 2)
 rec_rat <- 1e-08 * 4688
 pop_siz <- pop_siz[min(raw_smp$age_mean - int_gen + 1):max(raw_smp$age_mean - int_gen + 1)]
 ref_siz <- tail(pop_siz, n = 1)
@@ -754,8 +685,8 @@ load("./REAL_PTN_3.rda")
 sel_cof_chn <- PMMH$sel_cof_chn
 frq_pth_chn <- PMMH$frq_pth_chn
 
-pdf(file = "./REAL_PTN_3_Traceplot_SelCoeff.pdf", width = 24, height = 12)
-par(mfrow = c(2, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_3_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of tobiano before the Middle Ages")
@@ -764,10 +695,6 @@ plot(1:itn_num, sel_cof_chn[2, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of sabino before the Middle Ages")
 
-plot(1:itn_num, sel_cof_chn[3, 1, 1:itn_num], type = 'l',
-     xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for selection coefficient of mixed before the Middle Ages")
-
 plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of tobiano from the Middle Ages")
@@ -775,10 +702,6 @@ plot(1:itn_num, sel_cof_chn[1, 2, 1:itn_num], type = 'l',
 plot(1:itn_num, sel_cof_chn[2, 2, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
      main = "Trace plot for selection coefficient of sabino from the Middle Ages")
-
-plot(1:itn_num, sel_cof_chn[3, 2, 1:itn_num], type = 'l',
-     xlab = "Iteration", ylab = "Selection coefficient",
-     main = "Trace plot for selection coefficient of mixed from the Middle Ages")
 dev.off()
 
 # brn_num <- 1e+04
@@ -788,20 +711,18 @@ sel_cof_chn <- sel_cof_chn[, , brn_num:dim(sel_cof_chn)[3]]
 thn_num <- 5e+00
 sel_cof_chn <- sel_cof_chn[, , (1:round(dim(sel_cof_chn)[3] / thn_num)) * thn_num]
 
-sel_cof_est <- matrix(NA, nrow = 3, ncol = 2)
-sel_cof_est[, 1] <- rowMeans(sel_cof_chn[, 1, ])
-sel_cof_est[, 2] <- rowMeans(sel_cof_chn[, 2, ])
+sel_cof_est <- matrix(NA, nrow = 2, ncol = 2)
+sel_cof_est[, 1] <- rowMeans(sel_cof_chn[1:2, 1, ])
+sel_cof_est[, 2] <- rowMeans(sel_cof_chn[1:2, 2, ])
 
-sel_cof_hpd <- array(NA, dim = c(3, 2, 2))
+sel_cof_hpd <- array(NA, dim = c(2, 2, 2))
 sel_cof_hpd[1, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[1, 1, ]), prob = 0.95)
 sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
-sel_cof_hpd[3, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[3, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
-sel_cof_hpd[3, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[3, 2, ]), prob = 0.95)
 
-pdf(file = "./REAL_PTN_3_Posterior_SelCoeff.pdf", width = 24, height = 12)
-par(mfrow = c(2, 3), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_3_Posterior_SelCoeff.pdf", width = 16, height = 12)
+par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano before the Middle Ages")
@@ -818,14 +739,6 @@ abline(v = sel_cof_est[2, 1], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 1], col = 'blue', lty = 2, lwd = 2)
 
-hist(sel_cof_chn[3, 1, ], breaks = seq(min(sel_cof_chn[3, 1, ]), max(sel_cof_chn[3, 1, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for selection coefficient of mixed before the Middle Ages")
-lines(density(sel_cof_chn[3, 1, ]), lwd = 2, col = 'black')
-abline(v = sel_cof_est[3, 1], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 1, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 2, 1], col = 'blue', lty = 2, lwd = 2)
-
 hist(sel_cof_chn[1, 2, ], breaks = seq(min(sel_cof_chn[1, 2, ]), max(sel_cof_chn[1, 2, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
      main = "Posterior for selection coefficient of tobiano from the Middle Ages")
@@ -841,27 +754,18 @@ lines(density(sel_cof_chn[2, 2, ]), lwd = 2, col = 'black')
 abline(v = sel_cof_est[2, 2], col = 'black', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 1, 2], col = 'blue', lty = 2, lwd = 2)
 abline(v = sel_cof_hpd[2, 2, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(sel_cof_chn[3, 2, ], breaks = seq(min(sel_cof_chn[3, 2, ]), max(sel_cof_chn[3, 2, ]), length.out = 50), freq = FALSE,
-     xlab = "Selection coefficient",
-     main = "Posterior for selection coefficient of mixed from the Middle Ages")
-lines(density(sel_cof_chn[3, 2, ]), lwd = 2, col = 'black')
-abline(v = sel_cof_est[3, 2], col = 'black', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 1, 2], col = 'blue', lty = 2, lwd = 2)
-abline(v = sel_cof_hpd[3, 2, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
-dif_sel_chn <- sel_cof_chn[, 2, ] - sel_cof_chn[, 1, ]
+dif_sel_chn <- sel_cof_chn[1:2, 2, ] - sel_cof_chn[1:2, 1, ]
 
 dif_sel_est <- rowMeans(dif_sel_chn)
 
-dif_sel_hpd <- matrix(NA, nrow = 3, ncol = 2)
+dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
-dif_sel_hpd[3, ] <- HPDinterval(as.mcmc(dif_sel_chn[3, ]), prob = 0.95)
 
-pdf(file = "./REAL_PTN_3_Posterior_SelChange.pdf", width = 16, height = 12)
-par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
+pdf(file = "./REAL_PTN_3_Posterior_SelChange.pdf", width = 16, height = 6)
+par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
      main = "Posterior for change in selection coefficient of tobiano")
@@ -877,14 +781,6 @@ lines(density(dif_sel_chn[2, ]), lwd = 2, col = 'black')
 abline(v = dif_sel_est[2], col = 'black', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 1], col = 'blue', lty = 2, lwd = 2)
 abline(v = dif_sel_hpd[2, 2], col = 'blue', lty = 2, lwd = 2)
-
-hist(dif_sel_chn[3, ], breaks = seq(min(dif_sel_chn[3, ]), max(dif_sel_chn[3, ]), length.out = 50), freq = FALSE,
-     xlab = "Change in selection coefficient",
-     main = "Posterior for change in selection coefficient of mixed")
-lines(density(dif_sel_chn[3, ]), lwd = 2, col = 'black')
-abline(v = dif_sel_est[3], col = 'black', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[3, 1], col = 'blue', lty = 2, lwd = 2)
-abline(v = dif_sel_hpd[3, 2], col = 'blue', lty = 2, lwd = 2)
 dev.off()
 
 frq_pth_chn <- frq_pth_chn[, , brn_num:dim(frq_pth_chn)[3]]
