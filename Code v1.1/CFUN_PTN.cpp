@@ -5,9 +5,6 @@
 // Phenotypes controlled by two genes with genetic linkage
 // Non-constant natural selection and non-constant demographic histories
 
-// Fix the selection coefficient of mixed against solid to be -1
-// Integrate prior knowledge from modern samples (gene polymorphism)
-
 // Input: genotype likelihoods
 // Output: posteriors for the selection coefficient and the genotype frequency trajectories of the population
 
@@ -233,15 +230,15 @@ arma::dcolvec calculateParticleWeight_arma(const arma::dmat& gen_lik, const arma
 
   arma::dcolvec prob = arma::prod(gen_frq.t() * gen_lik, 1);
 
-  for (arma::uword i = 0; i < hap_frq.n_cols; i++) {
-    if (hap_frq(1, i) + hap_frq(3, i) == 0 || hap_frq(2, i) + hap_frq(3, i) == 0) {
-      prob(i) = 0; // the mutant alleles are observed in modern samples although they may not be found in ancient samples
-    }
+  // for (arma::uword i = 0; i < hap_frq.n_cols; i++) {
+  //   if (hap_frq(1, i) + hap_frq(3, i) == 0 || hap_frq(2, i) + hap_frq(3, i) == 0) {
+  //     prob(i) = 0; // the mutant alleles are observed in modern samples although they may not be found in ancient samples
+  //   }
 
-    if (hap_frq(0, i) + hap_frq(2, i) == 0 || hap_frq(0, i) + hap_frq(1, i) == 0) {
-      prob(i) = 0; // the ancestral alleles are observed in modern samples although they may not be found in ancient samples
-    }
-  }
+  //   if (hap_frq(0, i) + hap_frq(2, i) == 0 || hap_frq(0, i) + hap_frq(1, i) == 0) {
+  //     prob(i) = 0; // the ancestral alleles are observed in modern samples although they may not be found in ancient samples
+  //   }
+  // }
 
   return prob;
 }
@@ -787,8 +784,6 @@ List runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::
   // take the uniform prior and fix the initial value of the selection coefficient to zero
   // or take the beta prior with alpha = 1 and beta = 3
   sel_cof_chn.slice(0) = sel_cof;
-  sel_cof_chn(2, 0, 0) = -1;
-  sel_cof_chn(2, 1, 0) = -1;
 
   calculateLogLikelihood_arma(log_lik(0), frq_pth, sel_cof_chn.slice(0), rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, gen_lik, ptn_num, pcl_num);
   arma::ucolvec frq_idx = arma::linspace<arma::ucolvec>(0, smp_gen.max() - smp_gen.min(), smp_gen.max() - smp_gen.min() + 1) * ptn_num;
@@ -800,8 +795,6 @@ List runPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const arma::
 
     // draw the candidates of the selection coefficients from the random walk proposal
     sel_cof_chn.slice(i) = sel_cof_chn.slice(i - 1) + sel_cof_sd % arma::randn<arma::dmat>(3, 2);
-    sel_cof_chn(2, 0, i) = -1;
-    sel_cof_chn(2, 1, i) = -1;
 
     if (arma::any(arma::any(sel_cof_chn.slice(i) < -1, 1))) {
       sel_cof_chn.slice(i) = sel_cof_chn.slice(i - 1);
@@ -878,8 +871,6 @@ List runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const a
   // or take the beta prior with alpha = 1 and beta = 3
   sel_cof_chn.slice(0) = sel_cof;
   // sel_cof_chn.slice(0) = arma::reshape(sel_cof_tmp, 2, 2);
-  sel_cof_chn(2, 0, 0) = -1;
-  sel_cof_chn(2, 1, 0) = -1;
 
   calculateLogLikelihood_arma(log_lik(0), frq_pth, sel_cof_chn.slice(0), rec_rat, pop_siz, ref_siz, evt_gen, smp_gen, gen_lik, ptn_num, pcl_num);
   arma::ucolvec frq_idx = arma::linspace<arma::ucolvec>(0, smp_gen.max() - smp_gen.min(), smp_gen.max() - smp_gen.min() + 1) * ptn_num;
@@ -894,8 +885,6 @@ List runAdaptPMMH_arma(const arma::dmat& sel_cof, const double& rec_rat, const a
     U = arma::randn<arma::dcolvec>(6);
     sel_cof_tmp = sel_cof_tmp + S * U;
     sel_cof_chn.slice(i) = arma::reshape(sel_cof_tmp, 3, 2);
-    sel_cof_chn(2, 0, i) = -1;
-    sel_cof_chn(2, 1, i) = -1;
 
     alpha = 0;
     if (arma::any(arma::any(sel_cof_chn.slice(i) < -1, 1))) {
