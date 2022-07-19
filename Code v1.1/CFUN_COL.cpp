@@ -5,9 +5,6 @@
 // Phenotypes controlled by two gene with epistatic interaction
 // Non-constant natural selection and non-constant demographic histories
 
-// Fix the linkage disequilibrium to be 0
-// Integrate prior knowledge from modern samples (gene polymorphism)
-
 // Input: genotype likelihoods
 // Output: posteriors for the selection coefficient and the genotype frequency trajectories of the population
 
@@ -229,15 +226,15 @@ arma::dcolvec calculateParticleWeight_arma(const arma::dmat& gen_lik, const arma
 
   arma::dcolvec prob = arma::prod(gen_frq.t() * gen_lik, 1);
 
-  for (arma::uword i = 0; i < hap_frq.n_cols; i++) {
-    if (hap_frq(1, i) + hap_frq(3, i) == 0 || hap_frq(2, i) + hap_frq(3, i) == 0) {
-      prob(i) = 0; // the mutant alleles are observed in modern samples although they may not be found in ancient samples
-    }
+  // for (arma::uword i = 0; i < hap_frq.n_cols; i++) {
+  //   if (hap_frq(1, i) + hap_frq(3, i) == 0 || hap_frq(2, i) + hap_frq(3, i) == 0) {
+  //     prob(i) = 0; // the mutant alleles are observed in modern samples although they may not be found in ancient samples
+  //   }
 
-    if (hap_frq(0, i) + hap_frq(2, i) == 0 || hap_frq(0, i) + hap_frq(1, i) == 0) {
-      prob(i) = 0; // the ancestral alleles are observed in modern samples although they may not be found in ancient samples
-    }
-  }
+  //   if (hap_frq(0, i) + hap_frq(2, i) == 0 || hap_frq(0, i) + hap_frq(1, i) == 0) {
+  //     prob(i) = 0; // the ancestral alleles are observed in modern samples although they may not be found in ancient samples
+  //   }
+  // }
 
   return prob;
 }
@@ -250,23 +247,23 @@ arma::dmat initialiseParticle_arma(const arma::uword& pcl_num) {
 
   arma::dmat part = arma::zeros<arma::dmat>(4, pcl_num);
   arma::dmat mut_frq = arma::randu<arma::dmat>(2, pcl_num);
-  // arma::drowvec ld = arma::randu<arma::drowvec>(pcl_num);
-  arma::drowvec ld = arma::zeros<arma::drowvec>(pcl_num); // linkage disequilibrium = 0
+  arma::drowvec ld = arma::randu<arma::drowvec>(pcl_num);
+  // arma::drowvec ld = arma::zeros<arma::drowvec>(pcl_num); // linkage disequilibrium = 0
 
-  // for (arma::uword i = 0; i < pcl_num; i++) {
-  //   double ld_min = -mut_frq(0, i) * mut_frq(1, i);
-  //   ld_min = (ld_min >= -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i)))? ld_min : -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i));
-  //   double ld_max = mut_frq(0, i) * (1 - mut_frq(1, i));
-  //   ld_max = (ld_max <= (1 - mut_frq(0, i)) * mut_frq(1, i))? ld_max : (1 - mut_frq(0, i)) * mut_frq(1, i);
-  //   ld(i) = ld_min + (ld_max - ld_min) * ld(i);
-  // }
+  for (arma::uword i = 0; i < pcl_num; i++) {
+    double ld_min = -mut_frq(0, i) * mut_frq(1, i);
+    ld_min = (ld_min >= -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i)))? ld_min : -(1 - mut_frq(0, i)) * (1 - mut_frq(1, i));
+    double ld_max = mut_frq(0, i) * (1 - mut_frq(1, i));
+    ld_max = (ld_max <= (1 - mut_frq(0, i)) * mut_frq(1, i))? ld_max : (1 - mut_frq(0, i)) * mut_frq(1, i);
+    ld(i) = ld_min + (ld_max - ld_min) * ld(i);
+  }
   part.row(0) = (1 - mut_frq.row(0)) % (1 - mut_frq.row(1)) + ld;
   part.row(1) = (1 - mut_frq.row(0)) % mut_frq.row(1) - ld;
   part.row(2) = mut_frq.row(0) % (1 - mut_frq.row(1)) - ld;
   part.row(3) = mut_frq.row(0) % mut_frq.row(1) + ld;
 
   return part;
-  
+
   // use the flat Dirichlet prior for the starting haplotype frequencies of the underlying population
   // NumericMatrix part(4, pcl_num);
   // for (int i = 0; i < 4; i++) {
