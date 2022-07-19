@@ -5,6 +5,7 @@
 #' Phenotypes controlled by two genes with genetic linkage
 #' Non-constant natural selection and non-constant demographic histories
 
+#' Fix the selection coefficient of mixed against solid to be -1
 #' Use the flat Dirichlet prior for the starting haplotype frequencies of the underlying population
 
 #' Input: genotype likelihoods
