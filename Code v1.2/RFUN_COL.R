@@ -5,6 +5,8 @@
 #' Phenotypes controlled by two gene with epistatic interaction
 #' Non-constant natural selection and non-constant demographic histories
 
+#' Use the flat Dirichlet prior for the starting haplotype frequencies of the underlying population
+
 #' Input: genotype likelihoods
 #' Output: posteriors for the selection coefficient and the genotype frequency trajectories of the population
 
