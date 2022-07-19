@@ -1,1 +1,2 @@
 # Estimating temporally variable selection intensity from ancient DNA data with the flexibility of modelling linkage and epistasis
+Source code is implemented for an MCMC-based method for inferring temporally variable selection from ancient DNA data (in format of genotype likelihoods) with the flexibility of modelling linkage and epistasis, and the preprint has been submitted to Molecular Biology and Evolution available at
