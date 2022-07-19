@@ -5,6 +5,8 @@
 #' Phenotypes controlled by two genes with genetic linkage
 #' Non-constant natural selection and non-constant demographic histories
 
+#' Use the flat Dirichlet prior for the starting haplotype frequencies of the underlying population
+
 #' Input: genotype likelihoods
 #' Output: posteriors for the selection coefficient and the genotype frequency trajectories of the population
 
@@ -33,7 +35,7 @@ source("./RFUN_PTN.R")
 #' Raw data of Wutke et al. (2016) from 3500 BC (Domestication 3500 BC)
 load("./Data/REAL.rda")
 
-set.seed(6)
+set.seed(13)
 KIT13_smp <- KIT13
 KIT13_smp <- KIT13_smp[which(rowSums(KIT13_smp[, 4:9]) != 0), ]
 int_gen <- -round(max(KIT13_smp$age_mean, KIT13_smp$age_lower, KIT13_smp$age_upper) / 8)
