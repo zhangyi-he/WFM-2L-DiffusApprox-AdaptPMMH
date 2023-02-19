@@ -100,14 +100,14 @@ apt_rto <- 4e-01
 system.time(PMMH <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
 save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
-     file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_1.rda")
+     file = "./REAL_COL_1.rda")
 
-load("./Output/Output v1.1/REAL v1.0.1/REAL_COL_1.rda")
+load("./REAL_COL_1.rda")
 
 sel_cof_chn <- PMMH$sel_cof_chn
 frq_pth_chn <- PMMH$frq_pth_chn
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_1_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_1_Traceplot_SelCoeff.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -143,7 +143,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_1_Posterior_SelCoeff.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_1_Posterior_SelCoeff.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -186,7 +186,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_1_Posterior_SelChange.pdf", width = 16, height = 6)
+pdf(file = "./REAL_COL_1_Posterior_SelChange.pdf", width = 16, height = 6)
 par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
@@ -220,7 +220,7 @@ for (i in 1:dim(frq_pth_chn)[1]) {
   }
 }
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_1_Posterior_HaploTraj.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_1_Posterior_HaploTraj.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
@@ -277,7 +277,7 @@ for (i in 1:dim(frq_pth_chn)[1]) {
   }
 }
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_1_Posterior_PhenoTraj.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_1_Posterior_PhenoTraj.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Phenotype frequency",
@@ -382,14 +382,14 @@ apt_rto <- 4e-01
 system.time(PMMH <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
 save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
-     file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_2.rda")
+     file = "./REAL_COL_2.rda")
 
-load("./Output/Output v1.1/REAL v1.0.1/REAL_COL_2.rda")
+load("./REAL_COL_2.rda")
 
 sel_cof_chn <- PMMH$sel_cof_chn
 frq_pth_chn <- PMMH$frq_pth_chn
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_2_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_2_Traceplot_SelCoeff.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -425,7 +425,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_2_Posterior_SelCoeff.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_2_Posterior_SelCoeff.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -468,7 +468,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_2_Posterior_SelChange.pdf", width = 16, height = 6)
+pdf(file = "./REAL_COL_2_Posterior_SelChange.pdf", width = 16, height = 6)
 par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
@@ -502,7 +502,7 @@ for (i in 1:dim(frq_pth_chn)[1]) {
   }
 }
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_2_Posterior_HaploTraj.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_2_Posterior_HaploTraj.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
@@ -559,7 +559,7 @@ for (i in 1:dim(frq_pth_chn)[1]) {
   }
 }
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_2_Posterior_PhenoTraj.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_2_Posterior_PhenoTraj.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Phenotype frequency",
@@ -664,14 +664,14 @@ apt_rto <- 4e-01
 system.time(PMMH <- cmprunAdaptPMMH(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn_num, stp_siz, apt_rto))
 
 save(sel_cof, rec_rat, pop_siz, ref_siz, evt_gen, raw_smp, ptn_num, pcl_num, itn_num, stp_siz, apt_rto, PMMH,
-     file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_3.rda")
+     file = "./REAL_COL_3.rda")
 
-load("./Output/Output v1.1/REAL v1.0.1/REAL_COL_3.rda")
+load("./REAL_COL_3.rda")
 
 sel_cof_chn <- PMMH$sel_cof_chn
 frq_pth_chn <- PMMH$frq_pth_chn
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_3_Traceplot_SelCoeff.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_3_Traceplot_SelCoeff.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(1:itn_num, sel_cof_chn[1, 1, 1:itn_num], type = 'l',
      xlab = "Iteration", ylab = "Selection coefficient",
@@ -707,7 +707,7 @@ sel_cof_hpd[2, , 1] <- HPDinterval(as.mcmc(sel_cof_chn[2, 1, ]), prob = 0.95)
 sel_cof_hpd[1, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[1, 2, ]), prob = 0.95)
 sel_cof_hpd[2, , 2] <- HPDinterval(as.mcmc(sel_cof_chn[2, 2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_3_Posterior_SelCoeff.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_3_Posterior_SelCoeff.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(sel_cof_chn[1, 1, ], breaks = seq(min(sel_cof_chn[1, 1, ]), max(sel_cof_chn[1, 1, ]), length.out = 50), freq = FALSE,
      xlab = "Selection coefficient",
@@ -750,7 +750,7 @@ dif_sel_hpd <- matrix(NA, nrow = 2, ncol = 2)
 dif_sel_hpd[1, ] <- HPDinterval(as.mcmc(dif_sel_chn[1, ]), prob = 0.95)
 dif_sel_hpd[2, ] <- HPDinterval(as.mcmc(dif_sel_chn[2, ]), prob = 0.95)
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_3_Posterior_SelChange.pdf", width = 16, height = 6)
+pdf(file = "./REAL_COL_3_Posterior_SelChange.pdf", width = 16, height = 6)
 par(mfrow = c(1, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 hist(dif_sel_chn[1, ], breaks = seq(min(dif_sel_chn[1, ]), max(dif_sel_chn[1, ]), length.out = 50), freq = FALSE,
      xlab = "Change in selection coefficient",
@@ -784,7 +784,7 @@ for (i in 1:dim(frq_pth_chn)[1]) {
   }
 }
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_3_Posterior_HaploTraj.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_3_Posterior_HaploTraj.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Haplotype frequency",
@@ -841,7 +841,7 @@ for (i in 1:dim(frq_pth_chn)[1]) {
   }
 }
 
-pdf(file = "./Output/Output v1.1/REAL v1.0.1/REAL_COL_3_Posterior_PhenoTraj.pdf", width = 16, height = 12)
+pdf(file = "./REAL_COL_3_Posterior_PhenoTraj.pdf", width = 16, height = 12)
 par(mfrow = c(2, 2), mar = c(5.5, 5, 5.5, 2.5), cex.main = 1.75, cex.sub = 1.5, cex.axis = 1.5, cex.lab = 1.5)
 plot(0, type = 'n', xlim = c(min(raw_smp$age_mean), max(raw_smp$age_mean)), ylim = c(min(frq_pth_chn[1, , ]), max(frq_pth_chn[1, , ])),
      xlab = "Generation", ylab = "Phenotype frequency",
