@@ -9,4 +9,4 @@ The source code is implemented for an MCMC-based method for inferring temporally
 
 [Data](https://github.com/zhangyi-he/WFM-2L-DiffusApprox-AdaptPMMH/tree/master/Data) includes the ancient horse samples genotyped at the loci for coat colouration.
 
-Note that source code currently available on GitHub is implemented for horse base coat colours and pinto coat patterns.
+Note that source code currently available on GitHub is implemented for horse base coat colours and pinto coat patterns. We will release a version that allows for a user-specified genotype-phenotype map soon.
