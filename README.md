@@ -8,3 +8,5 @@ The source code is implemented for an MCMC-based method for inferring temporally
 [Code v1.2](https://github.com/zhangyi-he/WFM-2L-DiffusApprox-AdaptPMMH/tree/master/Code%20v1.2) / [Code v1.2.1](https://github.com/zhangyi-he/WFM-2L-DiffusApprox-AdaptPMMH/tree/master/Code%20v1.2.1) includes the source code implemented for horse base coat colours (ASIP and MC1R with epistasis) and horse pinto coat patterns (KIT13 and KIT16 with linkage). A Dirichlet flat prior for population gamete frequencies is adopted. Note that [Code v1.2.1](https://github.com/zhangyi-he/WFM-2L-DiffusApprox-AdaptPMMH/tree/master/Code%20v1.2.1) provides a version that the selection coefficient of mixed against solid is fixed to be -1 for horse pinto coat patterns.
 
 [Data](https://github.com/zhangyi-he/WFM-2L-DiffusApprox-AdaptPMMH/tree/master/Data) includes the ancient horse samples genotyped at the loci for coat colouration.
+
+Note that source code currently available on GitHub is implemented for horse base coat colours and pinto coat patterns.
